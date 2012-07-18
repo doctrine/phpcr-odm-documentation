@@ -1,0 +1,65 @@
+Accessing the underlying PHPCR session
+======================================
+
+PHPCR-ODM builds on top of the PHPCR api. You can access this to do operations
+not provided by the DocumentManager. However, if you do any data manipulations,
+you risk to get the DocumentManager out of sync. If you do not know exactly what
+you do, it is recommended to flush before accessing the PHPCR layer, and then not
+use the DocumentManager any longer. To flush the operations you did on PHPCR layer,
+you can call ``SessionInterface::save()``
+
+
+Getting the PHPCR Session
+-------------------------
+
+The DocumentManager provides access to the PHPCR session.
+
+.. code-block:: php
+
+    <?php
+
+    $session = $documentManager->getPhpcrSession();
+    // do stuff
+    $session->save();
+
+
+
+The Node field mapping
+----------------------
+
+Using the node mapping, you can set the ``PHPCR\NodeInterface`` to a field of your document.
+This field is populated on find, and as soon as you register the document with the manager using persist().
+
+
+.. configuration-block::
+
+    .. code-block:: php
+
+        <?php
+        /**
+         * @Document
+         */
+        class MyPersistentClass
+        {
+            /** @Node */
+            private $node;
+        }
+
+    .. code-block:: xml
+
+        <doctrine-mapping>
+            <document class="MyPersistentClass">
+                <node fieldName="node"/>
+            </document>
+        </doctrine-mapping>
+
+    .. code-block:: yaml
+
+        MyPersistentClass:
+            node: node
+
+Code example
+------------
+
+TODO: show an example, i.e. how to change the phpcr:class field to
+fix existing data after a document class name refactoring
