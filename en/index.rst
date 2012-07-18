@@ -1,5 +1,5 @@
-Doctrine PHP Content Repository ODM's documentation
-===================================================
+Doctrine PHP Content Repository ODM documentation
+=================================================
 
 The Doctrine PHPCR ODM documentation is comprised of tutorials, a reference section and
 cookbook articles that explain different parts of the PHP Content Repository Object Document mapper.
@@ -42,15 +42,18 @@ Mapping Objects onto a Document Repository
 Working with Objects
 --------------------
 
-* **Basic Reference**:
+* **Basic Reference**: TODO
   :doc:`Documents <reference/working-with-objects>` |
   :doc:`Events <reference/events>`
 
 * **Query Reference**:
-  :doc:`Query Builder API <reference/query-builder-api>`
+  :doc:`Query Builder API <reference/query-builder>`
 
 Advanced Topics
 ---------------
+
+* **PHPCR Session**:
+  :doc:`Accessing the underlying PHPCR session <reference/phpcr-access>`
 
 * **Multilanguage**:
   :doc:`Working with Multilanguage Documents <reference/multilang>`
@@ -60,21 +63,17 @@ Advanced Topics
 
 .. transactions?
 
-* **Best Practices**:
-  :doc:`Best Practices <reference/best-practices>`
-
 * **Performance**:
-  :doc:`Change Tracking Policies <reference/change-tracking-policies>`
+  :doc:`Fetch Depth <reference/fetch-depth>`
 
-* **Logging**:
-  :doc:`Logging <reference/logging>`
+.. TODO? * **Logging**: :doc:`Logging <reference/logging>`
 
 Cookbook
 --------
 
 * **Tricks**:
-  :doc:`Blending ORM and MongoDB ODM <cookbook/blending-orm-and-mongodb-odm>` |
-  :doc:`Mapping classes to ORM and ODM <cookbook/mapping-classes-to-orm-and-odm>`
+  :doc:`Blending ORM and PHPCR-ODM <cookbook/blending-orm-and-phpcr-odm>` |
+  :doc:`Mapping classes to ORM and PHPCR-ODM <cookbook/mapping-classes-to-orm-and-phpcr-odm>`
 
 * **Implementation**:
   :doc:`Using Wakeup Or Clone <cookbook/implementing-wakeup-or-clone>`

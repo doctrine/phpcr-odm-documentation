@@ -32,7 +32,7 @@ Then run ``composer install`` and you are done.
 PHPCR provider
 --------------
 
-Doctrine PHPCR-ODM uses the [PHP Content Repository API](http://phpcr.github.com/) for
+Doctrine PHPCR-ODM uses the `PHP Content Repository API <http://phpcr.github.com/`_ for
 storage. You can force one of the available providers in your projects composer.json file
 "require" section by specifying one of the "suggest" libraries in the phpcr-odm composer.json
 
@@ -44,7 +44,7 @@ Install Jackalope-Jackrabbit PHCPR provider
 
 Jackalope-Jackrabbit uses the Java backend jackrabbit for storage.
 
-Follow [Running Jackrabbit Server](https://github.com/jackalope/jackalope/wiki/Running-a-jackrabbit-server)
+Follow `Running Jackrabbit Server <http://github.com/jackalope/jackalope/wiki/Running-a-jackrabbit-server>`_
 from the Jackalope wiki to have the storage backend.
 
 Bootstrap will roughly look like this
@@ -68,8 +68,8 @@ Install Jackalope Doctrine DBAL PHPCR provider
 Jackalope Doctrine DBAL maps PHPCR to relational databases. It should support all
 databases that Doctrine DBAL can support.
 
-Create the database as described in the README of
-[Jackalope Doctrine DBAL](http://github.com/jackalope/jackalope-doctrine-dbal).
+Create the database as described in the documentation of
+`Jackalope Doctrine DBAL <http://github.com/jackalope/jackalope-doctrine-dbal>`_.
 
 
 Bootstrap will roughly look like this when using mysql as storage backend:
@@ -104,10 +104,10 @@ Bootstrap will roughly look like this when using mysql as storage backend:
 Install Midgard2 PHPCR provider
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-[Midgard2](https://github.com/midgardproject/phpcr-midgard2) is a PHP extension
+`Midgard2 <https://github.com/midgardproject/phpcr-midgard2>`_ is a PHP extension
 that persists PHPCR into relational databases like SQLite and MySQL.
 
-Midgard2 needs [a PHP extension](https://github.com/midgardproject/midgard-php5)
+Midgard2 needs `the migard-php5 PHP extension <https://github.com/midgardproject/midgard-php5>`_
 to run. On typical Linux setups getting the extension is as easy as:
 
     sudo apt-get install php5-midgard2
@@ -584,7 +584,7 @@ See the next chapter on what the console provides you.
 Register system node types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-PHPCR ODM uses a [custom node type](https://github.com/doctrine/phpcr-odm/wiki/Custom-node-type-phpcr%3Amanaged)
+PHPCR ODM uses a `custom node type <http://github.com/doctrine/phpcr-odm/wiki/Custom-node-type-phpcr%3Amanaged>`_
 to track meta information without interfering with your content.
 We provide a command that makes it trivial to register this type and the phpcr
 namespace.

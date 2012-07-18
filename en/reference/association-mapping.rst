@@ -8,6 +8,8 @@ has children.
 We will start with the hierarchy associations and then go into the references, which work
 slightly different from what you are used from an RDBMS as well.
 
+.. _hierarchy-mappings:
+
 Hiearchy mappings
 -----------------
 
@@ -21,7 +23,7 @@ To map children, you have two options:
 - You can map a single child with a specific name
 - Or you can map a :ref:`collection <collections>` of children, with the possibility to filter on the document name
 
-A single Child will always fetch only one document. If no explicit name is specified, the field
+A single Child will always load only one document. If no explicit name is specified, the field
 name is used to retrieve the child document. The name is the last part of that documents id,
 resp. its Nodename mapping.
 
@@ -32,6 +34,7 @@ for details on allowed filters.
 
 To tweak performance, you can also specify a ``fetchDepth`` if you know that you will always access children
 of the mapped children. This can improve performance when you need to load a more complicated structure.
+(See also :doc:`Tuning the node preloading <fetch-depth>`).
 
 Some sample mappings:
 
