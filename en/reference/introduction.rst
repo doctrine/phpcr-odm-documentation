@@ -158,11 +158,11 @@ For easy readability, we use the annotation mapping in this tutorial.
          */
         private $id;
         /**
-         * @PHPCRODM\Parent
+         * @PHPCRODM\ParentDocument
          */
         private $parent;
         /**
-         * @PHPCRODM\Name
+         * @PHPCRODM\Nodename
          */
         private $name;
         /**
@@ -215,7 +215,7 @@ For easy readability, we use the annotation mapping in this tutorial.
     }
 
 If you are familiar with Doctrine ORM, this code should look pretty familiar to you. The
-only important difference are the hierarchy related annotations Parent, Name and Children.
+only important difference are the hierarchy related annotations ParentDocument, Name and Children.
 In PHPCR, data is stored in trees. Every document has a parent and its own name. The id is
 built from this structure, resulting in path strings. The recommended way to generate the
 id is by assigning a name and a parent to the document. See the section on identifier

@@ -30,9 +30,7 @@ Mapping Objects onto a Document Repository
 
 * **Basic Reference**:
   :doc:`Objects and Fields <reference/basic-mapping>` |
-  :doc:`Multilanguage Fields <reference/multilang-mapping>` |
-  :doc:`Hierarchies: Children and parents <reference/hierarchy-mapping>` |
-  :doc:`References <reference/reference-mapping>` |
+  :doc:`Hierarchies and References <reference/association-mapping>` |
   :doc:`Inheritance <reference/inheritance-mapping>`
 
 * **Mapping Driver References**:
@@ -54,7 +52,13 @@ Working with Objects
 Advanced Topics
 ---------------
 
-# transactions, versioning, ?
+* **Multilanguage**:
+  :doc:`Working with Multilanguage Documents <reference/multilang>`
+
+* **Versioning**:
+  :doc:`Versioning Documents <reference/versioning>`
+
+# transactions?
 
 * **Best Practices**:
   :doc:`Best Practices <reference/best-practices>`
