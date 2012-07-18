@@ -19,7 +19,7 @@ parent, it will use it, otherwise Doctrine\ODM\PHPCR\Document\Generic is used.
 To map children, you have two options:
 
 - You can map a single child with a specific name
-- Or you can map a collection of children, with the possibility to filter on the document name
+- Or you can map a :ref:`collection <collections>` of children, with the possibility to filter on the document name
 
 A single Child will always fetch only one document. If no explicit name is specified, the field
 name is used to retrieve the child document. The name is the last part of that documents id,
@@ -82,6 +82,8 @@ are set to be referenceable. That way, a reference will stay intact even if docu
 A field can reference one or many documents, and it can enforce referencial integrity or create
 a weak reference that does not ensure integrity, depending on your use case.
 
+
+.. _association-mapping_referenceable:
 
 Referenceable documents
 ~~~~~~~~~~~~~~~~~~~~~~~

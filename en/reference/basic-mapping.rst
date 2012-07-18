@@ -97,8 +97,8 @@ to be designated as an document. This can be done through the
           # ...
 
 There is a couple of options you can specify for the document mapping.
-Some of them are explained here, the rest in the chapters on :doc:`References <reference/association-mapping>`,
-:doc:`Multilanguage <reference/multilang>` and :doc:`Versioning <reference/versioning>`.
+Some of them are explained here, the rest in the chapters on :ref:`References <association-mapping_referenceable>`,
+:doc:`Multilanguage <multilang>` and :doc:`Versioning <versioning>`.
 
 
 Specify a node type
@@ -110,7 +110,7 @@ instead of the default permissive nt:unstructured.
 Specify a repository class
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The ``repositoryClass```attribute allows to specify a custom repository instead of the default
+The ``repositoryClass`` attribute allows to specify a custom repository instead of the default
 repository implementation.
 
 
@@ -123,10 +123,10 @@ A Doctrine Mapping Type defines the mapping between a PHP type and
 a PHPCR property type. PHPCR defines a finite set of allowed types for properties.
 
 For example, the Doctrine Mapping Type ``string`` defines the
-mapping from a PHP string to a PHPCR\PropertyType::STRING.
+mapping from a PHP string to a PHPCR\\PropertyType::STRING.
 Here is a quick overview of the built-in mapping types:
 
-See `PHPCR\PropertyType <http://phpcr.github.com/doc/html/phpcr/propertytype.html>`_ for details about the types.
+See `PHPCR\\PropertyType <http://phpcr.github.com/doc/html/phpcr/propertytype.html>`_ for details about the types.
 
 - ``String``: Arbitrary length strings
 - ``Binary``: Binary stream using PHP streams
@@ -138,7 +138,7 @@ See `PHPCR\PropertyType <http://phpcr.github.com/doc/html/phpcr/propertytype.htm
 - ``Name``: A valid PHPCR name
 - ``Path``: A valid PHPCR path
 - ``Uri``: A valid URI, for example a URL
-- ``Uuid``: A PHPCR universally unique id (read only, see :doc:`References <reference/association-mapping>` for more)
+- ``Uuid``: A PHPCR universally unique id (read only, see :ref:`References <association-mapping_referenceable>` for more)
 
 
 .. note::
@@ -155,7 +155,7 @@ See `PHPCR\PropertyType <http://phpcr.github.com/doc/html/phpcr/propertytype.htm
 
     If you need specific timezone handling you have to handle this
     in your domain, converting all the values back and forth from UTC.
-    There is also a :doc:`cookbook entry <../cookbook/working-with-datetime>`
+    There is also a `cookbook entry in the ORM documentation <http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/cookbook/working-with-datetime.html>`_
     on working with datetimes that gives hints for implementing
     multi timezone applications.
 

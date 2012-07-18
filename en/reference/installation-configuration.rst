@@ -2,7 +2,7 @@ Installation
 ============
 
 If you use the Doctrine PHPCR ODM **Symfony Bundle**, please look into the
- [Tutorial to install the DoctrinePHPCRBundle](https://github.com/symfony-cmf/symfony-cmf-docs/blob/master/tutorials/installing-configuring-doctrine-phpcr-odm.rst).
+`Tutorial to install the DoctrinePHPCRBundle <https://github.com/symfony-cmf/symfony-cmf-docs/blob/master/tutorials/installing-configuring-doctrine-phpcr-odm.rst>`_.
 This documentation explains how to use PHPCR ODM outside of symfony, which requires some
 manual initialization.
 
