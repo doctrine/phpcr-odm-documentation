@@ -219,7 +219,7 @@ only important difference are the hierarchy related annotations ParentDocument, 
 In PHPCR, data is stored in trees. Every document has a parent and its own name. The id is
 built from this structure, resulting in path strings. The recommended way to generate the
 id is by assigning a name and a parent to the document. See the section on identifier
-strategies in the reference chapter :doc:`Objects and Fields <reference/basic-mapping>`
+strategies in the reference chapter :doc:`Objects and Fields <basic-mapping>`
 for other possibilities.
 
 .. note::

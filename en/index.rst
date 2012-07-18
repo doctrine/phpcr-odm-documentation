@@ -1,5 +1,5 @@
-Doctrine PHP Content Repository ODM's documentation!
-=====================================
+Doctrine PHP Content Repository ODM's documentation
+===================================================
 
 The Doctrine PHPCR ODM documentation is comprised of tutorials, a reference section and
 cookbook articles that explain different parts of the PHP Content Repository Object Document mapper.
@@ -33,7 +33,7 @@ Mapping Objects onto a Document Repository
   :doc:`Hierarchies and References <reference/association-mapping>` |
   :doc:`Inheritance <reference/inheritance-mapping>`
 
-* **Mapping Driver References**:
+* **Mapping Driver References**: (TODO: build this in a sane way, without duplicating too much information)
   :doc:`Docblock Annotations <reference/annotations-reference>` |
   :doc:`XML <reference/xml-mapping>` |
   :doc:`YAML <reference/yml-mapping>` |
@@ -58,7 +58,7 @@ Advanced Topics
 * **Versioning**:
   :doc:`Versioning Documents <reference/versioning>`
 
-# transactions?
+.. transactions?
 
 * **Best Practices**:
   :doc:`Best Practices <reference/best-practices>`

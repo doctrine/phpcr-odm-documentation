@@ -43,10 +43,10 @@ get better understanding when you also take a look at the  `PHPCR documentation 
 Additional core features
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-As PHPCR provides native support for versioning and locking, PHPCR-ODM also exposes these features.
-See the advanced section for those topics. TODO: link
+As PHPCR provides native support for versioning, PHPCR-ODM also exposes this feature.
+See the advanced chapter :doc:`Versioning <versioning>` for information about this.
 
-Additionally, we implemented :doc:`multilanguage  <reference/multilang-mapping>` support into PHPCR-ODM.
+Additionally, we implemented :doc:`Multilanguage  <multilang>` support into PHPCR-ODM.
 
 
-TODO: any other differences?
+TODO: any other differences compared to ORM?
