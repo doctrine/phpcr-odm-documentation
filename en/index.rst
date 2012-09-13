@@ -23,7 +23,7 @@ Getting Started
 
 * **Setup**:
   :doc:`Installation and configuration <reference/installation-configuration>` |
-  :doc:`Introduction <reference/tools>`
+  :doc:`Tools <reference/tools>`
 
 Mapping Objects onto a Document Repository
 ------------------------------------------

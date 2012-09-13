@@ -572,12 +572,8 @@ Doctrine uses the Symfony Console component for generating the command
 line interface. You can take a look at the ``bin/phpcr`` script  for inspiration how to
 setup the cli.
 
-
-
-TODO: can we have that too?
-
-If you installed Doctrine PHPCR-ODM through Composer, then the Doctrine command is
-available to you in the bin-dir, by default at ``vendor/.bin/doctrine``.
+If you installed Doctrine PHPCR-ODM through Composer, then the ``phpcr`` script is
+available to you in the bin-dir, by default at ``vendor/bin/phpcr``.
 
 See the next chapter on what the console provides you.
 
