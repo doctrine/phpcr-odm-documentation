@@ -21,13 +21,18 @@ about the use of generate entities for example, you can call:
 
 .. code-block:: php
 
-    doctrine doctrine:phpcr:register-system-node-types --help
+    phpcr doctrine:phpcr:register-system-node-types --help
 
 Configuration
 ~~~~~~~~~~~~~
 
-To use the commands, you need to define the phpcr binary. The easiest is to copy
-bin/phpcr from the phpcr-odm folder and put it into your project directory.
+To use the commands, you need to define the phpcr binary.
+
+If you installed Doctrine PHPCR-ODM through Composer, then the ``phpcr``
+script is available to you in the bin-dir, by default at ``vendor/bin/phpcr``.
+
+If you installed Doctrine PHPCR-ODM by some other means, copy ``bin/phpcr``
+from the phpcr-odm folder and put it into your project directory.
 
 Command Overview
 ~~~~~~~~~~~~~~~~
