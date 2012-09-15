@@ -82,7 +82,7 @@ Bootstrap will roughly look like this when using mysql as storage backend:
     $pass = 'admin';
 
     $params = array(
-        'driver'    => 'pdo_mysql',
+        'driver'    => 'pdo_mysql', // or pdo_pgsql
         'host'      => 'localhost',
         'user'      => $user,
         'password'  => $pass,
@@ -99,6 +99,19 @@ Bootstrap will roughly look like this when using mysql as storage backend:
     $credentials = new \PHPCR\SimpleCredentials(null, null);
     $session = $repository->login($credentials, $workspace);
 
+
+Jackalope Doctrine DBAL does currently not manage users, so the simple
+credentials are ignored.
+
+Jackalope Doctrine DBAL also works with sqlite. Use the following parameters:
+
+.. code-block:: php
+
+    $params = array(
+        'driver' => 'pdo_sqlite',
+        'dbname' => 'odm',
+        'path' => '/tmp/jackalope.db',
+    );
 
 
 Install Midgard2 PHPCR provider
@@ -119,7 +132,7 @@ Bootstrap will roughly look like this when using mysql as storage backend:
     <?php
     $workspace = 'default';
     $user = 'admin';
-    $pass = 'admin';
+    $pass = 'password';
 
     $params = array(
         'midgard2.configuration.db.type' => 'MySQL',
@@ -139,6 +152,23 @@ Bootstrap will roughly look like this when using mysql as storage backend:
 Note that the `midgard2.configuration.db.init` setting should only be used the
 first time you connect to the Midgard2 repository. After that the database is
 ready and this setting should be removed for better performance.
+
+The `$user` and `$pass` are the credentials for the PHPCR user. The
+`...db.username` and `...db.password` configuration values are used by the
+mysql driver of midgard to connect to the database.
+
+
+Midgard can also use sqlite, with the following parameters:
+
+.. code-block:: php
+
+    $params = array(
+        'midgard2.configuration.db.type' => 'SQLite',
+        'midgard2.configuration.db.name' => 'odm',
+        'midgard2.configuration.db.dir' => '/tmp',
+        'midgard2.configuration.blobdir' => '/tmp/blobs'
+        'midgard2.configuration.db.init' => true,
+    );
 
 
 Configuration
