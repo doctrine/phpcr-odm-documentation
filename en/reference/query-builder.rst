@@ -62,6 +62,7 @@ The maximum number of results can be set with the setMaxResults method.  Further
         ->execute();
 
 Getting all child nodes below /blogs is as simple as adding a descendant node constraint:
+
 .. code-block:: php
 
     <?php
@@ -71,7 +72,6 @@ Getting all child nodes below /blogs is as simple as adding a descendant node co
     $qb->from($factory->selector('nt:unstructured'))
         ->where($factory->descendantNode('/blog'))
         ->execute();
-
 
 
 If you want to know the SQL2 statement generated call getStatement() on the query object.
