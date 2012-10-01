@@ -38,13 +38,47 @@ This query is equivalent to the JCR-SQL2 query ``SELECT * FROM nt:unstructured W
 
     /** @var $qb QueryBuilder */
     $factory = $qb->getQOMFactory();
-    $qb->select($factory->selector('nt:unstructured'))
-        ->where($factory->propertyExistance('name'))
-        ->setFirstResult(10)
-        ->setMaxResults(10)
+    $qb->from($factory->selector('nt:unstructured'))
+        ->where($factory->propertyExistence('name'))
         ->execute();
+
     $result = $documentManager->getDocumentsByQuery($qb->getQuery());
     foreach ($result as $document) {
         echo $document->getId();
     }
 
+The maximum number of results can be set with the setMaxResults method.  Furthermore the position of the first result to be retrieved can be set with setFirstResult
+
+.. code-block:: php
+
+    <?php
+
+    /** @var $qb QueryBuilder */
+    $factory = $qb->getQOMFactory();
+    $qb->from($factory->selector('nt:unstructured'))
+        ->where($factory->propertyExistence('name'))
+        ->setFirstResult(5)
+        ->setMaxResults(10)
+        ->execute();
+
+Getting all child nodes below /blogs is as simple as adding a descendant node constraint:
+.. code-block:: php
+
+    <?php
+
+    /** @var $qb QueryBuilder */
+    $factory = $qb->getQOMFactory();
+    $qb->from($factory->selector('nt:unstructured'))
+        ->where($factory->descendantNode('/blog'))
+        ->execute();
+
+
+
+If you want to know the SQL2 statement generated call getStatement() on the query object.
+
+.. code-block:: php
+
+    <?php
+    //Prepare the query builder with the desired statement.
+    //..
+    echo $qb->getQuery()->getStatement();
