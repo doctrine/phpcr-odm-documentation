@@ -1,14 +1,19 @@
 The QueryBuilder
 ================
 
-A ``QueryBuilder`` provides an API that is designed for
+The ``QueryBuilder`` provides an API that is designed for
 programmatically constructing a query in several steps.
 
 It provides a set of classes and methods that is able to
 programmatically build queries, and also provides a fluent API.
 
 The QueryBuilder of PHPCR-ODM is provided by the phpcr-utils library.
-See TODO for a full documentation on the QueryBuilder methods.
+See `PHPCR-utils > Namespaces > PHPCR\Util\QOM\QueryBuilder <http://phpcr.github.com/doc/html-all/index.html>`_
+for a full documentation on the QueryBuilder methods.
+
+The actual tests and such are done by the PHPCR Query Object Model factory,
+defined by ``PHPCR\Query\QOM\QueryObjectModelFactoryInterface``
+
 
 Constructing a new QueryBuilder object
 --------------------------------------
@@ -47,7 +52,9 @@ This query is equivalent to the JCR-SQL2 query ``SELECT * FROM nt:unstructured W
         echo $document->getId();
     }
 
-The maximum number of results can be set with the setMaxResults method.  Furthermore the position of the first result to be retrieved can be set with setFirstResult
+The maximum number of results (limit) can be set with the setMaxResults method.
+Furthermore the position of the first result to be retrieved (offset) can be
+set with setFirstResult
 
 .. code-block:: php
 
@@ -61,7 +68,7 @@ The maximum number of results can be set with the setMaxResults method.  Further
         ->setMaxResults(10)
         ->execute();
 
-Getting all child nodes below /blogs is as simple as adding a descendant node constraint:
+Getting all descendant nodes of /dms is as simple as adding a descendant node constraint:
 
 .. code-block:: php
 
@@ -70,9 +77,11 @@ Getting all child nodes below /blogs is as simple as adding a descendant node co
     /** @var $qb QueryBuilder */
     $factory = $qb->getQOMFactory();
     $qb->from($factory->selector('nt:unstructured'))
-        ->where($factory->descendantNode('/blog'))
+        ->where($factory->descendantNode('/dms'))
         ->execute();
 
+Note that if you just need the direct children of a document, you should use
+the ``@Children`` annotation on the document.
 
 If you want to know the SQL2 statement generated call getStatement() on the query object.
 
