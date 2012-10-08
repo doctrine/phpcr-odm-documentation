@@ -255,8 +255,8 @@ Mapping multivalue properties
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 PHPCR handles multivalue (array) data natively. The PHPCR-ODM exposes this feature through the
-`multivalue` attribute of properties. Unless specified as true, properties are considered single
-value.
+`multivalue` attribute of properties and adds support for hashmaps (storing the keys as well).
+Unless specified as true, properties are considered single value.
 
 .. configuration-block::
 
@@ -285,6 +285,40 @@ value.
 This mapping expects the field $names to contain an array of strings. When reading from the database,
 a multivalue property is expected and the field will be set to the array of strings.
 
+The multivalue mapping will lose the keys of the array. To store hashmaps with keys, use the assoc
+attribute. This attribute implies multivalue so you don't need to repeat multivalue=true. The following
+configuration will result in the PHPCR property namesKeys for the names array and listArraykeys for
+the list keys.
+
+.. configuration-block::
+
+    .. code-block:: php
+
+        <?php
+        /** @String(assoc="") */
+        private $names;
+
+        /** @String(assoc="listArraykeys") */
+        private $list;
+
+    .. code-block:: xml
+
+        <doctrine-mapping>
+          <document name="MyPersistentClass">
+            <field fieldName="names" assoc="" />
+            <field fieldName="list" assoc="listArraykeys" />
+          </document>
+        </doctrine-mapping>
+
+    .. code-block:: yaml
+
+        MyPersistentClass:
+          type: document
+          fields:
+            names:
+              assoc: ""
+            list:
+              assoc: "listArraykeys"
 
 Summary
 ~~~~~~~
@@ -304,6 +338,10 @@ Again a short list for the overview:
    property in the repository.
 -  ``multivalue``: (optional, defaults to false) If this is set to true, the
    property is an array of the specified type.
+- ``assoc``: (optional, defaults to false) If set to a string, the value is
+    considered multivalue and the keys are stored in the PHPCR property given
+    for the assoc property. If the value of assoc is empty, the name for the
+    key field is the normal field name with ``Keys`` appended.
 
 
 Identifiers
