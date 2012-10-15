@@ -43,22 +43,41 @@ The following Commands are currently available:
 -  ``help`` Displays help for a command (?)
 -  ``list`` Lists commands
 -  ``doctrine:phpcr:register-system-node-types`` Register system node types in the PHPCR repository
+-  ``doctrine:phpcr:mapping:info``  Shows basic information about all mapped documents
 -  ``phpcr:import``  Import xml data into the repository, either in JCR system view format or arbitrary xml
+-  ``phpcr:export``  Export nodes from the repository, either to the JCR system view format or the document view format
 -  ``phpcr:dump`` Dump the content repository
 -  ``phpcr:purge``  Remove all content from the repository
 -  ``phpcr:query``  Execute a JCR SQL2 statement
 -  ``phpcr:register-node-types``  Register node types in the PHPCR repository
 -  ``phpcr:workspace:create``  Create a workspace in the configured repository
+-  ``phpcr:workspace:list``    List all available workspaces in the configured repository
 
-Note that the commands prefixed with only phpcr come from the phpcr-utils and are not
-specific to Doctrine PHPCR-ODM, but helpful when interacting with a PHPCR repository.
+
+.. Note::
+
+    The commands prefixed with only phpcr come from the phpcr-utils and are not
+    specific to Doctrine PHPCR-ODM. If you use the PHPCR-ODM bundle in Symfony2,
+    all commands are prefixed with doctrine:phpcr.
+
+
+Jackrabbit specific commands
+""""""""""""""""""""""""""""
 
 If you are using jackalope-jackrabbit, you also have a command to start and stop the
 jackrabbit server:
 
 -  ``jackalope:run:jackrabbit``  Start and stop the Jackrabbit server
 
-TODO: expose and mention jackalope-doctrine-dbal command
+
+Doctrine DBAL specific commands
+"""""""""""""""""""""""""""""""
+
+If you are using jackalope-doctrine-dbal, you have a command to initialize the
+database:
+
+- ``jackalope:init:dbal``   Prepare the database for Jackalope Doctrine DBAL
+
 
 Register system node types
 --------------------------
