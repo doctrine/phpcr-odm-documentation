@@ -202,15 +202,15 @@ any translatable documents:
 
     <?php
     $localePrefs = array(
-        'en' => array('en', 'de', 'fr'),
-        'fr' => array('fr', 'de', 'en'),
-        'it' => array('fr', 'de', 'en'),
+        'en' => array('de', 'fr'),
+        'fr' => array('de', 'en'),
+        'it' => array('de', 'en'),
     );
 
     $dm = new \Doctrine\ODM\PHPCR\DocumentManager($session, $config);
     $dm->setLocaleChooserStrategy(new LocaleChooser($localePrefs, 'en'));
 
-The above says: When `en` is requested try to get a translation first in `en`, then `de` and finally `fr`.
+The above says: When `en` is requested but you do not find it, then try `de` and finally `fr`.
 
 You can write your own strategy by implementing `Doctrine\ODM\PHPCR\Translation\LocaleChooser\LocaleChooserInterface`.
 This is useful to determine the default language based on some logic, or provide fallback orders based on user preferences.
@@ -227,8 +227,8 @@ Full Example
     // bootstrap the DocumentManager as required (see above)
 
     $localePrefs = array(
-        'en' => array('en', 'fr'),
-        'fr' => array('fr', 'en'),
+        'en' => array('fr'),
+        'fr' => array('en'),
     );
 
     $dm = new \Doctrine\ODM\PHPCR\DocumentManager($session, $config);
