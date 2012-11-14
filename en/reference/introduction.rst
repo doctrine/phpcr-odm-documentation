@@ -103,7 +103,7 @@ Now we bootstrap Doctrine PHPCR-ODM. Create a file called bootstrap.php in the p
         $autoload->loadClass($class);
         return class_exists($class, false);
     });
-    AnnotationRegistry::registerFile(__DIR__.'/vendor/phpcr-odm/lib/Doctrine/ODM/PHPCR/Mapping/Annotations/DoctrineAnnotations.php');
+    AnnotationRegistry::registerFile(__DIR__.'/vendor/doctrine/phpcr-odm/lib/Doctrine/ODM/PHPCR/Mapping/Annotations/DoctrineAnnotations.php');
 
     $params = array(
         'driver'    => 'pdo_mysql',
