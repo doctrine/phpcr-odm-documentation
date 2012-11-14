@@ -205,12 +205,12 @@ Autoloading is taken care of by Composer. You just have to include the composer 
     require_once __DIR__ . "/vendor/autoload.php";
 
 
-Obtaining an EntityManager
+Obtaining an ObjectManager
 --------------------------
 
-Once you have prepared the class loading, you acquire an
-*EntityManager* instance. The EntityManager class is the primary
-access point to ORM functionality provided by Doctrine.
+Once you have prepared the class loading, you acquire an *ObjectManager*
+instance. The ObjectManager class is the primary access point to the document
+mapper functionality provided by Doctrine PHPCR-ODM.
 
 Prepare the mapping driver
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
