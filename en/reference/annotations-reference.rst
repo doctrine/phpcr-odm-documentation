@@ -1,0 +1,347 @@
+Annotations Reference
+=====================
+
+In this chapter a reference of every PHPCR-ODM Annotation is given with short
+explanations on their context and usage.
+
+Index
+-----
+
+-  :ref:`@Binary <annref_binary>`
+-  :ref:`@Boolean <annref_boolean>`
+-  :ref:`@Child <annref_child>`
+-  :ref:`@Children <annref_children>`
+-  :ref:`@Date <annref_date>`
+-  :ref:`@Decimal <annref_decimal>`
+-  :ref:`@Document <annref_document>`
+-  :ref:`@Double <annref_double>`
+-  :ref:`@Float <annref_float>`
+-  :ref:`@Id <annref_id>`
+-  :ref:`@Int <annref_int>`
+-  :ref:`@Locale <annref_locale>`
+-  :ref:`@Long <annref_long>`
+-  :ref:`@MappedSuperclass <annref_mappedsuperclass>`
+-  :ref:`@Name <annref_name>`
+-  :ref:`@Node <annref_node>`
+-  :ref:`@Nodename <annref_nodename>`
+-  :ref:`@ParentDocument <annref_parentdocument>`
+-  :ref:`@Path <annref_path>`
+-  :ref:`@PostLoad <annref_postload>`
+-  :ref:`@PostPersist <annref_postpersist>`
+-  :ref:`@PostRemove <annref_postremove>`
+-  :ref:`@PostUpdate <annref_postupdate>`
+-  :ref:`@PrePersist <annref_prepersist>`
+-  :ref:`@PreRemove <annref_preremove>`
+-  :ref:`@PreUpdate <annref_preupdate>`
+-  :ref:`@ReferenceMany <annref_referencemany>`
+-  :ref:`@ReferenceOne <annref_referenceone>`
+-  :ref:`@Referrers <annref_referrers>`
+-  :ref:`@String <annref_string>`
+-  :ref:`@Uri <annref_uri>`
+-  :ref:`@Uuid <annref_uuid>`
+-  :ref:`@VersionCreated <annref_versioncreated>`
+-  :ref:`@VersionName <annref_versionname>`
+
+Reference
+---------
+
+.. _annref_binary:
+
+@Binary
+~~~~~~~
+
+Sets the type of the annotated instance variable to binary.
+
+.. _annref_boolean:
+
+@Boolean
+~~~~~~~~
+
+Sets the type of the annotated instance variable to boolean.
+
+.. _annref_child:
+
+@Child
+~~~~~~
+
+-  **name**: Name of field (@notsure)
+
+.. _annref_children:
+
+@Children
+~~~~~~~~~
+
+- **filter**: Specify a filter for valid child types
+- **fetchDepth**: Number of levels to fetch, default 1. (@notsure)
+- **ignoreUntranslated**: Ignore untranslated nodes.
+
+.. _annref_date:
+
+@Date
+~~~~~
+
+Sets the type of the annotated instance variable to date. The date field is analogous to DateTime.
+
+.. _annref_decimal:
+
+@Decimal
+~~~~~~~~
+
+Sets the type of the annotated instance variable to decimal.
+
+.. _annref_document:
+
+@Document
+~~~~~~~~~
+
+Applie
+
+-  **nodeType**: PHPCR type for this node. Default `nt:unstructured`.
+-  **repositoryClass**: Name of the repository to use for this document.
+-  **versionable**: Set to true to enable versioning.
+-  **referenceable**: Set to true to allow this node to be referenced.
+-  **translator**: Determines how translations are stored, one of `attribute` or `child`. See :ref:`langauge mapping <multilang_mapping>`
+
+Example:
+
+.. code-block:: php
+
+   <?php
+   /**
+    * @Document(repositoryClass="MyProject\UserRepository")
+    */
+   class User
+   {
+     //...
+   }
+
+.. _annref_double:
+
+@Double
+~~~~~~~
+
+Sets the type of the annotated instance variable to double.
+
+.. _annref_float:
+
+@Float
+~~~~~~
+
+Sets the type of the annotated instance variable to float.
+
+.. _annref_id:
+
+@Id
+~~~
+
+The annotated instance variable will be marked as the document identifier.
+See :ref:`identifiers <basicmapping_identifiers>`.
+
+- **strategy**: How to generate IDs, one of NONE, REPOSITORY, ASSIGNED or PARENT. 
+  See :ref:`generation strategies <basicmapping_identifier_generation_strategies>`.
+
+.. _annref_int:
+
+@Int
+~~~~
+
+Sets the type of the annotated instance variable to integer.
+
+.. _annref_locale:
+
+@Locale
+~~~~~~~
+
+Identifies the annotate instance variable as the field in which to store
+the documents current locale. Mandatory for translated documents.
+
+.. _annref_long:
+
+@Long
+~~~~~
+
+Sets the type of the annotated instance variable to long.
+
+.. _annref_mappedsuperclass:
+
+@MappedSuperclass
+~~~~~~~~~~~~~~~~~
+
+A mapped superclass is an abstract or concrete class that provides
+persistent document state and mapping information for its subclasses
+but which is not itself an entity.
+
+-  **nodeType**: PHPCR type for this node. Default `nt:unstructured`.
+-  **repositoryClass**: Name of the repository to use for this document.
+-  **translator**: Determines how translations are stored, one of `attribute` or `child`. See :ref:`language mapping <multilang_mapping>`
+
+.. _annref_name:
+
+@Name
+~~~~~
+
+Restrict this field to containing the node name with optional namespace. (@notsure)
+
+.. _annref_node:
+
+@Node
+~~~~~
+
+Assign a PHPCR node to the annotated instance variable. See :ref:`node field mapping <phpcraccess_nodefieldmapping>`.
+
+.. _annref_nodename:
+
+@Nodename
+~~~~~~~~~
+
+Mark the annotated instance variable as representing the name of the node. The name
+of the node is the last part of the path. Changing the marked variable will update
+the node path.
+
+.. _annref_parentdocument:
+
+@ParentDocument
+~~~~~~~~~~~~~~~
+
+The annotated instance variable will contain the nodes parent document (if any).
+
+.. _annref_path:
+
+@Path
+~~~~~
+
+The annotated instance variable will contain an absolute or relative path in the
+repository. (@notsure)
+
+.. _annref_postload:
+
+@PostLoad
+~~~~~~~~~~~
+
+Marks a method on the entity to be called as a @PostLoad event.
+Only works with @HasLifecycleCallbacks in the document class PHP
+DocBlock.
+
+.. _annref_postpersist:
+
+@PostPersist
+~~~~~~~~~~~~~~
+
+Marks a method on the entity to be called as a @PostPersist event.
+Only works with @HasLifecycleCallbacks in the document class PHP
+DocBlock.
+
+.. _annref_postremove:
+
+@PostRemove
+~~~~~~~~~~~~~
+
+Marks a method on the entity to be called as a @PostRemove event.
+Only works with @HasLifecycleCallbacks in the document class PHP
+DocBlock.
+
+.. _annref_postupdate:
+
+@PostUpdate
+~~~~~~~~~~~~~
+
+Marks a method on the entity to be called as a @PostUpdate event.
+Only works with @HasLifecycleCallbacks in the document class PHP
+DocBlock.
+
+.. _annref_prepersist:
+
+@PrePersist
+~~~~~~~~~~~~~
+
+Marks a method on the entity to be called as a @PrePersist event.
+Only works with @HasLifecycleCallbacks in the document class PHP
+DocBlock.
+
+.. _annref_preremove:
+
+@PreRemove
+~~~~~~~~~~~~
+
+Marks a method on the entity to be called as a @PreRemove event.
+Only works with @HasLifecycleCallbacks in the document class PHP
+DocBlock.
+
+.. _annref_preupdate:
+
+@PreUpdate
+~~~~~~~~~~~~
+
+Marks a method on the entity to be called as a @PreUpdate event.
+Only works with @HasLifecycleCallbacks in the document class PHP
+DocBlock.
+
+.. _annref_referencemany:
+
+@ReferenceMany
+~~~~~~~~~~~~~~
+
+Optional attributes:
+
+-  **targetDocument**: Specify type of target document class (@question - can we specify interfaces here?)
+-  **strategy**: One of `weak`, `hard` or `path`. See :ref:`reference other documents <associationmapping_referenceotherdocuments>`.
+
+.. _annref_referenceone:
+
+@ReferenceOne
+~~~~~~~~~~~~~
+
+Optional attributes:
+
+-  **targetDocument**: Specify type of target document class (@question - can we specify interfaces here?)
+-  **strategy**: One of `weak`, `hard` or `path`. See :ref:`reference other documents <associationmapping_referenceotherdocuments>`.
+
+.. _annref_referrers:
+
+@Referrers
+~~~~~~~~~~
+
+Mark the annotated instance variable to contain documents which refer to this document.
+
+-  **filter**: Filter document types
+-  **referenceType**: One of `weak`, `hard` or `path`.
+
+.. _annref_string:
+
+@String
+~~~~~~~
+
+Sets the type of the annotated instance variable to string.
+
+.. _annref_uri:
+
+@Uri
+~~~~
+
+The annotated instance variable will be validated as an URI.
+
+.. _annref_uuid:
+
+@Uuid
+~~~~~
+
+The annotated instance variable will be populated with a UUID 
+(Universally Unique Identifier). The UUID is immutable.
+
+.. _annref_versioncreated:
+
+@VersionCreated
+~~~~~~~~~~~~~~~
+
+The annotated instance variable will be populated with the date
+that the current document version was created. Applies only to
+documents with the versionable attribute.
+
+.. _annref_versionname:
+
+@VersionName
+~~~~~~~~~~~~
+
+The annotated instance variable will be populated with the name
+of the current version as given by PHPCR.
+
