@@ -22,7 +22,7 @@ The DocumentManager provides access to the PHPCR session.
     // do stuff
     $session->save();
 
-
+.. _phpcraccess_nodefieldmapping:
 
 The Node field mapping
 ----------------------

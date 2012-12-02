@@ -343,6 +343,7 @@ Again a short list for the overview:
     for the assoc property. If the value of assoc is empty, the name for the
     key field is the normal field name with ``Keys`` appended.
 
+.. _basicmapping_identifiers:
 
 Identifiers
 -----------
@@ -364,6 +365,7 @@ is to use the @Parentdocument and @Nodename annotations to place the document in
 When using that strategy, you need not have a property with the @Id annotation - though you can
 if you want to have access to the path for something.
 
+.. _basicmapping_identifier_generation_strategies:
 
 Identifier Generation Strategies
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
