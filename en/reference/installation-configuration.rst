@@ -180,7 +180,7 @@ roughly exists of four steps:
 -  Installation (see above)
 -  Making sure Doctrine class files can be loaded on demand.
 -  Obtaining a DocumentManager instance.
--  Configuration of the Console Tool and run the register-sytem-node-types command
+-  Configuration of the Console Tool and run the register-system-node-types command
 
 .. tip::
 

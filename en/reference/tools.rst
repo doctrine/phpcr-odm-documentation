@@ -95,7 +95,7 @@ different from nt:unstructured, like a file or folder.
     Convert mapping information between supported formats.
 
     This is an **execute one-time** command. It should not be necessary for
-    you to call this method multiple times, escpecially when using the ``--from-database``
+    you to call this method multiple times, especially when using the ``--from-database``
     flag.
 
     Converting an existing database schema into mapping files only solves about 70-80%
