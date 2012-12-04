@@ -15,9 +15,7 @@ Index
 -  :ref:`@Decimal <annref_decimal>`
 -  :ref:`@Document <annref_document>`
 -  :ref:`@Double <annref_double>`
--  :ref:`@Float <annref_float>`
 -  :ref:`@Id <annref_id>`
--  :ref:`@Int <annref_int>`
 -  :ref:`@Locale <annref_locale>`
 -  :ref:`@Long <annref_long>`
 -  :ref:`@MappedSuperclass <annref_mappedsuperclass>`
@@ -64,41 +62,46 @@ Sets the type of the annotated instance variable to boolean.
 @Child
 ~~~~~~
 
--  **name**: Name of field (@notsure)
+Required attributes:
+
+- **name**: Node name of the child document to map, this should be a string.
 
 .. _annref_children:
 
 @Children
 ~~~~~~~~~
 
-- **filter**: Specify a filter for valid child types
-- **fetchDepth**: Number of levels to fetch, default 1. (@notsure)
-- **ignoreUntranslated**: Ignore untranslated nodes.
+Optional attributes:
+
+- **filter**: Specify a filter for valid child types, string.
+- **fetchDepth**: Performance optimisation, number of levels to prefetch and cache, 
+  this should be an integer.
+- **ignoreUntranslated**: Set to false to *not* throw exceptions on untranslated child documents.
 
 .. _annref_date:
 
 @Date
 ~~~~~
 
-Sets the type of the annotated instance variable to date. The date field is analogous to DateTime.
+Sets the type of the annotated instance variable to DateTime.
 
 .. _annref_decimal:
 
 @Decimal
 ~~~~~~~~
 
-Sets the type of the annotated instance variable to decimal.
+Sets the type of the annotated instance variable to decimal. The decimal field uses the BCMath library which supports numbers of any size or precision.
 
 .. _annref_document:
 
 @Document
 ~~~~~~~~~
 
-Applie
+Optional attributes:
 
--  **nodeType**: PHPCR type for this node. Default `nt:unstructured`.
+-  **nodeType**: PHPCR type for this node, default `nt:unstructured`.
 -  **repositoryClass**: Name of the repository to use for this document.
--  **versionable**: Set to true to enable versioning.
+-  **versionable**: Set to true to enable versioning, implies `referenceable`.
 -  **referenceable**: Set to true to allow this node to be referenced.
 -  **translator**: Determines how translations are stored, one of `attribute` or `child`. See :ref:`langauge mapping <multilang_mapping>`
 
@@ -120,14 +123,7 @@ Example:
 @Double
 ~~~~~~~
 
-Sets the type of the annotated instance variable to double.
-
-.. _annref_float:
-
-@Float
-~~~~~~
-
-Sets the type of the annotated instance variable to float.
+Sets the type of the annotated instance variable to double. The PHP type will be **float**.
 
 .. _annref_id:
 
@@ -137,15 +133,10 @@ Sets the type of the annotated instance variable to float.
 The annotated instance variable will be marked as the document identifier.
 See :ref:`identifiers <basicmapping_identifiers>`.
 
+Required attributes:
+
 - **strategy**: How to generate IDs, one of NONE, REPOSITORY, ASSIGNED or PARENT. 
   See :ref:`generation strategies <basicmapping_identifier_generation_strategies>`.
-
-.. _annref_int:
-
-@Int
-~~~~
-
-Sets the type of the annotated instance variable to integer.
 
 .. _annref_locale:
 
@@ -153,14 +144,14 @@ Sets the type of the annotated instance variable to integer.
 ~~~~~~~
 
 Identifies the annotate instance variable as the field in which to store
-the documents current locale. Mandatory for translated documents.
+the documents current locale. This field applies only to translated documents.
 
 .. _annref_long:
 
 @Long
 ~~~~~
 
-Sets the type of the annotated instance variable to long.
+Sets the type of the annotated instance variable to long. The PHP type will be **integer**.
 
 .. _annref_mappedsuperclass:
 
@@ -171,16 +162,35 @@ A mapped superclass is an abstract or concrete class that provides
 persistent document state and mapping information for its subclasses
 but which is not itself an entity.
 
+Optional attributes:
+
 -  **nodeType**: PHPCR type for this node. Default `nt:unstructured`.
--  **repositoryClass**: Name of the repository to use for this document.
+-  **repositoryClass**: Fully qualified name of the repository to use for this document.
 -  **translator**: Determines how translations are stored, one of `attribute` or `child`. See :ref:`language mapping <multilang_mapping>`
+
+.. code-block:: php
+
+    <?php
+    /** @MappedSuperclass */
+    class MappedSuperclassBase
+    {
+        // ... fields and methods
+    }
+
+    /** @Document */
+    class DocumentSubClassFoo extends MappedSuperclassBase
+    {
+        // ... fields and methods
+    } 
 
 .. _annref_name:
 
 @Name
 ~~~~~
 
-Restrict this field to containing the node name with optional namespace. (@notsure)
+Specifies that the annotated instance variable should be (mapped?) as
+the **name** property in PHPCR. The value of this variable has to
+be a valid XML name (localname with optional namespace prefix).
 
 .. _annref_node:
 
@@ -203,15 +213,16 @@ the node path.
 @ParentDocument
 ~~~~~~~~~~~~~~~
 
-The annotated instance variable will contain the nodes parent document (if any).
+The annotated instance variable will contain the nodes parent document. Assigning
+a different parent will result in a move operation.
 
 .. _annref_path:
 
 @Path
 ~~~~~
 
-The annotated instance variable will contain an absolute or relative path in the
-repository. (@notsure)
+The annotated instance variable will contain an absolute or relative path to the
+current node in the repository.
 
 .. _annref_postload:
 
@@ -283,8 +294,17 @@ DocBlock.
 
 Optional attributes:
 
--  **targetDocument**: Specify type of target document class (@question - can we specify interfaces here?)
--  **strategy**: One of `weak`, `hard` or `path`. See :ref:`reference other documents <associationmapping_referenceotherdocuments>`.
+-  **targetDocument**: *string*, Specify type of target document class. Note that this
+   is an optional parameter and by default you can associate *any* document.
+-  **strategy**: *enum*, One of `weak`, `hard` or `path`. See :ref:`reference other documents <associationmapping_referenceotherdocuments>`.
+
+.. code-block:: php
+
+   <?php
+   /**
+    * @ReferenceMany(targetDocument="Phonenumber", strategy="hard")
+    */
+    protected $phonenumbers;
 
 .. _annref_referenceone:
 
@@ -293,7 +313,8 @@ Optional attributes:
 
 Optional attributes:
 
--  **targetDocument**: Specify type of target document class (@question - can we specify interfaces here?)
+-  **targetDocument**: Specify type of target document class. Note that this
+   is an optional parameter and by default you can associate *any* document.
 -  **strategy**: One of `weak`, `hard` or `path`. See :ref:`reference other documents <associationmapping_referenceotherdocuments>`.
 
 .. _annref_referrers:
@@ -301,11 +322,21 @@ Optional attributes:
 @Referrers
 ~~~~~~~~~~
 
-Mark the annotated instance variable to contain documents which refer to this document.
+Mark the annotated instance variable to contain the documents which refer to this document.
 
--  **filter**: Filter document types
--  **referenceType**: One of `weak`, `hard` or `path`.
+Optional attributes:
 
+-  **filter**: Filters referrers by the referencing property name.
+-  **referenceType**: One of `weak` or `hard`.
+
+.. code-block:: 
+
+   <?php
+   /**
+    * @Referrers(filter="myapp:mycustomnode | a*", referenceType="hard")
+    */
+   protected $myReferrers;
+    
 .. _annref_string:
 
 @String
