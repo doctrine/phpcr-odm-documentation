@@ -76,7 +76,8 @@ Optional attributes:
 - **filter**: Specify a filter for valid child types, string.
 - **fetchDepth**: Performance optimisation, number of levels to prefetch and cache, 
   this should be an integer.
-- **ignoreUntranslated**: Set to false to *not* throw exceptions on untranslated child documents.
+- **ignoreUntranslated**: Set to false to *not* throw exceptions on untranslated child i
+  documents.
 
 .. _annref_date:
 
@@ -90,7 +91,8 @@ Sets the type of the annotated instance variable to DateTime.
 @Decimal
 ~~~~~~~~
 
-Sets the type of the annotated instance variable to decimal. The decimal field uses the BCMath library which supports numbers of any size or precision.
+Sets the type of the annotated instance variable to decimal. The decimal field 
+uses the BCMath library which supports numbers of any size or precision.
 
 .. _annref_document:
 
@@ -357,7 +359,9 @@ The annotated instance variable will be validated as an URI.
 ~~~~~
 
 The annotated instance variable will be populated with a UUID 
-(Universally Unique Identifier). The UUID is immutable.
+(Universally Unique Identifier). The UUID is immutable. For
+this field to be reliably populated the document should be
+*referenceable*.
 
 .. _annref_versioncreated:
 
