@@ -73,11 +73,19 @@ Required attributes:
 
 Optional attributes:
 
-- **filter**: Specify a filter for valid child types, string.
+- **filter**: Child name filter.
 - **fetchDepth**: Performance optimisation, number of levels to prefetch and cache, 
   this should be an integer.
-- **ignoreUntranslated**: Set to false to *not* throw exceptions on untranslated child i
+- **ignoreUntranslated**: Set to false to *not* throw exceptions on untranslated child
   documents.
+
+.. code-block:: php
+
+   <?php
+    /** 
+     * @Children(filter="a*", fetchDepth=3)
+     */
+    private $children;
 
 .. _annref_date:
 
@@ -107,7 +115,7 @@ Optional attributes:
 -  **referenceable**: Set to true to allow this node to be referenced.
 -  **translator**: Determines how translations are stored, one of `attribute` or `child`. See :ref:`langauge mapping <multilang_mapping>`
 
-Example:
+Minimal example:
 
 .. code-block:: php
 
@@ -117,7 +125,25 @@ Example:
     */
    class User
    {
-     //...
+     // ...
+   }
+
+Full example:
+
+.. code-block:: php
+
+   <?php
+   /**
+    * @Document(
+    *   repositoryClass="MyProject\UserRepository",
+    *   versionable=true,
+    *   referenceable=true,
+    *   translator="child"
+    * )
+    */
+   class SomeDocument
+   {
+     // ...
    }
 
 .. _annref_double:
@@ -137,15 +163,24 @@ See :ref:`identifiers <basicmapping_identifiers>`.
 
 Required attributes:
 
-- **strategy**: How to generate IDs, one of NONE, REPOSITORY, ASSIGNED or PARENT. 
-  See :ref:`generation strategies <basicmapping_identifier_generation_strategies>`.
+- **strategy**: How to generate IDs, one of NONE, REPOSITORY, ASSIGNED or PARENT, default
+  ASSIGNED. See :ref:`generation strategies <basicmapping_identifier_generation_strategies>`.
+
+
+.. code-block:: php
+
+   <?php
+   /**
+    * @Id(strategy="PARENT")
+    */
+   protected $id;
 
 .. _annref_locale:
 
 @Locale
 ~~~~~~~
 
-Identifies the annotate instance variable as the field in which to store
+Identifies the annotated instance variable as the field in which to store
 the documents current locale. This field applies only to translated documents.
 
 .. _annref_long:
@@ -190,16 +225,16 @@ Optional attributes:
 @Name
 ~~~~~
 
-Specifies that the annotated instance variable should be (mapped?) as
-the **name** property in PHPCR. The value of this variable has to
-be a valid XML name (localname with optional namespace prefix).
+The annotated instance variable must be a valid XML CNAME value and
+can be used to store a valid node name.
 
 .. _annref_node:
 
 @Node
 ~~~~~
 
-Assign a PHPCR node to the annotated instance variable. See :ref:`node field mapping <phpcraccess_nodefieldmapping>`.
+The annotated instance variable will be populated with the underlying
+PHPCR node. See :ref:`node field mapping <phpcraccess_nodefieldmapping>`.
 
 .. _annref_nodename:
 
@@ -223,71 +258,142 @@ a different parent will result in a move operation.
 @Path
 ~~~~~
 
-The annotated instance variable will contain an absolute or relative path to the
-current node in the repository.
+The annotated instance variable must be a valid PHPCR node path and can be used to
+store an arbitrary reference to another node.
 
 .. _annref_postload:
 
 @PostLoad
 ~~~~~~~~~~~
 
-Marks a method on the entity to be called as a @PostLoad event.
-Only works with @HasLifecycleCallbacks in the document class PHP
-DocBlock.
+Life cycle callback. The marked method will be called automatically on the ``postLoad``
+event. See :ref:`life cycle callbacks <events_lifecyclecallbacks>`
+
+.. code-block:: php
+
+   <?php
+    /** 
+     * @PostLoad 
+     */
+    public function doSomethingOnPostLoad()
+    {
+       // ... do something after the Document has been loaded
+    }
 
 .. _annref_postpersist:
 
 @PostPersist
 ~~~~~~~~~~~~~~
 
-Marks a method on the entity to be called as a @PostPersist event.
-Only works with @HasLifecycleCallbacks in the document class PHP
-DocBlock.
+Life cycle callback. The marked method will be called automatically on the ``postPersist``
+event. See :ref:`life cycle callbacks <events_lifecyclecallbacks>`
+
+.. code-block:: php
+
+   <?php
+    /** 
+     * @PostPersist 
+     */
+    public function doSomethingOnPostPersist()
+    {
+      // ... do something after the document has been persisted
+    }
 
 .. _annref_postremove:
 
 @PostRemove
 ~~~~~~~~~~~~~
 
-Marks a method on the entity to be called as a @PostRemove event.
-Only works with @HasLifecycleCallbacks in the document class PHP
-DocBlock.
+Life cycle callback. The marked method will be called automatically on the ``postRemove``
+event. See :ref:`life cycle callbacks <events_lifecyclecallbacks>`
+
+.. code-block:: php
+
+   <?php
+    /** 
+     * @PostRemove
+     */
+    public function doSomethingOnPostRemove()
+    {
+      // ... do something after the document has been removed
+    }
 
 .. _annref_postupdate:
 
 @PostUpdate
 ~~~~~~~~~~~~~
 
-Marks a method on the entity to be called as a @PostUpdate event.
-Only works with @HasLifecycleCallbacks in the document class PHP
-DocBlock.
+Life cycle callback. The marked method will be called automatically on the ``postUpdate``
+event. See :ref:`life cycle callbacks <events_lifecyclecallbacks>`
+
+.. code-block:: php
+
+   <?php
+    /** 
+     * @PostUpdate
+     */
+    public function doSomethingOnPostUpdate()
+    {
+      // ... do something after the document has been updated
+    }
 
 .. _annref_prepersist:
 
 @PrePersist
-~~~~~~~~~~~~~
+~~~~~~~~~~~
 
-Marks a method on the entity to be called as a @PrePersist event.
-Only works with @HasLifecycleCallbacks in the document class PHP
-DocBlock.
+Life cycle callback. The marked method will be called automatically on the ``prePersist``
+event. See :ref:`life cycle callbacks <events_lifecyclecallbacks>`
+
+.. code-block:: php
+
+   <?php
+    /** 
+     * @PrePersist
+     */
+    public function doSomethingOnPrePersist()
+    {
+      // ... do something before the document has been persisted
+    }
 
 .. _annref_preremove:
 
 @PreRemove
 ~~~~~~~~~~~~
 
-Marks a method on the entity to be called as a @PreRemove event.
-Only works with @HasLifecycleCallbacks in the document class PHP
-DocBlock.
+Life cycle callback. The marked method will be called automatically on the ``preRemove``
+event. See :ref:`life cycle callbacks <events_lifecyclecallbacks>`
+
+.. code-block:: php
+
+   <?php
+    /** 
+     * @PreRemove
+     */
+    public function doSomethingOnPreRemove()
+    {
+      // ... do something before the document has been removed
+    }
 
 .. _annref_preupdate:
 
 @PreUpdate
 ~~~~~~~~~~~~
 
-Marks a method on the entity to be called as a @PreUpdate event.
-Only works with @HasLifecycleCallbacks in the document class PHP
-DocBlock.
+Life cycle callback. The marked method will be called automatically on the ``preUpdate``
+event. See :ref:`life cycle callbacks <events_lifecyclecallbacks>`
+
+
+.. code-block:: php
+
+   <?php
+    /** 
+     * @PreUpdate
+     */
+    public function doSomethingOnPreUpdate()
+    {
+      // ... do something before the document has been updated
+    }
 
 .. _annref_referencemany:
 
@@ -379,4 +485,3 @@ documents with the versionable attribute.
 
 The annotated instance variable will be populated with the name
 of the current version as given by PHPCR.
-
