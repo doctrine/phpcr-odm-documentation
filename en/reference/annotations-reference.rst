@@ -50,12 +50,26 @@ Reference
 
 Sets the type of the annotated instance variable to binary.
 
+Optional attributes:
+
+- **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
+- **multivalue**: True to specify that this property should be treated as a simple array. 
+
+See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
+
 .. _annref_boolean:
 
 @Boolean
 ~~~~~~~~
 
 Sets the type of the annotated instance variable to boolean.
+
+Optional attributes:
+
+- **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
+- **multivalue**: True to specify that this property should be treated as a simple array. 
+
+See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
 
 .. _annref_child:
 
@@ -94,6 +108,13 @@ Optional attributes:
 
 Sets the type of the annotated instance variable to DateTime.
 
+Optional attributes:
+
+- **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
+- **multivalue**: True to specify that this property should be treated as a simple array. 
+
+See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
+
 .. _annref_decimal:
 
 @Decimal
@@ -101,6 +122,13 @@ Sets the type of the annotated instance variable to DateTime.
 
 Sets the type of the annotated instance variable to decimal. The decimal field 
 uses the BCMath library which supports numbers of any size or precision.
+
+Optional attributes:
+
+- **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
+- **multivalue**: True to specify that this property should be treated as a simple array. 
+
+See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
 
 .. _annref_document:
 
@@ -153,6 +181,13 @@ Full example:
 
 Sets the type of the annotated instance variable to double. The PHP type will be **float**.
 
+Optional attributes:
+
+- **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
+- **multivalue**: True to specify that this property should be treated as a simple array. 
+
+See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
+
 .. _annref_id:
 
 @Id
@@ -189,6 +224,13 @@ the documents current locale. This field applies only to translated documents.
 ~~~~~
 
 Sets the type of the annotated instance variable to long. The PHP type will be **integer**.
+
+Optional attributes:
+
+- **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
+- **multivalue**: True to specify that this property should be treated as a simple array. 
+
+See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
 
 .. _annref_mappedsuperclass:
 
@@ -228,6 +270,13 @@ Optional attributes:
 The annotated instance variable must be a valid XML CNAME value and
 can be used to store a valid node name.
 
+Optional attributes:
+
+- **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
+- **multivalue**: True to specify that this property should be treated as a simple array. 
+
+See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
+
 .. _annref_node:
 
 @Node
@@ -260,6 +309,13 @@ a different parent will result in a move operation.
 
 The annotated instance variable must be a valid PHPCR node path and can be used to
 store an arbitrary reference to another node.
+
+Optional attributes:
+
+- **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
+- **multivalue**: True to specify that this property should be treated as a simple array. 
+
+See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
 
 .. _annref_postload:
 
@@ -452,12 +508,26 @@ Optional attributes:
 
 Sets the type of the annotated instance variable to string.
 
+Optional attributes:
+
+- **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
+- **multivalue**: True to specify that this property should be treated as a simple array. 
+
+See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
+
 .. _annref_uri:
 
 @Uri
 ~~~~
 
 The annotated instance variable will be validated as an URI.
+
+Optional attributes:
+
+- **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
+- **multivalue**: True to specify that this property should be treated as a simple array. 
+
+See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
 
 .. _annref_uuid:
 

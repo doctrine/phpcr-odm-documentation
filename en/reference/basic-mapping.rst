@@ -251,6 +251,8 @@ follows:
               property: db_name
 
 
+.. _basicmapping_mappingmultivalueproperties:
+
 Mapping multivalue properties
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
