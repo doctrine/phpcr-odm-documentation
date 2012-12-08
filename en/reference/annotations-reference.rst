@@ -198,15 +198,14 @@ See :ref:`identifiers <basicmapping_identifiers>`.
 
 Required attributes:
 
-- **strategy**: How to generate IDs, one of NONE, REPOSITORY, ASSIGNED or PARENT, default
-  ASSIGNED. See :ref:`generation strategies <basicmapping_identifier_generation_strategies>`.
-
+- **strategy**: How to generate IDs, one of ``NONE``, ``REPOSITORY``, ``ASSIGNED`` or ``PARENT``, default
+  is ``PARENT`` See :ref:`generation strategies <basicmapping_identifier_generation_strategies>`.
 
 .. code-block:: php
 
    <?php
    /**
-    * @Id(strategy="PARENT")
+    * @Id()
     */
    protected $id;
 
