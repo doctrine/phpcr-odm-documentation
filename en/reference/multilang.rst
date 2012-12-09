@@ -23,6 +23,7 @@ to the correct language.
 Because every document may only exist once, and translations
 are considered the same document, you can not have multiple languages loaded at the same time.
 
+.. _multilang_mapping:
 
 Mapping
 -------

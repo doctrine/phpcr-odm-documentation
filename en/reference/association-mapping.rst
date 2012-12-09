@@ -134,6 +134,8 @@ id standard and is guaranteed to be unique for the whole PHPCR repository (all w
     you need to load and save every document of that type to make the stored documents note the change.
 
 
+.. _associationmapping_referenceotherdocuments:
+
 Reference other documents
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
