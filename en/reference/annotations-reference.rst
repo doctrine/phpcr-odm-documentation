@@ -4,131 +4,44 @@ Annotations Reference
 In this chapter a reference of every PHPCR-ODM Annotation is given with short
 explanations on their context and usage.
 
-Index
------
+.. contents::
 
--  :ref:`@Binary <annref_binary>`
--  :ref:`@Boolean <annref_boolean>`
--  :ref:`@Child <annref_child>`
--  :ref:`@Children <annref_children>`
--  :ref:`@Date <annref_date>`
--  :ref:`@Decimal <annref_decimal>`
--  :ref:`@Document <annref_document>`
--  :ref:`@Double <annref_double>`
--  :ref:`@Id <annref_id>`
--  :ref:`@Locale <annref_locale>`
--  :ref:`@Long <annref_long>`
--  :ref:`@MappedSuperclass <annref_mappedsuperclass>`
--  :ref:`@Name <annref_name>`
--  :ref:`@Node <annref_node>`
--  :ref:`@Nodename <annref_nodename>`
--  :ref:`@ParentDocument <annref_parentdocument>`
--  :ref:`@Path <annref_path>`
--  :ref:`@PostLoad <annref_postload>`
--  :ref:`@PostPersist <annref_postpersist>`
--  :ref:`@PostRemove <annref_postremove>`
--  :ref:`@PostUpdate <annref_postupdate>`
--  :ref:`@PrePersist <annref_prepersist>`
--  :ref:`@PreRemove <annref_preremove>`
--  :ref:`@PreUpdate <annref_preupdate>`
--  :ref:`@ReferenceMany <annref_referencemany>`
--  :ref:`@ReferenceOne <annref_referenceone>`
--  :ref:`@Referrers <annref_referrers>`
--  :ref:`@String <annref_string>`
--  :ref:`@Uri <annref_uri>`
--  :ref:`@Uuid <annref_uuid>`
--  :ref:`@VersionCreated <annref_versioncreated>`
--  :ref:`@VersionName <annref_versionname>`
+Note on usage
+-------------
 
-Reference
----------
-
-.. _annref_binary:
-
-@Binary
-~~~~~~~
-
-Sets the type of the annotated instance variable to binary.
-
-Optional attributes:
-
-- **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
-- **multivalue**: True to specify that this property should be treated as a simple array. 
-
-See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
-
-.. _annref_boolean:
-
-@Boolean
-~~~~~~~~
-
-Sets the type of the annotated instance variable to boolean.
-
-Optional attributes:
-
-- **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
-- **multivalue**: True to specify that this property should be treated as a simple array. 
-
-See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
-
-.. _annref_child:
-
-@Child
-~~~~~~
-
-Required attributes:
-
-- **name**: Node name of the child document to map, this should be a string.
-
-.. _annref_children:
-
-@Children
-~~~~~~~~~
-
-Optional attributes:
-
-- **filter**: Child name filter.
-- **fetchDepth**: Performance optimisation, number of levels to prefetch and cache, 
-  this should be an integer.
-- **ignoreUntranslated**: Set to false to *not* throw exceptions on untranslated child
-  documents.
+Note that the code examples are given without their namespaces, however it is
+normally necessary to import the annotation namespace into your class, and to
+prefix each annotation with the namespace as demonstrated in the following example:
 
 .. code-block:: php
 
-   <?php
-    /** 
-     * @Children(filter="a*", fetchDepth=3)
+    <?php
+    namespace MyProject\Bundle\BlogBundle\Document;
+    use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
+
+    /**
+     * @PHPCR\Document()
      */
-    private $children;
+    class Post
+    {
+        /**
+         * @PHPCR\Id()
+         */
+        protected $uuid;
 
-.. _annref_date:
+        /**
+         * @PHPCR\ParentDocument()
+         */
+        protected $parent;
 
-@Date
-~~~~~
+        /**
+         * @PHPCR\NodeName
+         */
+        protected $title;
+    }
 
-Sets the type of the annotated instance variable to DateTime.
-
-Optional attributes:
-
-- **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
-- **multivalue**: True to specify that this property should be treated as a simple array. 
-
-See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
-
-.. _annref_decimal:
-
-@Decimal
-~~~~~~~~
-
-Sets the type of the annotated instance variable to decimal. The decimal field 
-uses the BCMath library which supports numbers of any size or precision.
-
-Optional attributes:
-
-- **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
-- **multivalue**: True to specify that this property should be treated as a simple array. 
-
-See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
+Document
+--------
 
 .. _annref_document:
 
@@ -137,11 +50,11 @@ See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueprop
 
 Optional attributes:
 
--  **nodeType**: PHPCR type for this node, default `nt:unstructured`.
+-  **nodeType**: PHPCR type for this node, default ``nt:unstructured``.
 -  **repositoryClass**: Name of the repository to use for this document.
--  **versionable**: Set to true to enable versioning, implies `referenceable`.
+-  **versionable**: Set to true to enable versioning, implies *referenceable*.
 -  **referenceable**: Set to true to allow this node to be referenced.
--  **translator**: Determines how translations are stored, one of `attribute` or `child`. See :ref:`langauge mapping <multilang_mapping>`
+-  **translator**: Determines how translations are stored, one of ``attribute`` or ``child``. See :ref:`langauge mapping <multilang_mapping>`
 
 Minimal example:
 
@@ -174,6 +87,97 @@ Full example:
      // ...
    }
 
+.. _annref_mappedsuperclass:
+
+@MappedSuperclass
+~~~~~~~~~~~~~~~~~
+
+A mapped superclass is an abstract or concrete class that provides
+persistent document state and mapping information for its subclasses
+but which is not itself a document.
+
+Optional attributes:
+
+-  **nodeType**: PHPCR type for this node. Default ``nt:unstructured``.
+-  **repositoryClass**: Fully qualified name of the repository to use for this document.
+-  **translator**: Determines how translations are stored, one of ``attribute`` or ``child``. See :ref:`language mapping <multilang_mapping>`
+
+.. code-block:: php
+
+    <?php
+    /** @MappedSuperclass */
+    class MappedSuperclassBase
+    {
+        // ... fields and methods
+    }
+
+    /** @Document */
+    class DocumentSubClassFoo extends MappedSuperclassBase
+    {
+        // ... fields and methods
+    } 
+
+
+Field Types
+-----------
+
+.. _annref_binary:
+
+@Binary
+~~~~~~~
+
+Sets the type of the annotated instance variable to binary.
+
+Optional attributes:
+
+- **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
+- **multivalue**: True to specify that this property should be treated as a simple array. 
+
+See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
+
+.. _annref_boolean:
+
+@Boolean
+~~~~~~~~
+
+Sets the type of the annotated instance variable to boolean.
+
+Optional attributes:
+
+- **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
+- **multivalue**: True to specify that this property should be treated as a simple array. 
+
+See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
+
+.. _annref_date:
+
+@Date
+~~~~~
+
+Sets the type of the annotated instance variable to DateTime.
+
+Optional attributes:
+
+- **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
+- **multivalue**: True to specify that this property should be treated as a simple array. 
+
+See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
+
+.. _annref_decimal:
+
+@Decimal
+~~~~~~~~
+
+Sets the type of the annotated instance variable to decimal. The decimal field 
+uses the BCMath library which supports numbers of any size or precision.
+
+Optional attributes:
+
+- **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
+- **multivalue**: True to specify that this property should be treated as a simple array. 
+
+See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
+
 .. _annref_double:
 
 @Double
@@ -187,6 +191,123 @@ Optional attributes:
 - **multivalue**: True to specify that this property should be treated as a simple array. 
 
 See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
+
+
+.. _annref_long:
+
+@Long
+~~~~~
+
+Sets the type of the annotated instance variable to long. The PHP type will be **integer**.
+
+Optional attributes:
+
+- **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
+- **multivalue**: True to specify that this property should be treated as a simple array. 
+
+See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
+    
+.. _annref_name:
+
+@Name
+~~~~~
+
+The annotated instance variable must be a valid XML CNAME value and
+can be used to store a valid node name.
+
+Optional attributes:
+
+- **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
+- **multivalue**: True to specify that this property should be treated as a simple array. 
+
+See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
+
+.. _annref_path:
+
+@Path
+~~~~~
+
+The annotated instance variable must be a valid PHPCR node path and can be used to
+store an arbitrary reference to another node.
+
+Optional attributes:
+
+- **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
+- **multivalue**: True to specify that this property should be treated as a simple array. 
+
+See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
+
+.. _annref_string:
+
+@String
+~~~~~~~
+
+Sets the type of the annotated instance variable to string.
+
+Optional attributes:
+
+- **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
+- **multivalue**: True to specify that this property should be treated as a simple array. 
+
+See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
+
+.. _annref_uri:
+
+@Uri
+~~~~
+
+The annotated instance variable will be validated as an URI.
+
+Optional attributes:
+
+- **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
+- **multivalue**: True to specify that this property should be treated as a simple array. 
+
+See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
+
+Hierarchy
+---------
+
+.. _annref_child:
+
+@Child
+~~~~~~
+
+Required attributes:
+
+- **name**: Node name of the child document to map, this should be a string.
+
+.. _annref_children:
+
+@Children
+~~~~~~~~~
+
+Optional attributes:
+
+- **filter**: Child name filter; only return children whose names match the given filter.
+- **fetchDepth**: Performance optimisation, number of levels to pre-fetch and cache, 
+  this should be an integer.
+- **ignoreUntranslated**: Set to false to *not* throw exceptions on untranslated child
+  documents.
+
+.. code-block:: php
+
+   <?php
+    /** 
+     * @Children(filter="a*", fetchDepth=3)
+     */
+    private $children;
+
+.. _annref_parentdocument:
+
+@ParentDocument
+~~~~~~~~~~~~~~~
+
+The annotated instance variable will contain the nodes parent document. Assigning
+a different parent will result in a move operation.
+
+Identification
+--------------
 
 .. _annref_id:
 
@@ -207,82 +328,7 @@ Required attributes:
    /**
     * @Id()
     */
-   protected $id;
-
-.. _annref_locale:
-
-@Locale
-~~~~~~~
-
-Identifies the annotated instance variable as the field in which to store
-the documents current locale. This field applies only to translated documents.
-
-.. _annref_long:
-
-@Long
-~~~~~
-
-Sets the type of the annotated instance variable to long. The PHP type will be **integer**.
-
-Optional attributes:
-
-- **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
-- **multivalue**: True to specify that this property should be treated as a simple array. 
-
-See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
-
-.. _annref_mappedsuperclass:
-
-@MappedSuperclass
-~~~~~~~~~~~~~~~~~
-
-A mapped superclass is an abstract or concrete class that provides
-persistent document state and mapping information for its subclasses
-but which is not itself an entity.
-
-Optional attributes:
-
--  **nodeType**: PHPCR type for this node. Default `nt:unstructured`.
--  **repositoryClass**: Fully qualified name of the repository to use for this document.
--  **translator**: Determines how translations are stored, one of `attribute` or `child`. See :ref:`language mapping <multilang_mapping>`
-
-.. code-block:: php
-
-    <?php
-    /** @MappedSuperclass */
-    class MappedSuperclassBase
-    {
-        // ... fields and methods
-    }
-
-    /** @Document */
-    class DocumentSubClassFoo extends MappedSuperclassBase
-    {
-        // ... fields and methods
-    } 
-
-.. _annref_name:
-
-@Name
-~~~~~
-
-The annotated instance variable must be a valid XML CNAME value and
-can be used to store a valid node name.
-
-Optional attributes:
-
-- **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
-- **multivalue**: True to specify that this property should be treated as a simple array. 
-
-See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
-
-.. _annref_node:
-
-@Node
-~~~~~
-
-The annotated instance variable will be populated with the underlying
-PHPCR node. See :ref:`node field mapping <phpcraccess_nodefieldmapping>`.
+   protected $id; // e.g. /path/to/mydocument
 
 .. _annref_nodename:
 
@@ -293,28 +339,44 @@ Mark the annotated instance variable as representing the name of the node. The n
 of the node is the last part of the path. Changing the marked variable will update
 the node path.
 
-.. _annref_parentdocument:
+.. code-block:: php
 
-@ParentDocument
-~~~~~~~~~~~~~~~
+   <?php
+   /**
+    * @Id()
+    */
+   protected $id; // e.g. /path/to/mydocument
 
-The annotated instance variable will contain the nodes parent document. Assigning
-a different parent will result in a move operation.
+   /**
+    * @NodeName()
+    */
+   protected $nodeName; // e.g. mydocument
 
-.. _annref_path:
+.. _annref_uuid:
 
-@Path
+@Uuid
 ~~~~~
 
-The annotated instance variable must be a valid PHPCR node path and can be used to
-store an arbitrary reference to another node.
+The annotated instance variable will be populated with a UUID 
+(Universally Unique Identifier). The UUID is immutable. For
+this field to be reliably populated the document should be
+*referenceable*.
 
-Optional attributes:
+.. code-block:: php
 
-- **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
-- **multivalue**: True to specify that this property should be treated as a simple array. 
+   <?php
+   /**
+    * @Uuid()
+    */
+   protected $uuid; // e.g. 508d6621-0c20-4972-bf0e-0278ccabe6e5 
 
-See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
+Lifcycle callbacks
+------------------
+
+.. note::
+
+   Unlike the Doctrine ORM it is **not** necessary to specify a @HasLifecycleCallbacks
+   annotation.
 
 .. _annref_postload:
 
@@ -450,6 +512,20 @@ event. See :ref:`life cycle callbacks <events_lifecyclecallbacks>`
       // ... do something before the document has been updated
     }
 
+PHPCR
+-----
+
+.. _annref_node:
+
+@Node
+~~~~~
+
+The annotated instance variable will be populated with the underlying
+PHPCR node. See :ref:`node field mapping <phpcraccess_nodefieldmapping>`.
+
+References
+----------
+
 .. _annref_referencemany:
 
 @ReferenceMany
@@ -457,9 +533,9 @@ event. See :ref:`life cycle callbacks <events_lifecyclecallbacks>`
 
 Optional attributes:
 
--  **targetDocument**: *string*, Specify type of target document class. Note that this
+-  **targetDocument**: Specify type of target document class. Note that this
    is an optional parameter and by default you can associate *any* document.
--  **strategy**: *enum*, One of `weak`, `hard` or `path`. See :ref:`reference other documents <associationmapping_referenceotherdocuments>`.
+-  **strategy**: One of ``weak``, ``hard`` or ``path``. See :ref:`reference other documents <associationmapping_referenceotherdocuments>`.
 
 .. code-block:: php
 
@@ -490,7 +566,7 @@ Mark the annotated instance variable to contain the documents which refer to thi
 Optional attributes:
 
 -  **filter**: Filters referrers by the referencing property name.
--  **referenceType**: One of `weak` or `hard`.
+-  **referenceType**: One of ``weak`` or ``hard``.
 
 .. code-block:: 
 
@@ -499,44 +575,21 @@ Optional attributes:
     * @Referrers(filter="myapp:mycustomnode | a*", referenceType="hard")
     */
    protected $myReferrers;
-    
-.. _annref_string:
 
-@String
+
+Translation
+-----------
+
+.. _annref_locale:
+
+@Locale
 ~~~~~~~
 
-Sets the type of the annotated instance variable to string.
+Identifies the annotated instance variable as the field in which to store
+the documents current locale. This field applies only to translated documents.
 
-Optional attributes:
-
-- **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
-- **multivalue**: True to specify that this property should be treated as a simple array. 
-
-See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
-
-.. _annref_uri:
-
-@Uri
-~~~~
-
-The annotated instance variable will be validated as an URI.
-
-Optional attributes:
-
-- **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
-- **multivalue**: True to specify that this property should be treated as a simple array. 
-
-See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
-
-.. _annref_uuid:
-
-@Uuid
-~~~~~
-
-The annotated instance variable will be populated with a UUID 
-(Universally Unique Identifier). The UUID is immutable. For
-this field to be reliably populated the document should be
-*referenceable*.
+Versioning
+----------
 
 .. _annref_versioncreated:
 
