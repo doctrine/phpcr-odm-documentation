@@ -1,7 +1,7 @@
 Annotations Reference
 =====================
 
-In this chapter a reference of every PHPCR-ODM Annotation is given with short
+In this chapter a reference of every PHPCR-ODM annotation is given with short
 explanations on their context and usage.
 
 .. contents::
@@ -62,7 +62,7 @@ Minimal example:
 
    <?php
    /**
-    * @Document(repositoryClass="MyProject\UserRepository")
+    * @Document()
     */
    class User
    {
@@ -99,8 +99,10 @@ but which is not itself a document.
 Optional attributes:
 
 -  **nodeType**: PHPCR type for this node. Default ``nt:unstructured``.
--  **repositoryClass**: Fully qualified name of the repository to use for this document.
--  **translator**: Determines how translations are stored, one of ``attribute`` or ``child``. See :ref:`language mapping <multilang_mapping>`
+-  **repositoryClass**: Fully qualified name of the repository to use for 
+   documents extending this superclass.
+-  **translator**: Determines how translations are stored, one of ``attribute`` 
+   or ``child``. See :ref:`language mapping <multilang_mapping>`.
 
 .. code-block:: php
 
@@ -118,7 +120,7 @@ Optional attributes:
     } 
 
 
-Field Types
+User Fields
 -----------
 
 .. _annref_binary:
