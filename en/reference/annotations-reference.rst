@@ -134,6 +134,7 @@ Optional attributes:
 
 - **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
 - **multivalue**: True to specify that this property should be treated as a simple array. 
+- **translated**: True to specify that the property should be translatable.
 
 See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
 
@@ -148,6 +149,7 @@ Optional attributes:
 
 - **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
 - **multivalue**: True to specify that this property should be treated as a simple array. 
+- **translated**: True to specify that the property should be translatable.
 
 See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
 
@@ -162,6 +164,7 @@ Optional attributes:
 
 - **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
 - **multivalue**: True to specify that this property should be treated as a simple array. 
+- **translated**: True to specify that the property should be translatable.
 
 See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
 
@@ -177,6 +180,7 @@ Optional attributes:
 
 - **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
 - **multivalue**: True to specify that this property should be treated as a simple array. 
+- **translated**: True to specify that the property should be translatable.
 
 See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
 
@@ -191,6 +195,7 @@ Optional attributes:
 
 - **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
 - **multivalue**: True to specify that this property should be treated as a simple array. 
+- **translated**: True to specify that the property should be translatable.
 
 See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
 
@@ -206,6 +211,7 @@ Optional attributes:
 
 - **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
 - **multivalue**: True to specify that this property should be treated as a simple array. 
+- **translated**: True to specify that the property should be translatable.
 
 See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
     
@@ -221,6 +227,7 @@ Optional attributes:
 
 - **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
 - **multivalue**: True to specify that this property should be treated as a simple array. 
+- **translated**: True to specify that the property should be translatable.
 
 See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
 
@@ -236,6 +243,7 @@ Optional attributes:
 
 - **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
 - **multivalue**: True to specify that this property should be treated as a simple array. 
+- **translated**: True to specify that the property should be translatable.
 
 See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
 
@@ -250,6 +258,7 @@ Optional attributes:
 
 - **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
 - **multivalue**: True to specify that this property should be treated as a simple array. 
+- **translated**: True to specify that the property should be translatable.
 
 See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
 
@@ -264,6 +273,7 @@ Optional attributes:
 
 - **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
 - **multivalue**: True to specify that this property should be treated as a simple array. 
+- **translated**: True to specify that the property should be translatable.
 
 See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
 
