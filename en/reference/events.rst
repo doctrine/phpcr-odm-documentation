@@ -70,6 +70,7 @@ listeners:
    methods that receives some kind of ``EventArgs`` instance which
    give access to the entity, EntityManager or other relevant data.
 
+.. _events_lifecyclecallbacks:
 
 Lifecycle Callbacks
 -------------------

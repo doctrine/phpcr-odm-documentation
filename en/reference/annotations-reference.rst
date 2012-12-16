@@ -4,8 +4,6 @@ Annotations Reference
 In this chapter a reference of every PHPCR-ODM annotation is given with short
 explanations on their context and usage.
 
-.. contents::
-
 Note on usage
 -------------
 
@@ -120,8 +118,50 @@ Optional attributes:
     } 
 
 
-User Fields
------------
+Value Fields
+------------
+
+These mappings mark the annotated instance variable as "persistent". They need to be
+specified inside the instance variables associated PHP DocBlock comment. Any value
+held inside these variables will be saved to and loaded from the storage layer as part
+of the lifecycle of the instance variables document class.
+
+.. _annref_valuefieldattribs:
+
+Common optional attributes:
+
+- **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
+- **multivalue**: ``true`` to specify that this property should be treated as a simple array. 
+  See :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
+- **translated**: ``true`` to specify that the property should be translatable, requires the 
+  ``translator`` attribute to be specified in :ref:`@Document<annref_document>`.
+
+Examples:
+
+.. code-block:: php
+
+   <?php
+
+   /**
+    * @String()
+    */
+   protected $title;
+
+   /**
+    * @Boolean()
+    */
+   protected $enabled;
+
+   /**
+    * @String(multivalue=true)
+    */
+   protected $keywords; // e.g. array('dog', 'cat', 'mouse')
+
+   /**
+    * @Long(assoc=true)
+    */
+   protected $exchangeRates; // e.g. array('GBP' => 0.810709, 'EUR' => 1, 'USD' => 1.307460)
+
 
 .. _annref_binary:
 
@@ -130,14 +170,9 @@ User Fields
 
 Sets the type of the annotated instance variable to binary.
 
-Optional attributes:
+Attributes:
 
-- **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
-- **multivalue**: ``true`` to specify that this property should be treated as a simple array. 
-- **translated**: ``true`` to specify that the property should be translatable, requires the 
-  ``translator`` property to be specified in :ref:`@Document<annref_document>`.
-
-See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
+- Inherits :ref:`value field attributes <annref_valuefieldattribs>`.
 
 .. _annref_boolean:
 
@@ -146,14 +181,9 @@ See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueprop
 
 Sets the type of the annotated instance variable to boolean.
 
-Optional attributes:
+Attributes:
 
-- **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
-- **multivalue**: ``true`` to specify that this property should be treated as a simple array. 
-- **translated**: ``true`` to specify that the property should be translatable, requires the 
-  ``translator`` property to be specified in :ref:`@Document<annref_document>`.
-
-See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
+- Inherits :ref:`value field attributes <annref_valuefieldattribs>`.
 
 .. _annref_date:
 
@@ -162,14 +192,9 @@ See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueprop
 
 Sets the type of the annotated instance variable to DateTime.
 
-Optional attributes:
+Attributes:
 
-- **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
-- **multivalue**: ``true`` to specify that this property should be treated as a simple array. 
-- **translated**: ``true`` to specify that the property should be translatable, requires the 
-  ``translator`` property to be specified in :ref:`@Document<annref_document>`.
-
-See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
+- Inherits :ref:`value field attributes <annref_valuefieldattribs>`.
 
 .. _annref_decimal:
 
@@ -179,14 +204,9 @@ See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueprop
 Sets the type of the annotated instance variable to decimal. The decimal field 
 uses the BCMath library which supports numbers of any size or precision.
 
-Optional attributes:
+Attributes:
 
-- **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
-- **multivalue**: ``true`` to specify that this property should be treated as a simple array. 
-- **translated**: ``true`` to specify that the property should be translatable, requires the 
-  ``translator`` property to be specified in :ref:`@Document<annref_document>`.
-
-See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
+- Inherits :ref:`value field attributes <annref_valuefieldattribs>`.
 
 .. _annref_double:
 
@@ -195,15 +215,9 @@ See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueprop
 
 Sets the type of the annotated instance variable to double. The PHP type will be **float**.
 
-Optional attributes:
+Attributes:
 
-- **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
-- **multivalue**: ``true`` to specify that this property should be treated as a simple array. 
-- **translated**: ``true`` to specify that the property should be translatable, requires the 
-  ``translator`` property to be specified in :ref:`@Document<annref_document>`.
-
-See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
-
+- Inherits :ref:`value field attributes <annref_valuefieldattribs>`.
 
 .. _annref_long:
 
@@ -212,15 +226,10 @@ See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueprop
 
 Sets the type of the annotated instance variable to long. The PHP type will be **integer**.
 
-Optional attributes:
+Attributes:
 
-- **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
-- **multivalue**: ``true`` to specify that this property should be treated as a simple array. 
-- **translated**: ``true`` to specify that the property should be translatable, requires the 
-  ``translator`` property to be specified in :ref:`@Document<annref_document>`.
+- Inherits :ref:`value field attributes <annref_valuefieldattribs>`.
 
-See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
-    
 .. _annref_name:
 
 @Name
@@ -229,14 +238,9 @@ See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueprop
 The annotated instance variable must be a valid XML CNAME value and
 can be used to store a valid node name.
 
-Optional attributes:
+Attributes:
 
-- **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
-- **multivalue**: ``true`` to specify that this property should be treated as a simple array. 
-- **translated**: ``true`` to specify that the property should be translatable, requires the 
-  ``translator`` property to be specified in :ref:`@Document<annref_document>`.
-
-See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
+- Inherits :ref:`value field attributes <annref_valuefieldattribs>`.
 
 .. _annref_path:
 
@@ -246,14 +250,9 @@ See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueprop
 The annotated instance variable must be a valid PHPCR node path and can be used to
 store an arbitrary reference to another node.
 
-Optional attributes:
+Attributes:
 
-- **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
-- **multivalue**: ``true`` to specify that this property should be treated as a simple array. 
-- **translated**: ``true`` to specify that the property should be translatable, requires the 
-  ``translator`` property to be specified in :ref:`@Document<annref_document>`.
-
-See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
+- Inherits :ref:`value field attributes <annref_valuefieldattribs>`.
 
 .. _annref_string:
 
@@ -262,14 +261,9 @@ See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueprop
 
 Sets the type of the annotated instance variable to string.
 
-Optional attributes:
+Attributes:
 
-- **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
-- **multivalue**: ``true`` to specify that this property should be treated as a simple array. 
-- **translated**: ``true`` to specify that the property should be translatable, requires the 
-  ``translator`` property to be specified in :ref:`@Document<annref_document>`.
-
-See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
+- Inherits :ref:`value field attributes <annref_valuefieldattribs>`.
 
 .. _annref_uri:
 
@@ -278,31 +272,44 @@ See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueprop
 
 The annotated instance variable will be validated as an URI.
 
-Optional attributes:
+Attributes:
 
-- **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
-- **multivalue**: ``true`` to specify that this property should be treated as a simple array. 
-- **translated**: ``true`` to specify that the property should be translatable, requires the 
-  ``translator`` property to be specified in :ref:`@Document<annref_document>`.
-
-See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
+- Inherits :ref:`value field attributes <annref_valuefieldattribs>`.
 
 Hierarchy
 ---------
+
+These mappings mark the annotated instance variables to contain instances of Documents
+above or below the current Document in the document hierarchy. They need to be
+specified inside the instance variables associated PHP DocBlock comment.
 
 .. _annref_child:
 
 @Child
 ~~~~~~
 
+The annotated instance variable will be populated with the named document
+directly below the instance variables document class in the document hierarchy.
+
 Required attributes:
 
 - **name**: Node name of the child document to map, this should be a string.
+
+.. code-block:: php
+
+   <?php
+   /**
+    * @Child(name="Preferences")
+    */
+   protected $preferences;
 
 .. _annref_children:
 
 @Children
 ~~~~~~~~~
+
+The annotated instance variable will be populated with Documents directly below the
+instance variables document class in the document hierarchy.
 
 Optional attributes:
 
@@ -328,15 +335,27 @@ Optional attributes:
 The annotated instance variable will contain the nodes parent document. Assigning
 a different parent will result in a move operation.
 
+.. code-block:: php
+
+   <?php
+
+   /**
+    * @ParentDocument
+    */
+   private $parent;
+
 Identification
 --------------
+
+These mappings help to manage the identification of the document class.
 
 .. _annref_id:
 
 @Id
 ~~~
 
-The annotated instance variable will be marked as the document identifier.
+The annotated instance variable will be marked with the documents
+identifier. The ID is the **full path** to the document in the document hierarchy.
 See :ref:`identifiers <basicmapping_identifiers>`.
 
 Required attributes:
@@ -358,8 +377,8 @@ Required attributes:
 ~~~~~~~~~
 
 Mark the annotated instance variable as representing the name of the node. The name
-of the node is the last part of the path. Changing the marked variable will update
-the node path.
+of the node is the last part of the :ref:`ID <annref_id>`. Changing the marked variable will update
+the nodes ID.
 
 .. code-block:: php
 
@@ -395,6 +414,9 @@ this field to be reliably populated the document should be
 Lifcycle callbacks
 ------------------
 
+These annotations, applied to a method, will cause the method to be called automatically
+by the ODM on the annotations corresponding lifecycle event.
+
 .. note::
 
    Unlike the Doctrine ORM it is **not** necessary to specify a @HasLifecycleCallbacks
@@ -403,10 +425,10 @@ Lifcycle callbacks
 .. _annref_postload:
 
 @PostLoad
-~~~~~~~~~~~
+~~~~~~~~~
 
 Life cycle callback. The marked method will be called automatically on the ``postLoad``
-event. See :ref:`life cycle callbacks <events_lifecyclecallbacks>`
+event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>`
 
 .. code-block:: php
 
@@ -425,7 +447,7 @@ event. See :ref:`life cycle callbacks <events_lifecyclecallbacks>`
 ~~~~~~~~~~~~~~
 
 Life cycle callback. The marked method will be called automatically on the ``postPersist``
-event. See :ref:`life cycle callbacks <events_lifecyclecallbacks>`
+event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>`
 
 .. code-block:: php
 
@@ -444,7 +466,7 @@ event. See :ref:`life cycle callbacks <events_lifecyclecallbacks>`
 ~~~~~~~~~~~~~
 
 Life cycle callback. The marked method will be called automatically on the ``postRemove``
-event. See :ref:`life cycle callbacks <events_lifecyclecallbacks>`
+event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>`
 
 .. code-block:: php
 
@@ -463,7 +485,7 @@ event. See :ref:`life cycle callbacks <events_lifecyclecallbacks>`
 ~~~~~~~~~~~~~
 
 Life cycle callback. The marked method will be called automatically on the ``postUpdate``
-event. See :ref:`life cycle callbacks <events_lifecyclecallbacks>`
+event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>`
 
 .. code-block:: php
 
@@ -482,7 +504,7 @@ event. See :ref:`life cycle callbacks <events_lifecyclecallbacks>`
 ~~~~~~~~~~~
 
 Life cycle callback. The marked method will be called automatically on the ``prePersist``
-event. See :ref:`life cycle callbacks <events_lifecyclecallbacks>`
+event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>`
 
 .. code-block:: php
 
@@ -501,7 +523,7 @@ event. See :ref:`life cycle callbacks <events_lifecyclecallbacks>`
 ~~~~~~~~~~~~
 
 Life cycle callback. The marked method will be called automatically on the ``preRemove``
-event. See :ref:`life cycle callbacks <events_lifecyclecallbacks>`
+event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>`
 
 .. code-block:: php
 
@@ -520,7 +542,7 @@ event. See :ref:`life cycle callbacks <events_lifecyclecallbacks>`
 ~~~~~~~~~~~~
 
 Life cycle callback. The marked method will be called automatically on the ``preUpdate``
-event. See :ref:`life cycle callbacks <events_lifecyclecallbacks>`
+event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>`
 
 
 .. code-block:: php
@@ -578,6 +600,14 @@ Optional attributes:
    is an optional parameter and by default you can associate *any* document.
 -  **strategy**: One of `weak`, `hard` or `path`. See :ref:`reference other documents <associationmapping_referenceotherdocuments>`.
 
+.. code-block:: php
+
+   <?php
+   /**
+    * @ReferenceOne(targetDocument="Contact", strategy="hard")
+    */
+    protected $contact;
+
 .. _annref_referrers:
 
 @Referrers
@@ -594,13 +624,36 @@ Optional attributes:
 
    <?php
    /**
-    * @Referrers(filter="myapp:mycustomnode | a*", referenceType="hard")
+    * @Referrers(referenceType="hard")
     */
    protected $myReferrers;
 
-
 Translation
 -----------
+
+These annotations only apply to documents where the ``translator`` attribute is 
+specified in :ref:`@Document<annref_document>`.
+
+Example:
+
+.. code-block:: php
+
+    <?php
+    /**
+     * @Document(translator="attribute")
+     */
+    class MyDocument
+    {
+       /**
+        * @Locale
+        */
+       protected $locale;
+
+       /**
+        * @String(translated=true)
+        */
+       protected $title;
+    }
 
 .. _annref_locale:
 
@@ -608,10 +661,36 @@ Translation
 ~~~~~~~
 
 Identifies the annotated instance variable as the field in which to store
-the documents current locale. This field applies only to translated documents.
+the documents current locale.
 
 Versioning
 ----------
+
+These annotations only apply to documents where the ``versionable`` attribute is 
+specified in :ref:`@Document<annref_document>`.
+
+See :ref:`versioning mappings <versioning_mappings>`.
+
+Example:
+
+.. code-block:: php
+
+    <?php
+    /**
+     * @Document(versionable="simple")
+     */
+    class MyPersistentClass
+    {
+        /** 
+         * @VersionName 
+         */
+        private $versionName;
+
+        /** 
+         * @VersionCreated
+         */
+        private $versionCreated;
+    }
 
 .. _annref_versioncreated:
 
