@@ -52,6 +52,7 @@ the special restoreVersion and removeVersion methods.)
 What you get is a detached instance of the document which is ignored by flush
 and can not be persisted.
 
+.. _versioning_mappings:
 
 Mappings
 --------
