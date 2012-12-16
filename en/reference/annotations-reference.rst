@@ -133,8 +133,9 @@ Sets the type of the annotated instance variable to binary.
 Optional attributes:
 
 - **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
-- **multivalue**: True to specify that this property should be treated as a simple array. 
-- **translated**: True to specify that the property should be translatable.
+- **multivalue**: ``true`` to specify that this property should be treated as a simple array. 
+- **translated**: ``true`` to specify that the property should be translatable, requires the 
+  ``translator`` property to be specified in :ref:`@Document<annref_document>`.
 
 See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
 
@@ -148,8 +149,9 @@ Sets the type of the annotated instance variable to boolean.
 Optional attributes:
 
 - **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
-- **multivalue**: True to specify that this property should be treated as a simple array. 
-- **translated**: True to specify that the property should be translatable.
+- **multivalue**: ``true`` to specify that this property should be treated as a simple array. 
+- **translated**: ``true`` to specify that the property should be translatable, requires the 
+  ``translator`` property to be specified in :ref:`@Document<annref_document>`.
 
 See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
 
@@ -163,8 +165,9 @@ Sets the type of the annotated instance variable to DateTime.
 Optional attributes:
 
 - **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
-- **multivalue**: True to specify that this property should be treated as a simple array. 
-- **translated**: True to specify that the property should be translatable.
+- **multivalue**: ``true`` to specify that this property should be treated as a simple array. 
+- **translated**: ``true`` to specify that the property should be translatable, requires the 
+  ``translator`` property to be specified in :ref:`@Document<annref_document>`.
 
 See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
 
@@ -179,8 +182,9 @@ uses the BCMath library which supports numbers of any size or precision.
 Optional attributes:
 
 - **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
-- **multivalue**: True to specify that this property should be treated as a simple array. 
-- **translated**: True to specify that the property should be translatable.
+- **multivalue**: ``true`` to specify that this property should be treated as a simple array. 
+- **translated**: ``true`` to specify that the property should be translatable, requires the 
+  ``translator`` property to be specified in :ref:`@Document<annref_document>`.
 
 See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
 
@@ -194,8 +198,9 @@ Sets the type of the annotated instance variable to double. The PHP type will be
 Optional attributes:
 
 - **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
-- **multivalue**: True to specify that this property should be treated as a simple array. 
-- **translated**: True to specify that the property should be translatable.
+- **multivalue**: ``true`` to specify that this property should be treated as a simple array. 
+- **translated**: ``true`` to specify that the property should be translatable, requires the 
+  ``translator`` property to be specified in :ref:`@Document<annref_document>`.
 
 See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
 
@@ -210,8 +215,9 @@ Sets the type of the annotated instance variable to long. The PHP type will be *
 Optional attributes:
 
 - **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
-- **multivalue**: True to specify that this property should be treated as a simple array. 
-- **translated**: True to specify that the property should be translatable.
+- **multivalue**: ``true`` to specify that this property should be treated as a simple array. 
+- **translated**: ``true`` to specify that the property should be translatable, requires the 
+  ``translator`` property to be specified in :ref:`@Document<annref_document>`.
 
 See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
     
@@ -226,8 +232,9 @@ can be used to store a valid node name.
 Optional attributes:
 
 - **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
-- **multivalue**: True to specify that this property should be treated as a simple array. 
-- **translated**: True to specify that the property should be translatable.
+- **multivalue**: ``true`` to specify that this property should be treated as a simple array. 
+- **translated**: ``true`` to specify that the property should be translatable, requires the 
+  ``translator`` property to be specified in :ref:`@Document<annref_document>`.
 
 See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
 
@@ -242,8 +249,9 @@ store an arbitrary reference to another node.
 Optional attributes:
 
 - **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
-- **multivalue**: True to specify that this property should be treated as a simple array. 
-- **translated**: True to specify that the property should be translatable.
+- **multivalue**: ``true`` to specify that this property should be treated as a simple array. 
+- **translated**: ``true`` to specify that the property should be translatable, requires the 
+  ``translator`` property to be specified in :ref:`@Document<annref_document>`.
 
 See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
 
@@ -257,8 +265,9 @@ Sets the type of the annotated instance variable to string.
 Optional attributes:
 
 - **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
-- **multivalue**: True to specify that this property should be treated as a simple array. 
-- **translated**: True to specify that the property should be translatable.
+- **multivalue**: ``true`` to specify that this property should be treated as a simple array. 
+- **translated**: ``true`` to specify that the property should be translatable, requires the 
+  ``translator`` property to be specified in :ref:`@Document<annref_document>`.
 
 See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
 
@@ -272,8 +281,9 @@ The annotated instance variable will be validated as an URI.
 Optional attributes:
 
 - **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
-- **multivalue**: True to specify that this property should be treated as a simple array. 
-- **translated**: True to specify that the property should be translatable.
+- **multivalue**: ``true`` to specify that this property should be treated as a simple array. 
+- **translated**: ``true`` to specify that the property should be translatable, requires the 
+  ``translator`` property to be specified in :ref:`@Document<annref_document>`.
 
 See also :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
 
