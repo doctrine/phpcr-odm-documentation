@@ -134,7 +134,9 @@ of the lifecycle of the instance variables document class.
 
 Common optional attributes:
 
-- **assoc**: Specify that this attribute should be an associative array. The value should be a string which will be used by the PHPCR node. Set to an empty string to automatically use the name of the annotated variable appended by "Keys".
+- **assoc**: Specify that this attribute should be an associative array. The value should 
+  be a string which will be used by the PHPCR node. Set to an empty string to automatically 
+  use the name of the annotated variable appended by "Keys".
 - **multivalue**: ``true`` to specify that this property should be treated as a simple array. 
   See :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
 - **translated**: ``true`` to specify that the property should be translatable, requires the 
