@@ -105,13 +105,17 @@ Optional attributes:
 .. code-block:: php
 
     <?php
-    /** @MappedSuperclass */
+    /** 
+     * @MappedSuperclass()
+     */
     class MappedSuperclassBase
     {
         // ... fields and methods
     }
 
-    /** @Document */
+    /** 
+     * @Document()
+     */
     class DocumentSubClassFoo extends MappedSuperclassBase
     {
         // ... fields and methods
@@ -130,7 +134,7 @@ of the lifecycle of the instance variables document class.
 
 Common optional attributes:
 
-- **assoc**: Specify that this attribute should be an associative array. The value should be a string. The string will be used by the PHPCR node.
+- **assoc**: Specify that this attribute should be an associative array. The value should be a string which will be used by the PHPCR node. Set to an empty string to automatically use the name of the annotated variable appended by "Keys".
 - **multivalue**: ``true`` to specify that this property should be treated as a simple array. 
   See :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
 - **translated**: ``true`` to specify that the property should be translatable, requires the 
@@ -158,7 +162,7 @@ Examples:
    protected $keywords; // e.g. array('dog', 'cat', 'mouse')
 
    /**
-    * @Long(assoc=true)
+    * @Long(assoc="")
     */
    protected $exchangeRates; // e.g. array('GBP' => 0.810709, 'EUR' => 1, 'USD' => 1.307460)
 
@@ -415,11 +419,12 @@ Lifcycle callbacks
 ------------------
 
 These annotations, applied to a method, will cause the method to be called automatically
-by the ODM on the annotations corresponding lifecycle event.
+by the ODM on the :ref:`lifecycle event <events_lifecyclecallbacks>` corresponding to the name 
+of the annotation.
 
 .. note::
 
-   Unlike the Doctrine ORM it is **not** necessary to specify a @HasLifecycleCallbacks
+   Unlike the Doctrine ORM it is **not** necessary to specify a ``@HasLifecycleCallbacks``
    annotation.
 
 .. _annref_postload:
