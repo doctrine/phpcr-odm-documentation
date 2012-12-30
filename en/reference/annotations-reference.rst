@@ -25,7 +25,7 @@ prefix each annotation with the namespace as demonstrated in the following examp
         /**
          * @PHPCR\Id()
          */
-        protected $uuid;
+        protected $id;
 
         /**
          * @PHPCR\ParentDocument()
