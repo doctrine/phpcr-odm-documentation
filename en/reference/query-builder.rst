@@ -44,8 +44,7 @@ This query is equivalent to the JCR-SQL2 query ``SELECT * FROM nt:unstructured W
     /** @var $qb QueryBuilder */
     $factory = $qb->getQOMFactory();
     $qb->from($factory->selector('nt:unstructured'))
-        ->where($factory->propertyExistence('name'))
-        ->execute();
+        ->where($factory->propertyExistence('name'));
 
     $result = $documentManager->getDocumentsByQuery($qb->getQuery());
     foreach ($result as $document) {
