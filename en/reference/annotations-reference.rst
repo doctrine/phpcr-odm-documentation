@@ -94,18 +94,25 @@ A mapped superclass is an abstract or concrete class that provides
 persistent document state and mapping information for its subclasses
 but which is not itself a document.
 
+.. note::
+
+    Contrary to ORM, the PHPCR-ODM with its NoSQL nature can handle documents
+    that extend each other just like any other document, so you only need mapped
+    superclasses in special situations. See also :doc:`Inheritance Mapping <inheritance-mapping>`.
+
+
 Optional attributes:
 
 -  **nodeType**: PHPCR type for this node. Default ``nt:unstructured``.
--  **repositoryClass**: Fully qualified name of the repository to use for 
+-  **repositoryClass**: Fully qualified name of the repository to use for
    documents extending this superclass.
--  **translator**: Determines how translations are stored, one of ``attribute`` 
+-  **translator**: Determines how translations are stored, one of ``attribute``
    or ``child``. See :ref:`language mapping <multilang_mapping>`.
 
 .. code-block:: php
 
     <?php
-    /** 
+    /**
      * @MappedSuperclass()
      */
     class MappedSuperclassBase
@@ -113,13 +120,13 @@ Optional attributes:
         // ... fields and methods
     }
 
-    /** 
+    /**
      * @Document()
      */
     class DocumentSubClassFoo extends MappedSuperclassBase
     {
         // ... fields and methods
-    } 
+    }
 
 
 Value Fields
@@ -134,12 +141,12 @@ of the lifecycle of the instance variables document class.
 
 Common optional attributes:
 
-- **assoc**: Specify that this attribute should be an associative array. The value should 
-  be a string which will be used by the PHPCR node. Set to an empty string to automatically 
+- **assoc**: Specify that this attribute should be an associative array. The value should
+  be a string which will be used by the PHPCR node. Set to an empty string to automatically
   use the name of the annotated variable appended by "Keys".
-- **multivalue**: ``true`` to specify that this property should be treated as a simple array. 
+- **multivalue**: ``true`` to specify that this property should be treated as a simple array.
   See :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
-- **translated**: ``true`` to specify that the property should be translatable, requires the 
+- **translated**: ``true`` to specify that the property should be translatable, requires the
   ``translator`` attribute to be specified in :ref:`@Document<annref_document>`.
 
 Examples:
@@ -207,7 +214,7 @@ Attributes:
 @Decimal
 ~~~~~~~~
 
-Sets the type of the annotated instance variable to decimal. The decimal field 
+Sets the type of the annotated instance variable to decimal. The decimal field
 uses the BCMath library which supports numbers of any size or precision.
 
 Attributes:
@@ -320,7 +327,7 @@ instance variables document class in the document hierarchy.
 Optional attributes:
 
 - **filter**: Child name filter; only return children whose names match the given filter.
-- **fetchDepth**: Performance optimisation, number of levels to pre-fetch and cache, 
+- **fetchDepth**: Performance optimisation, number of levels to pre-fetch and cache,
   this should be an integer.
 - **ignoreUntranslated**: Set to false to *not* throw exceptions on untranslated child
   documents.
@@ -328,7 +335,7 @@ Optional attributes:
 .. code-block:: php
 
    <?php
-    /** 
+    /**
      * @Children(filter="a*", fetchDepth=3)
      */
     private $children;
@@ -404,7 +411,7 @@ the nodes ID.
 @Uuid
 ~~~~~
 
-The annotated instance variable will be populated with a UUID 
+The annotated instance variable will be populated with a UUID
 (Universally Unique Identifier). The UUID is immutable. For
 this field to be reliably populated the document should be
 *referenceable*.
@@ -415,13 +422,13 @@ this field to be reliably populated the document should be
    /**
     * @Uuid()
     */
-   protected $uuid; // e.g. 508d6621-0c20-4972-bf0e-0278ccabe6e5 
+   protected $uuid; // e.g. 508d6621-0c20-4972-bf0e-0278ccabe6e5
 
 Lifcycle callbacks
 ------------------
 
 These annotations, applied to a method, will cause the method to be called automatically
-by the ODM on the :ref:`lifecycle event <events_lifecyclecallbacks>` corresponding to the name 
+by the ODM on the :ref:`lifecycle event <events_lifecyclecallbacks>` corresponding to the name
 of the annotation.
 
 .. note::
@@ -440,8 +447,8 @@ event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>`
 .. code-block:: php
 
    <?php
-    /** 
-     * @PostLoad 
+    /**
+     * @PostLoad
      */
     public function doSomethingOnPostLoad()
     {
@@ -459,8 +466,8 @@ event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>`
 .. code-block:: php
 
    <?php
-    /** 
-     * @PostPersist 
+    /**
+     * @PostPersist
      */
     public function doSomethingOnPostPersist()
     {
@@ -478,7 +485,7 @@ event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>`
 .. code-block:: php
 
    <?php
-    /** 
+    /**
      * @PostRemove
      */
     public function doSomethingOnPostRemove()
@@ -497,7 +504,7 @@ event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>`
 .. code-block:: php
 
    <?php
-    /** 
+    /**
      * @PostUpdate
      */
     public function doSomethingOnPostUpdate()
@@ -516,7 +523,7 @@ event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>`
 .. code-block:: php
 
    <?php
-    /** 
+    /**
      * @PrePersist
      */
     public function doSomethingOnPrePersist()
@@ -535,7 +542,7 @@ event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>`
 .. code-block:: php
 
    <?php
-    /** 
+    /**
      * @PreRemove
      */
     public function doSomethingOnPreRemove()
@@ -555,7 +562,7 @@ event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>`
 .. code-block:: php
 
    <?php
-    /** 
+    /**
      * @PreUpdate
      */
     public function doSomethingOnPreUpdate()
@@ -627,7 +634,7 @@ Optional attributes:
 -  **filter**: Filters referrers by the referencing property name.
 -  **referenceType**: One of ``weak`` or ``hard``.
 
-.. code-block:: 
+.. code-block:: php
 
    <?php
    /**
@@ -638,7 +645,7 @@ Optional attributes:
 Translation
 -----------
 
-These annotations only apply to documents where the ``translator`` attribute is 
+These annotations only apply to documents where the ``translator`` attribute is
 specified in :ref:`@Document<annref_document>`.
 
 Example:
@@ -673,7 +680,7 @@ the documents current locale.
 Versioning
 ----------
 
-These annotations only apply to documents where the ``versionable`` attribute is 
+These annotations only apply to documents where the ``versionable`` attribute is
 specified in :ref:`@Document<annref_document>`.
 
 See :ref:`versioning mappings <versioning_mappings>`.
@@ -688,12 +695,12 @@ Example:
      */
     class MyPersistentClass
     {
-        /** 
-         * @VersionName 
+        /**
+         * @VersionName
          */
         private $versionName;
 
-        /** 
+        /**
          * @VersionCreated
          */
         private $versionCreated;
