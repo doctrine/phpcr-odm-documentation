@@ -2,38 +2,360 @@ The QueryBuilder
 ================
 
 The ``QueryBuilder`` provides an API that is designed for
-programmatically constructing a query in several steps.
+programmatically constructing an ODM query object.
 
 It provides a set of classes and methods that is able to
 programmatically build queries, and also provides a fluent API.
 
-The QueryBuilder of PHPCR-ODM is provided by the phpcr-utils library.
-See `PHPCR-utils > Namespaces > PHPCR\Util\QOM\QueryBuilder <http://phpcr.github.com/doc/html-all/index.html>`_
-for a full documentation on the QueryBuilder methods.
+Creating a query builder instance
+---------------------------------
 
-The actual tests and such are done by the PHPCR Query Object Model factory,
-defined by ``PHPCR\Query\QOM\QueryObjectModelFactoryInterface``
+You can create instances of ``QueryBuilder`` in one of two ways, either via
+the ``DocumentManager`` or via a ``DocumentRepository``.
 
+Via the document manager
+~~~~~~~~~~~~~~~~~~~~~~~~
 
-Constructing a new QueryBuilder object
---------------------------------------
-
-The same way you build a normal Query, you build a ``QueryBuilder``
-object, with a factory method on the DocumentManager:
+You can create the ``QueryBuilder`` with the ``DocumentManager`` using the 
+``createQueryBuilder`` method.
 
 .. code-block:: php
 
     <?php
-    /** @var $dm DocumentManager */
+    $qb = $documentManager->createQueryBuilder();
 
-    $qb = $dm->createQueryBuilder();
+The following example gets all documents where the ``name`` property
+is equal to ``daniel`` and orders the results by ``username`` in ascending order.
 
-Once you have created an instance of QueryBuilder, it provides you
-with the methods to build a query.
+.. code-block:: php
+
+   <?php
+
+   $qb->where($qb->expr()->eq('name', 'daniel'))
+      ->orderBy('username', 'ASC');
+
+   $query = $qb->getQuery();   
+   $users = $query->execute();
+
+.. note::
+
+   Unlike the ORM it is not nescessary to specify a source to select from, the above
+   example will **any** record matching the criteria.
+
+Via a document repository
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can also create a ``QueryBuilder`` from a ``DocumentRepsitory`` instance, doing so
+will automatically select only those records which are associated with the ``DocumentRepository``.
+
+.. code-block:: php
+
+   <?php
+
+   $postsRepository = $dm->getRepository('Post');
+   $qb = $postsRepository->createQueryBuilder();
+   $posts = $qb->getQuery()->execute();
+
+The above code block will select all documents in the document tree of class ``Post``. This
+feature is especially usefull within a document repository class.
+
+.. code-block:: php
+
+   <?php
+
+   namespace Vendor\Blog\Repository;
+   use Doctrine\ODM\PHPCR\DocumentRepository;
+
+   class Post extends DocumentRepository
+   {
+       public function getPostsByAuthor($authorName)
+       {
+           $qb = $this->createQueryBuilder();
+           $qb->where(
+               $qb->expr('author', 'dtl')
+           );
+
+           return $qb->getQuery()->execute();
+       }
+   }
 
 
-Working with QueryBuilder
--------------------------
+.. _qbref_workingwiththequerybuilder:
+
+Working with the QueryBuilder
+-----------------------------
+
+.. _qbref_select:
+
+Selecting specific properties - select
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: php
+
+   <?php
+   $qb->select('username');
+   $qb->addSelect('firstname');
+   $qb->addSelect('lastname');
+
+.. note:: 
+   
+    @todo: Not 100% sure how this works atm, I'm guessing it will only hydrate the specified
+    properties, but then not sure how it will eventually fit in with joins etc. Imagine could
+    also be usefull if we add an Array query hydration mode.
+
+.. _qbref_limiting:
+
+Limiting the number of results
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can specify a maximum number of results and the index of the first result
+(the offset).
+
+.. code-block:: php
+
+   <?php
+   // select a maximum of 10 records.
+   $qb->from('User')
+      ->setMaxResults(10);
+
+   // select a maximum of 10 records from the position of the 20th record.
+   $qb->from('User')
+      ->setMaxResults(10)
+      ->setFirstResult(20); 
+
+.. _qbref_from:
+.. _qbref_nodeType:
+
+Restrict query to document class or node type
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can restrict **either** the document class **or** the node type. Attempting to
+specify both will result in an Exception because by setting the document class
+you are implicitly setting the node type.
+
+.. code-block:: php
+
+   <?php
+
+   $qb = $dm->getQueryBuilder();
+   $qb->from('User'); // select only from user documents
+
+   // or
+
+   $qb = $dm->getQueryBuilder();
+   $qb->nodeType('nt:mynodetype'); // select only documents with node type nt:mynodetype.
+
+   // but not
+
+   $qb = $dm->getQueryBuilder();
+   $qb->nodeType('nt:mynodetype');
+   $qb->from('User');
+   $qb->getQuery(); // this will throw an Exception.
+
+.. _qbref_where:
+
+Specifying selection criteria
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can specify selection criteria, or :ref:`Expressions <qbref_expressionbuilder>`, with the ``where`` method. You
+can add additional Expressions with ``andWhere`` and ``orWhere``.
+
+.. code-block:: php
+
+   <?php
+
+   // where name is "daniel"
+   $qb->where($qb->expr()->eq('name', 'daniel'));
+
+   // where username is "dtl" AND name is "daniel"
+   $qb->where($qb->expr()->eq('username', 'dtl'));
+      ->andWhere($qb->expr()->eq('name', 'daniel'));
+
+   // which is equivalent to
+   $qb->where($qb->expr()->andX(
+       $qb->expr()->eq('username', 'dtl'),
+       $qb->expr()->eq('name', 'daniel')
+   ));
+
+   // where username is "dtl" OR name is "daniel"
+   $qb->where($qb->expr()->eq('username', 'dtl'));
+   $qb->orWhere($qb->expr()->eq('name', 'daniel'));
+
+   // which is equivalent to
+   $qb->where($qb->expr()->orX(
+       $qb->expr()->eq('username', 'dtl'),
+       $qb->expr()->eq('name', 'daniel')
+   ));
+
+.. _qbref_ordering:
+
+Ordering results
+~~~~~~~~~~~~~~~~
+
+You can specify the property or properties by which to order the queries results
+with the ``orderBy`` method. You can specify additional orderings with ``addOrderBy``,
+or you can pass an array of property names to ``orderBy``.
+
+The ordering direction is specified as either ``ASC`` (ascending order, e.g. a-z, 0-9) or ``DESC``
+(descending order, e.g. z-a, 9-0). The default is ``ASC``.
+
+.. code-block:: php
+
+   <?php
+
+   $qb = $dm->createQueryBuilder();
+   $qb->orderBy('username', 'ASC'); // username assending
+
+   $qb = $dm->createQueryBuilder();
+   $qb->orderBy('username', 'DESC'); // username descending
+
+   $qb = $dm->createQueryBuilder();
+   $qb->orderBy('username');
+   $qb->addOrderBy('name'); // username then name ascending (ORDER BY username, name ASC)
+
+   $qb = $dm->createQueryBuilder();
+   $qb->orderBy(array('username', 'name'), 'ASC'); // same as above
+
+.. _qbref_expressionbuilder:
+
+The Expression Builder
+----------------------
+
+The ``ExpressionBuilder`` is a class which allows you to programatically construct selection
+criteria. It is created through the factory method ``expr()`` of the query builder. The return
+value is accepted by :ref:`where <qbref_where>`.
+
+.. _qbref_expr_andx:
+
+andX (and eXpression)
+~~~~~~~~~~~~~~~~~~~~~
+
+Join two or more expressions with an *AND* constraint.
+
+.. code-block:: php
+
+    <?php
+
+    $qb->expr()->andX(
+        $qb->expr()->eq('tag', 'dogs'),
+        $qb->expr()->eq('owner', 'daniel')
+    );
+
+.. _qbref_expr_orx:
+
+orX (or eXpression)
+~~~~~~~~~~~~~~~~~~~
+
+Join two or more expressions with an *OR* constraint.
+
+.. code-block:: php
+
+    <?php
+
+    $qb->expr()->andX(
+        $qb->expr()->eq('tag', 'dogs'),
+        $qb->expr()->eq('tag', 'cats')
+    );
+
+.. _qbref_expr_eq:
+
+eq (equal)
+~~~~~~~~~~
+
+Specify that the value of the given field name on candidate documents must be 
+equal to the given value.
+
+.. code-block:: php
+
+    <?php
+
+    $qb->expr()->eq('tag', 'dogs');
+
+neq (not equal)
+~~~~~~~~~~~~~~~
+
+Specify that the value of the given field name on candidate documents must **not** 
+be equal to the given value.
+
+.. code-block:: php
+
+    <?php
+
+    $qb->expr()->neq('tag', 'cats');
+
+.. _qbref_expr_gt:
+
+gt (greater than)
+~~~~~~~~~~~~~~~~~
+
+Specify that the value of the given field name on candidate documents must be greater 
+than the given value.
+
+.. code-block:: php
+
+    <?php
+
+    $qb->expr()->gt('number_of_logins', 50);
+
+.. _qbref_expr_gte:
+
+gte (greater than or equal)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Specify that the value of the given field name on candidate documents must be greater 
+than or equal to the given value.
+
+.. code-block:: php
+
+    <?php
+
+    $qb->expr()->gte('number_of_logins', 50);
+
+.. _qbref_expr_lt:
+
+lt (less than)
+~~~~~~~~~~~~~~
+
+Specify that the value of the given field name on candidate documents must be less 
+than the given value.
+
+.. code-block:: php
+
+    <?php
+
+    $qb->expr()->lt('number_of_logins', 50);
+
+.. _qbref_expr_lte:
+
+lte (less than or equal)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Specify that the value of the given field name on candidate documents must be less 
+than or equal to the given value.
+
+.. code-block:: php
+
+    <?php
+
+    $qb->expr()->lte('number_of_logins', 50);
+
+.. _qbref_phpcrquerybuilder:
+
+The PHPCR QueryBuilder
+----------------------
+
+The PHPCR QueryBuilder is a lower level and more verbose query builder available in the PHPCR Utils
+package and is not part of the ODM package, as such we will not document it extensively here and it
+is recommended that you use the ODM query builder. 
+
+This query builder does not know about the ODM layer, which means that it produces PHPCR queries
+and not ODM queries. To hydrate Documents from the results of a PHPCR query you need to use the
+``getDocumentsByPhpcrQuery`` method of the document manager.
+
+See the `PHPCR Documentation <http://phpcr.github.com/doc/html-all/index.html>`_ for more information.
+
+Examples
+~~~~~~~~
 
 This query is equivalent to the JCR-SQL2 query ``SELECT * FROM nt:unstructured WHERE name NOT IS NULL``
 
@@ -42,11 +364,13 @@ This query is equivalent to the JCR-SQL2 query ``SELECT * FROM nt:unstructured W
     <?php
 
     /** @var $qb QueryBuilder */
+    $qb = $dm->getPhpcrQueryBuilder();
     $factory = $qb->getQOMFactory();
     $qb->from($factory->selector('nt:unstructured'))
-        ->where($factory->propertyExistence('name'));
+        ->where($factory->propertyExistence('name'))
+        ->execute();
 
-    $result = $documentManager->getDocumentsByQuery($qb->getQuery());
+    $result = $documentManager->getDocumentsByPhpcrQuery($qb->getQuery());
     foreach ($result as $document) {
         echo $document->getId();
     }
