@@ -40,7 +40,7 @@ is equal to ``daniel`` and orders the results by ``username`` in ascending order
 .. note::
 
    Unlike the ORM it is not nescessary to specify a source to select from, the above
-   example will **any** record matching the criteria.
+   example will **any** document matching the criteria.
 
 Via a document repository
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -52,7 +52,7 @@ will automatically select only those records which are associated with the ``Doc
 
    <?php
 
-   $postsRepository = $dm->getRepository('Post');
+   $postsRepository = $dm->getRepository('MyVendor/Blog/Document/Post');
    $qb = $postsRepository->createQueryBuilder();
    $posts = $qb->getQuery()->execute();
 
@@ -63,7 +63,7 @@ feature is especially usefull within a document repository class.
 
    <?php
 
-   namespace Vendor\Blog\Repository;
+   namespace MyVendor\Blog\Repository;
    use Doctrine\ODM\PHPCR\DocumentRepository;
 
    class Post extends DocumentRepository
@@ -93,15 +93,14 @@ Selecting specific properties - select
 .. code-block:: php
 
    <?php
-   $qb->select('username');
-   $qb->addSelect('firstname');
-   $qb->addSelect('lastname');
+   $qb->select('username')
+      ->addSelect('firstname')
+      ->addSelect('lastname');
 
 .. note:: 
    
-    @todo: Not 100% sure how this works atm, I'm guessing it will only hydrate the specified
-    properties, but then not sure how it will eventually fit in with joins etc. Imagine could
-    also be usefull if we add an Array query hydration mode.
+   Select is currently only usefull with PHPCR hydration, ODM hydration will
+   hydrate all fields regardless of the column selection.
 
 .. _qbref_limiting:
 
@@ -115,11 +114,11 @@ You can specify a maximum number of results and the index of the first result
 
    <?php
    // select a maximum of 10 records.
-   $qb->from('User')
+   $qb->from('MyVendor/Blog/Document/User')
       ->setMaxResults(10);
 
    // select a maximum of 10 records from the position of the 20th record.
-   $qb->from('User')
+   $qb->from('MyVendor/Blog/Document/User')
       ->setMaxResults(10)
       ->setFirstResult(20); 
 
@@ -137,20 +136,20 @@ you are implicitly setting the node type.
 
    <?php
 
-   $qb = $dm->getQueryBuilder();
-   $qb->from('User'); // select only from user documents
+   $dm->getQueryBuilder()
+      ->from('MyVendor/Blog/Document/User'); // select only from user documents
 
    // or
 
-   $qb = $dm->getQueryBuilder();
-   $qb->nodeType('nt:mynodetype'); // select only documents with node type nt:mynodetype.
+   $dm->getQueryBuilder()
+      ->nodeType('nt:mynodetype'); // select only documents with node type nt:mynodetype.
 
    // but not
 
-   $qb = $dm->getQueryBuilder();
-   $qb->nodeType('nt:mynodetype');
-   $qb->from('User');
-   $qb->getQuery(); // this will throw an Exception.
+   $dm->getQueryBuilder()
+      ->nodeType('nt:mynodetype')
+      ->from('MyVendor/Blog/Document/User')
+      ->getQuery(); // this will throw an Exception.
 
 .. _qbref_where:
 
@@ -178,8 +177,8 @@ can add additional Expressions with ``andWhere`` and ``orWhere``.
    ));
 
    // where username is "dtl" OR name is "daniel"
-   $qb->where($qb->expr()->eq('username', 'dtl'));
-   $qb->orWhere($qb->expr()->eq('name', 'daniel'));
+   $qb->where($qb->expr()->eq('username', 'dtl'))
+      ->orWhere($qb->expr()->eq('name', 'daniel'));
 
    // which is equivalent to
    $qb->where($qb->expr()->orX(
@@ -199,22 +198,38 @@ or you can pass an array of property names to ``orderBy``.
 The ordering direction is specified as either ``ASC`` (ascending order, e.g. a-z, 0-9) or ``DESC``
 (descending order, e.g. z-a, 9-0). The default is ``ASC``.
 
+Add a single ordering:
+
 .. code-block:: php
 
    <?php
 
-   $qb = $dm->createQueryBuilder();
    $qb->orderBy('username', 'ASC'); // username assending
 
-   $qb = $dm->createQueryBuilder();
+Descending:
+
+.. code-block:: php
+
+   <?php
+
    $qb->orderBy('username', 'DESC'); // username descending
 
-   $qb = $dm->createQueryBuilder();
+Add two orderings:
+
+.. code-block:: php
+
+   <?php
+
    $qb->orderBy('username');
    $qb->addOrderBy('name'); // username then name ascending (ORDER BY username, name ASC)
 
-   $qb = $dm->createQueryBuilder();
-   $qb->orderBy(array('username', 'name'), 'ASC'); // same as above
+Add two orderings by passing an array to ``orderBy``:
+
+.. code-block:: php
+
+   <?php
+
+   $qb->orderBy(array('username', 'name'), 'ASC'); // same as previous example
 
 .. _qbref_expressionbuilder:
 
