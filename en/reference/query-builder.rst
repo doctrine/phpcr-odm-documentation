@@ -57,7 +57,9 @@ will automatically select only those records which are associated with the ``Doc
    $posts = $qb->getQuery()->execute();
 
 The above code block will select all documents in the document tree of class ``Post``. This
-feature is especially usefull within a document repository class.
+feature is especially useful within a document repository class.
+
+Example showing the use of the query builder in a ``DocumentRepository``:
 
 .. code-block:: php
 
@@ -353,6 +355,19 @@ than or equal to the given value.
     <?php
 
     $qb->expr()->lte('number_of_logins', 50);
+
+.. _qbref_expr_descendant:
+
+descendant
+~~~~~~~~~~
+
+Specify that candidate documents must be descendants of the node at the given path.
+
+.. code-block:: php
+
+    <?php
+
+    $qb->expr()->descendant('/path/to/parent');
 
 .. _qbref_phpcrquerybuilder:
 
