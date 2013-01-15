@@ -40,7 +40,7 @@ is equal to ``daniel`` and orders the results by ``username`` in ascending order
 .. note::
 
    Unlike the ORM it is not nescessary to specify a source to select from, the above
-   example will **any** document matching the criteria.
+   example will find **any** class of document matching the criteria.
 
 Via a document repository
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -356,18 +356,52 @@ than or equal to the given value.
 
     $qb->expr()->lte('number_of_logins', 50);
 
-.. _qbref_expr_descendant:
+.. _qbref_expr_like:
 
-descendant
-~~~~~~~~~~
+like
+~~~~
 
-Specify that candidate documents must be descendants of the node at the given path.
+Specify that the value of the given field name on the candidate document must match 
+the given pattern.  "%" is a wildcard.
 
 .. code-block:: php
 
     <?php
 
-    $qb->expr()->descendant('/path/to/parent');
+    $qb->expr()->like('name', 'cAtS'); // case insesitive will match "CATS" and "cats"
+    $qb->expr()->like('name', '%og'); // will match "dog" but not "doggy" 
+    $qb->expr()->like('name', '%og%'); // will match "dog" and "dogs" 
+    $qb->expr()->like('name', 'dog%'); // will match "dog" and "dogs" but not "the dog"
+
+.. _qbref_expr_descendant:
+
+descendant
+~~~~~~~~~~
+
+Specify that candidate documents must be descendants of the ancestor at the given path.
+
+.. code-block:: php
+
+    <?php
+
+    $qb->expr()->descendant('/blog/posts');
+
+textSearch
+~~~~~~~~~~
+
+Perform a text search - perform a full text search on the specified field.
+
+See `the JCR reference <http://docs.jboss.org/jbossdna/0.7/manuals/reference/html/jcr-query-and-search.html#fulltext-search-query-language>`_ for more information about query syntax.
+
+.. code-block:: php
+
+   <?php
+
+   $qb->expr()->textSearch('body', 'dog');
+
+.. note::
+
+   TODO: It would be really good to have some good text search examples here.
 
 .. _qbref_phpcrquerybuilder:
 
