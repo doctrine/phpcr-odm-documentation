@@ -1,11 +1,10 @@
+.. _qbref:
+
 The QueryBuilder
 ================
 
 The ``QueryBuilder`` provides an API that is designed for
-programmatically constructing an ODM query object.
-
-It provides a set of classes and methods that is able to
-programmatically build queries, and also provides a fluent API.
+programmatically constructing ODM :ref:`query <queryref>` objects.
 
 Creating a query builder instance
 ---------------------------------
@@ -393,15 +392,23 @@ Perform a text search - perform a full text search on the specified field.
 
 See `the JCR reference <http://docs.jboss.org/jbossdna/0.7/manuals/reference/html/jcr-query-and-search.html#fulltext-search-query-language>`_ for more information about query syntax.
 
+Search on **all** document types where **body** fields are equal to **dog**:
+
 .. code-block:: php
 
    <?php
 
+   $qb = // new query builder
    $qb->expr()->textSearch('body', 'dog');
 
-.. note::
+Search on **all** document types where **any** field **contains** the word "computer":
 
-   TODO: It would be really good to have some good text search examples here.
+.. code-block:: php
+
+   <?php
+
+   $qb = // new query builder
+   $qb->expr()->textSearch(null, '*computer*');
 
 .. _qbref_phpcrquerybuilder:
 

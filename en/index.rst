@@ -48,6 +48,7 @@ Working with Objects
 
 * **Query Reference**:
   :doc:`Query Builder API <reference/query-builder>`
+  :doc:`The Query Object <reference/query>`
 
 Advanced Topics
 ---------------
