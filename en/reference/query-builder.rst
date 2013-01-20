@@ -1,11 +1,10 @@
+.. _qbref:
+
 The QueryBuilder
 ================
 
 The ``QueryBuilder`` provides an API that is designed for
-programmatically constructing an ODM query object.
-
-It provides a set of classes and methods that is able to
-programmatically build queries, and also provides a fluent API.
+programmatically constructing ODM :ref:`query <queryref>` objects.
 
 Creating a query builder instance
 ---------------------------------
@@ -40,7 +39,7 @@ is equal to ``daniel`` and orders the results by ``username`` in ascending order
 .. note::
 
    Unlike the ORM it is not nescessary to specify a source to select from, the above
-   example will **any** document matching the criteria.
+   example will find **any** class of document matching the criteria.
 
 Via a document repository
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -57,7 +56,9 @@ will automatically select only those records which are associated with the ``Doc
    $posts = $qb->getQuery()->execute();
 
 The above code block will select all documents in the document tree of class ``Post``. This
-feature is especially usefull within a document repository class.
+feature is especially useful within a document repository class.
+
+Example showing the use of the query builder in a ``DocumentRepository``:
 
 .. code-block:: php
 
@@ -353,6 +354,61 @@ than or equal to the given value.
     <?php
 
     $qb->expr()->lte('number_of_logins', 50);
+
+.. _qbref_expr_like:
+
+like
+~~~~
+
+Specify that the value of the given field name on the candidate document must match 
+the given pattern.  "%" is a wildcard.
+
+.. code-block:: php
+
+    <?php
+
+    $qb->expr()->like('name', 'cAtS'); // case insesitive will match "CATS" and "cats"
+    $qb->expr()->like('name', '%og'); // will match "dog" but not "doggy" 
+    $qb->expr()->like('name', '%og%'); // will match "dog" and "dogs" 
+    $qb->expr()->like('name', 'dog%'); // will match "dog" and "dogs" but not "the dog"
+
+.. _qbref_expr_descendant:
+
+descendant
+~~~~~~~~~~
+
+Specify that candidate documents must be descendants of the ancestor at the given path.
+
+.. code-block:: php
+
+    <?php
+
+    $qb->expr()->descendant('/blog/posts');
+
+textSearch
+~~~~~~~~~~
+
+Perform a text search - perform a full text search on the specified field.
+
+See `the JCR reference <http://docs.jboss.org/jbossdna/0.7/manuals/reference/html/jcr-query-and-search.html#fulltext-search-query-language>`_ for more information about query syntax.
+
+Search on **all** document types where **body** fields are equal to **dog**:
+
+.. code-block:: php
+
+   <?php
+
+   $qb = // new query builder
+   $qb->expr()->textSearch('body', 'dog');
+
+Search on **all** document types where **any** field **contains** the word "computer":
+
+.. code-block:: php
+
+   <?php
+
+   $qb = // new query builder
+   $qb->expr()->textSearch(null, '*computer*');
 
 .. _qbref_phpcrquerybuilder:
 
