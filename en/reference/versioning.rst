@@ -110,19 +110,26 @@ Be aware that these two are different things:
     also does not need the versionable document attribute. (You do not create
     versions of old versions, you only create versions of the main document.)
 
+You can track some information about old versions in PHPCR-ODM. Both are only
+populated when you load an old version of a document, and both are read only.
+The ``VersionName`` tracks the version identifier that PHPCR assigned the
+version you created, ``VersionCreated`` the DateTime when the version was
+created.
 
 Note that all fields of a document are automatically versioned, you can not
-exclude anything from being versioned. Referenced documents are not versioned,
-but it is stored to which document the reference pointed at this time.
-Children and parents are not versioned. (Actually children could be versioned
-if you are using a PHCPR node types that specifies to cascade versioning. This
-feature however is untested with PHPCR-ODM, if you have feedback please tell us.)
+exclude anything from being versioned. Referenced documents are not versioned
+at the same time, but it is stored to which document the reference pointed at
+this time. Children and parents are not versioned by default. Children can be
+versioned by defining a PHCPR node type that specifies to cascade versioning.
+This feature however is untested with PHPCR-ODM, if you have feedback please
+tell us.
 
+.. warning::
 
-You can track some information about old versions in PHPCR-ODM. Both are only populated
-when you load an old version of a document, and both are readonly. The ``VersionName``
-tracks the version identifier that PHPCR assigned the version you created, ``VersionCreated`` the
-DateTime when the version was created.
+    Referencial integrity with hard references is only ensured for live
+    documents, not for versions. It is thus possible that a reference that
+    is declared "hard" can be null nontheless. Make sure to always check for
+    ``null`` values in version documents.
 
 
 Interacting with versions

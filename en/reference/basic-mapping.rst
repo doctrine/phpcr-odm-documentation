@@ -138,7 +138,7 @@ See `PHPCR\\PropertyType <http://phpcr.github.com/doc/html/phpcr/propertytype.ht
 - ``Name``: A valid PHPCR name
 - ``Path``: A valid PHPCR path
 - ``Uri``: A valid URI, for example a URL
-- ``Uuid``: A PHPCR universally unique id (read only, see :ref:`References <association-mapping_referenceable>` for more)
+- ``Uuid``: A PHPCR universally unique id for a document (read only, see :ref:`References <association-mapping_referenceable>` for more)
 
 
 .. note::

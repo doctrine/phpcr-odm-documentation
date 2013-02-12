@@ -223,6 +223,18 @@ In ReferenceMany collections, you can even have documents of mixed types.
     you can reference them in your document.
 
 
+.. warning::
+
+    When using hard references in combination with versioning, old versions of
+    your documents may still have target documents that become null if the
+    target has been deleted since the version has been created. This is due to
+    PHPCR not ensuring referential integrity for old versions as otherwise you
+    could never delete a document once it has been referenced and the reference
+    versioned, even if the reference is deleted later. When working with
+    versions, you thus always need to check if a referenced document actually
+    exists.
+
+
 Referrers back to the referencing documents
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
