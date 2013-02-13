@@ -171,7 +171,7 @@ Examples:
    protected $keywords; // e.g. array('dog', 'cat', 'mouse')
 
    /**
-    * @Long(assoc="")
+    * @Double(assoc="")
     */
    protected $exchangeRates; // e.g. array('GBP' => 0.810709, 'EUR' => 1, 'USD' => 1.307460)
 
