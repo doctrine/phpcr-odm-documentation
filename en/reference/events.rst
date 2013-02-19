@@ -21,17 +21,14 @@ the life-time of their registered documents.
 - preUpdate - occurs before an existing document is updated in the repository, during the flush operation
 - postUpdate - occurs after an existing document has successfully been updated in the repository
 - postLoad - occurs after the document has been loaded from the repository
-
-The following  events existing in the ORM but not (yet) in PHPCR-ODM. TODO: We should implement them.
-
--  loadClassMetadata - occurs after mapping metadata for a class has been loaded from a mapping source
-   (annotations/xml/yaml).
--  preFlush - occurs at the very beginning of a flush operation. This event is not a lifecycle callback.
--  onFlush - occurs after the change-sets of all managed documents have been computed. This event is not a lifecycle
-   callback.
--  postFlush - occurs at the end of a flush operation. This event is not a lifecycle callback.
--  onClear - occurs when the DocumentManager#clear() operation is invoked, after all references to documents
-   have been removed from the unit of work.
+- postFlush - occurs at the end of a flush operation. This event is not a lifecycle callback.
+- onClear - occurs when the DocumentManager#clear() operation is invoked, after all references to documents
+  have been removed from the unit of work.
+- loadClassMetadata - occurs after mapping metadata for a class has been loaded from a mapping source
+  (annotations/xml/yaml).
+- preFlush - occurs at the very beginning of a flush operation. This event is not a lifecycle callback.
+- onFlush - occurs after the change-sets of all managed documents have been computed. This event is not a lifecycle
+  callback.
 
 .. note::
 
@@ -147,4 +144,3 @@ Listening to Lifecycle Events
 -----------------------------
 
 This works exactly the same as with the `ORM events <http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/events.html>`_.
-Just keep in mind that we currently do not have all of the events the ORM has.
