@@ -16,7 +16,7 @@ Simple example:
     $qb = // create a new query builder instance
     $qb->where($qb->expr()->eq('foo', 'bar'));
     $query = $qb->getQuery(); // return a new Query object
-    $results = $query->getResults(); // get the results of the query
+    $results = $query->getResult(); // get the results of the query
 
 Once you have retrieved this class from the query builder it is
 ready to go, you have multiple ways for retrieving your data.
