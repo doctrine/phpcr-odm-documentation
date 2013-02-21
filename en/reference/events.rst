@@ -29,6 +29,8 @@ the life-time of their registered documents.
 - preFlush - occurs at the very beginning of a flush operation. This event is not a lifecycle callback.
 - onFlush - occurs after the change-sets of all managed documents have been computed. This event is not a lifecycle
   callback.
+- preMove - occurs before a document is moved to the target path
+- postMove - occurs after a document has been moved to the target path
 
 .. note::
 
