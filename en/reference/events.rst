@@ -39,6 +39,10 @@ the life-time of their registered documents.
     See the `Documentation of DoctrinePHPCRBundle <http://github.com/doctrine/DoctrinePHPCRBundle>`_
     for more information.
 
+.. note::
+
+    When I move a document, the document is not be modified, except the ID.
+    The preFlush and onFlush events may modify the document before moving the document.
 
 .. warning::
 
@@ -147,11 +151,8 @@ Listening to Lifecycle Events
 
 This works exactly the same as with the `ORM events <http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/events.html>`_.
 
-Move events
------------
-
-When I move a document, the document is not be modified, except the ID.
-The preFlush and onFlush events may modify the document before moving the document.
+Persistance event order
+-----------------------
 
 When $dm->flush is calling after $dm->move(), the order of events is:
 
