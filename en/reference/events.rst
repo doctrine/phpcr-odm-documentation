@@ -14,23 +14,23 @@ The DocumentManager and PHPCR-ODM UnitOfWork trigger a bunch of events during
 the life-time of their registered documents.
 
 
-- preRemove - occurs before a document is removed from the repository
-- postRemove - occurs after the document has been successfully removed from the repository
 - prePersist - occurs before a new document is created in the repository
 - postPersist - occurs after a document has been created in repository. generated fields will be available in this state.
 - preUpdate - occurs before an existing document is updated in the repository, during the flush operation
 - postUpdate - occurs after an existing document has successfully been updated in the repository
 - postLoad - occurs after the document has been loaded from the repository
-- postFlush - occurs at the end of a flush operation. This event is not a lifecycle callback.
-- onClear - occurs when the DocumentManager#clear() operation is invoked, after all references to documents
-  have been removed from the unit of work.
-- loadClassMetadata - occurs after mapping metadata for a class has been loaded from a mapping source
-  (annotations/xml/yaml).
+- preMove - occurs before a document move operation is persisted to the PHPCR session during flush
+- postMove - occurs after a document move operation has been persisted to the PHPCR session during flush
+- preRemove - occurs before a document is removed from the repository
+- postRemove - occurs after the document has been successfully removed from the repository
 - preFlush - occurs at the very beginning of a flush operation. This event is not a lifecycle callback.
 - onFlush - occurs after the change-sets of all managed documents have been computed. This event is not a lifecycle
   callback.
-- preMove - occurs before a document is moved to the target path
-- postMove - occurs after a document has been moved to the target path
+- postFlush - occurs at the end of a flush operation. This event is not a lifecycle callback.
+- onClear - occurs when the DocumentManager#clear() operation is invoked, after all references to documents
+  have been removed from the unit of work. This event is not a lifecycle callback.
+- loadClassMetadata - occurs after mapping metadata for a class has been loaded from a mapping source
+  (annotations/xml/yaml).
 
 .. note::
 
@@ -38,11 +38,6 @@ the life-time of their registered documents.
     doctrine_phpcr.event_listener to register a service as event listener.
     See the `Documentation of DoctrinePHPCRBundle <http://github.com/doctrine/DoctrinePHPCRBundle>`_
     for more information.
-
-.. note::
-
-    When I move a document, the document is not be modified, except the ID.
-    The preFlush and onFlush events may modify the document before moving the document.
 
 .. warning::
 
@@ -60,6 +55,27 @@ PHPCR-ODM package.
     <?php
     use Doctrine\ODM\PHPCR\Event;
     echo Event::preUpdate;
+
+Event order when moving
+-----------------------
+
+During the flush() operation of a modified document, the events get triggered in the following order:
+
+1. preFlush
+2. onFlush
+3. preUpdate
+4. postUpdate
+5. preMove
+6. postMove
+7. postFlush
+
+
+As the move event is triggered after the changeset has been calculated,
+modifications to the document are not taken into account anymore.
+
+
+Listening to events
+-------------------
 
 These can be hooked into by two different types of event
 listeners:
@@ -150,15 +166,3 @@ Listening to Lifecycle Events
 -----------------------------
 
 This works exactly the same as with the `ORM events <http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/events.html>`_.
-
-Persistance event order
------------------------
-
-When $dm->flush is calling after $dm->move(), the order of events is:
-
-1. preFlush
-2. onFlush
-3. preMove
-4. postMove
-5. postFlush
-
