@@ -235,40 +235,39 @@ In ReferenceMany collections, you can even have documents of mixed types.
     exists.
 
 
-Referrers back to the referencing documents
+Referrers to inverse the reference relation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-PHPCR-ODM is able to tell which documents reference a specific document, if the `hard` or
-`weak` strategy is used. The Referrers mapping provides a read only field with a collection
-of all documents referencing this document.
+PHPCR-ODM is able to tell which documents reference a specific document, if the ``hard`` or
+``weak`` strategy is used. The ``Referrers`` mapping is a collection of documents that have
+a reference to this document.
 
-In ORM terms, the Reference is the owning side of the association, while the Referrer is the inverse side.
+In ORM terms, the Reference is the owning side of the association, while the
+Referrer is the inverse side. Contrary to the ORM, the PHPCR references really
+are directional, they are always stored in the property of the document with
+the ReferenceOne or ReferenceMany field. Referrer is a purely virtual information
+that is not explicitly stored in the PHPCR database but determined at runtime.
 
-You can use the ``filter`` attribute to limit the collection to a specific property name
-on the referring side. The filter follows the ``name`` parameter of
-`PHPCR\NodeInterface::getReferences() <http://phpcr.github.com/doc/html/phpcr/nodeinterface.html#getReferences%28%29>`_
-
-Additionally you can filter for only weak or only hard references with ``referenceType`` -
-if you don't you get both types of references.
+You need to specify the ``referrerDocument`` to specify the (base) class of the
+document that has the reference, and ``referencedBy`` to tell which field of the
+referencing document contains the reference. After flushing, the reference property
+will contain the referenced document.
 
 .. configuration-block::
 
     .. code-block:: php
 
-        /** @Referrers */
-        private $allReferrers;
-        /** @Referrers(filter="weakTarget") */
+        /** @Referrers(referrerDocument="FQN\Class\Name", referencedBy="otherFieldName") */
         private $specificReferrers;
-        /** @Referrers(referenceType="hard") */
-        private $hardReferrers;
+        /** @Referrers(referrerDocument="Other\Class\Name", referencedBy="someFieldName", cascade="persist, remove") */
+        private $cascadedReferrers;
 
     .. code-block:: xml
 
         <doctrine-mapping>
             <document class="MyPersistentClass">
-                <referrers fieldName="allReferrers" />
-                <referrers fieldName="specificReferrers" filter="weakTarget" />
-                <referrers fieldName="hardReferrers" reference-type="hard" />
+                <referrers fieldName="specificReferrers" referrerDocument="FQN\Class\Name" referencedBy="otherFieldName" />
+                <referrers fieldName="cascadedReferrers" referrerDocument="Other\Class\Name" referencedBy="someFieldName" cascade="persist, remove" />
             </document>
         </doctrine-mapping>
 
@@ -276,11 +275,140 @@ if you don't you get both types of references.
 
         MyPersistentClass:
             referrers:
-                allReferrers: ~
                 specificReferrers:
-                    filter: weakTarget
+                    referrerDocument: FQN\Class\Name
+                    referencedBy: otherFieldName
+                cascadedReferrers:
+                    referrerDocument: Other\Class\Name
+                    referencedBy: someFieldName
+                    cascade: persist, remove
+
+
+
+Referrers can cascade like the other association mappings to persist or delete their
+referrers if desired.
+
+.. note::
+
+    The main use case to persist cascade or deletion of the referrer mapping
+    is to build a form where it is possible to add entities that should reference
+    this content. However, it is not allowed to modify both the reference collection
+    and the referrer collection of interlinked content, as this would be ambiguous.
+
+.. tip::
+
+    There is also the ``DocumentManager::getReferrers`` that allows you to control
+    what referencing documents to get more fine grained, if Referrers is to limited
+    and MixedReferrers too broad.
+
+
+MixedReferrers
+~~~~~~~~~~~~~~
+
+The mixed referrers is a much simpler but read only mapping to get a collection
+of *all* documents that have a reference to this document. The only possible option
+to this mapping is the `referenceType` to only get hard resp. weak references. If
+left out, you get both.
+
+Mixed referrers can even be mapped on a document that is not referenceable, as you
+might do it on a base document of which some extending documents are referenceable.
+An example for this is the `Generic` document provided by phpcr-odm itself.
+
+
+.. configuration-block::
+
+    .. code-block:: php
+
+        /** @MixedReferrers */
+        private $allReferrers;
+        /** @MixedReferrers(referenceType="hard") */
+        private $hardReferrers;
+
+    .. code-block:: xml
+
+        <doctrine-mapping>
+            <document class="MyPersistentClass">
+                <mixed-referrers fieldName="allReferrers" />
+                <mixed-referrers fieldName="hardReferrers" reference-type="hard" />
+            </document>
+        </doctrine-mapping>
+
+    .. code-block:: yaml
+
+        MyPersistentClass:
+            mixedReferrers:
+                allReferrers: ~
                 hardReferrers:
                     referenceType: hard
+
+
+Transitive persistence / Cascade Operations
+-------------------------------------------
+
+Persisting, removing, detaching and merging individual entities can
+become pretty cumbersome, especially when a highly interweaved object graph
+is involved. PHPCR-ODM provides cascading with the same concepts as
+Doctrine2 ORM does.
+
+Each association to another entity or a collection of entities can be
+configured to automatically cascade certain operations. For Children,
+cascading persist and remove are implicit and can not be disabled. (A
+PHPCR node always must have a parent, removing the parent removes its children.)
+The child removal happens on PHPCR level and does not trigger additional
+lifecycle events.
+
+For References and Referrers, no operations are cascaded by default, they
+can be configured specifically.
+
+The following cascade options exist:
+
+-  persist : Cascades persist operations to the associated entities.
+-  remove : Cascades remove operations to the associated entities.
+-  merge : Cascades merge operations to the associated entities.
+-  detach : Cascades detach operations to the associated entities.
+-  refresh : Also refresh the associated entities when refreshing this entity.
+-  translation : Cascade the current translation locale to associated entities.
+-  all : Cascades persist, remove, merge, detach, refresh and translation
+   operations to associated entities.
+
+.. note::
+
+    Cascade operations are performed in memory. That means collections and related entities
+    are fetched into memory, even if they are still marked as lazy when
+    the cascade operation is about to be performed. This approach allows
+    entity lifecycle events to be performed for each of these operations.
+
+    However, pulling objects graph into memory on cascade can cause considerable performance
+    overhead, especially when cascading collections are large. Makes sure
+    to weigh the benefits and downsides of each cascade operation that you define.
+
+Even though automatic cascading is convenient it should be used
+with care. Do not blindly apply cascade=all to all associations as
+it will unnecessarily degrade the performance of your application.
+For each cascade operation that gets activated Doctrine also
+applies that operation to the association, be it single or
+collection valued.
+
+Persistence by Reachability: Cascade Persist
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+There are additional semantics that apply to the Cascade Persist
+operation. During each flush() operation Doctrine detects if there
+are new entities in any collection and three possible cases can
+happen:
+
+
+1. New entities in a collection marked as cascade persist will be
+   directly persisted by Doctrine.
+2. New entities in a collection not marked as cascade persist will
+   produce an Exception and rollback the flush() operation.
+3. Collections without new entities are skipped.
+
+This concept is called Persistence by Reachability: New entities
+that are found on already managed entities are automatically
+persisted as long as the association is defined as cascade
+persist.
+
 
 
 .. _collections:
@@ -288,47 +416,19 @@ if you don't you get both types of references.
 Collections
 -----------
 
-TODO: review
+All many-valued associations of PHPCR-ODM use implementations of the ``Collection``
+interface. They are more powerful than plain arrays. Read sections 8.2 to 8.5 in
+the ORM documentation `Working with associations <http://docs.doctrine-project.org/en/latest/reference/working-with-associations.html>`_
+if you are not familiar with associations.
 
-In all the examples of many-valued associations in this manual we
-will make use of a ``Collection`` interface and a corresponding
-default implementation ``ArrayCollection`` that are defined in the
-``Doctrine\Common\Collections`` namespace. Why do we need that?
-Doesn't that couple my domain model to Doctrine? Unfortunately, PHP
-arrays, while being great for many things, do not make up for good
-collections of business objects, especially not in the context of
-an ORM. The reason is that plain PHP arrays can not be
-transparently extended / instrumented in PHP code, which is
-necessary for a lot of advanced ORM features. The classes /
-interfaces that come closest to an OO collection are ArrayAccess
-and ArrayObject but until instances of these types can be used in
-all places where a plain array can be used (something that may
-happen in PHP6) their usability is fairly limited. You "can"
-type-hint on ``ArrayAccess`` instead of ``Collection``, since the
-Collection interface extends ``ArrayAccess``, but this will
-severely limit you in the way you can work with the collection,
-because the ``ArrayAccess`` API is (intentionally) very primitive
-and more importantly because you can not pass this collection to
-all the useful PHP array functions, which makes it very hard to
-work with.
-
-.. warning::
-
-    The Collection interface and ArrayCollection class,
-    like everything else in the Doctrine namespace, are neither part of
-    the ORM, nor the DBAL, it is a plain PHP class that has no outside
-    dependencies apart from dependencies on PHP itself (and the SPL).
-    Therefore using this class in your domain classes and elsewhere
-    does not introduce a coupling to the persistence layer. The
-    Collection class, like everything else in the Common namespace, is
-    not part of the persistence layer. You could even copy that class
-    over to your project if you want to remove Doctrine from your
-    project and all your domain classes will work the same as before.
-
-
+Your domain models need to use those classes, but they are defined in a
+specific doctrine collections repository and thus not specific to any
+persistence implementation.
+For a discussion of this topic, see the `Collections section <http://docs.doctrine-project.org/en/latest/reference/association-mapping.html#collections>`_
+in the ORM documentation.
 
 Initializing Collections
-------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 You have to be careful when using entity fields that contain a
 collection of related entities. Say we have a User entity that
