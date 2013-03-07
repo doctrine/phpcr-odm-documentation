@@ -291,7 +291,7 @@ referrers if desired.
 .. note::
 
     The main use case to persist cascade or deletion of the referrer mapping
-    is to build a form where it is possible to add entities that should reference
+    is to build a form where it is possible to add documents that should reference
     this content. However, it is not allowed to modify both the reference collection
     and the referrer collection of interlinked content, as this would be ambiguous.
 
@@ -307,8 +307,8 @@ MixedReferrers
 
 The mixed referrers is a much simpler but read only mapping to get a collection
 of *all* documents that have a reference to this document. The only possible option
-to this mapping is the `referenceType` to only get hard resp. weak references. If
-left out, you get both.
+of mixed referrers is `referenceType` to limit the referrers to only hard resp. weak
+references. If left out, you get both types of references.
 
 Mixed referrers can even be mapped on a document that is not referenceable, as you
 might do it on a base document of which some extending documents are referenceable.
@@ -345,15 +345,15 @@ An example for this is the `Generic` document provided by phpcr-odm itself.
 Transitive persistence / Cascade Operations
 -------------------------------------------
 
-Persisting, removing, detaching and merging individual entities can
+Persisting, removing, detaching and merging individual documents can
 become pretty cumbersome, especially when a highly interweaved object graph
 is involved. PHPCR-ODM provides cascading with the same concepts as
 Doctrine2 ORM does.
 
-Each association to another entity or a collection of entities can be
-configured to automatically cascade certain operations. For Children,
-cascading persist and remove are implicit and can not be disabled. (A
-PHPCR node always must have a parent, removing the parent removes its children.)
+Each association to another document or a collection of documents can be
+configured to automatically cascade certain operations. For the ``Children`` mapping,
+cascading persist and remove are implicit and cannot be disabled. A PHPCR node
+always must have a parent, removing the parent removes its children.
 The child removal happens on PHPCR level and does not trigger additional
 lifecycle events.
 
@@ -362,28 +362,28 @@ can be configured specifically.
 
 The following cascade options exist:
 
--  persist : Cascades persist operations to the associated entities.
--  remove : Cascades remove operations to the associated entities.
--  merge : Cascades merge operations to the associated entities.
--  detach : Cascades detach operations to the associated entities.
--  refresh : Also refresh the associated entities when refreshing this entity.
--  translation : Cascade the current translation locale to associated entities.
--  all : Cascades persist, remove, merge, detach, refresh and translation
-   operations to associated entities.
+-  **persist**: Cascades persist operations to the associated documents.
+-  **remove**: Cascades remove operations to the associated documents.
+-  **merge**: Cascades merge operations to the associated documents.
+-  **detach**: Cascades detach operations to the associated documents.
+-  **refresh**: Also refresh the associated documents when refreshing this document.
+-  **translation**: Cascade the current translation locale to associated documents.
+-  **all**: Cascades persist, remove, merge, detach, refresh and translation
+   operations to associated documents.
 
 .. note::
 
-    Cascade operations are performed in memory. That means collections and related entities
+    Cascade operations are performed in memory. That means collections and related documents
     are fetched into memory, even if they are still marked as lazy when
     the cascade operation is about to be performed. This approach allows
-    entity lifecycle events to be performed for each of these operations.
+    document lifecycle events to be performed for each of these operations.
 
-    However, pulling objects graph into memory on cascade can cause considerable performance
+    However, pulling a large object graph into memory on cascade can cause considerable performance
     overhead, especially when cascading collections are large. Makes sure
     to weigh the benefits and downsides of each cascade operation that you define.
 
 Even though automatic cascading is convenient it should be used
-with care. Do not blindly apply cascade=all to all associations as
+with care. Do not blindly apply ``cascade=all`` to all associations as
 it will unnecessarily degrade the performance of your application.
 For each cascade operation that gets activated Doctrine also
 applies that operation to the association, be it single or
@@ -394,18 +394,18 @@ Persistence by Reachability: Cascade Persist
 
 There are additional semantics that apply to the Cascade Persist
 operation. During each flush() operation Doctrine detects if there
-are new entities in any collection and three possible cases can
+are new documents in any collection and three possible cases can
 happen:
 
 
-1. New entities in a collection marked as cascade persist will be
+1. New documents in a collection marked as cascade persist will be
    directly persisted by Doctrine.
-2. New entities in a collection not marked as cascade persist will
+2. New documents in a collection not marked as cascade persist will
    produce an Exception and rollback the flush() operation.
-3. Collections without new entities are skipped.
+3. Collections without new documents are skipped.
 
-This concept is called Persistence by Reachability: New entities
-that are found on already managed entities are automatically
+This concept is called "Persistence by Reachability". New documents
+that are found on already managed documents are automatically
 persisted as long as the association is defined as cascade
 persist.
 
@@ -430,17 +430,17 @@ in the ORM documentation.
 Initializing Collections
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-You have to be careful when using entity fields that contain a
-collection of related entities. Say we have a User entity that
+You have to be careful when using document fields that contain a
+collection of related documents. Say we have a User document that
 contains a collection of groups:
 
 .. code-block:: php
 
     <?php
-    /** @Entity **/
+    /** @Document **/
     class User
     {
-        /** @ManyToMany(targetEntity="Group") **/
+        /** @ReferenceMany **/
         private $groups;
 
         public function getGroups()
@@ -452,21 +452,21 @@ contains a collection of groups:
 With this code alone the ``$groups`` field only contains an
 instance of ``Doctrine\Common\Collections\Collection`` if the user
 is retrieved from Doctrine, however not after you instantiated a
-fresh instance of the User. When your user entity is still new
+fresh instance of the User. When your user document is still new
 ``$groups`` will obviously be null.
 
 This is why we recommend to initialize all collection fields to an
-empty ``ArrayCollection`` in your entities constructor:
+empty ``ArrayCollection`` in your documents constructor:
 
 .. code-block:: php
 
     <?php
     use Doctrine\Common\Collections\ArrayCollection;
 
-    /** @Entity **/
+    /** @Document **/
     class User
     {
-        /** @ManyToMany(targetEntity="Group") **/
+        /** @ReferenceMany **/
         private $groups;
 
         public function __construct()
@@ -480,12 +480,12 @@ empty ``ArrayCollection`` in your entities constructor:
         }
     }
 
-Now the following code will be working even if the Entity hasn't
-been associated with an EntityManager yet:
+Now the following code will be working even if the Document hasn't
+been associated with a DocumentManager yet:
 
 .. code-block:: php
 
     <?php
-    $group = $entityManager->find('Group', $groupId);
+    $group = $documentManager->find(null, $groupId);
     $user = new User();
     $user->getGroups()->add($group);
