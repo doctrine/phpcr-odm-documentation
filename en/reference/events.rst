@@ -61,13 +61,13 @@ Event order when moving
 
 During the flush() operation of a modified document, the events get triggered in the following order:
 
-1. preFlush
-2. onFlush
-3. preUpdate
-4. postUpdate
-5. preMove
-6. postMove
-7. postFlush
+* 1. preFlush
+* 2. onFlush
+* 3. preUpdate
+* 4. postUpdate
+* 5. preMove
+* 6. postMove
+* 7. postFlush
 
 
 As the move event is triggered after the changeset has been calculated,
@@ -165,4 +165,4 @@ listed in the previous Lifecycle Events section.
 Listening to Lifecycle Events
 -----------------------------
 
-This works exactly the same as with the `ORM events <http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/events.html>`_.
+This works exactly the same as with the `ORM events <http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/events.html#listening-to-lifecycle-events>`_.
