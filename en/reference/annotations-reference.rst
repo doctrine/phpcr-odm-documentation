@@ -148,6 +148,8 @@ Common optional attributes:
   See :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
 - **translated**: ``true`` to specify that the property should be translatable, requires the
   ``translator`` attribute to be specified in :ref:`@Document<annref_document>`.
+- **nullable**: ``true`` to specifiy that this property doesn't have a required value, used 
+  when loading a translation, to allow loading a node with a missing translated property.
 
 Examples:
 
@@ -156,9 +158,14 @@ Examples:
    <?php
 
    /**
-    * @String()
+    * @String(translated=true)
     */
    protected $title;
+
+   /**
+    * @String(translated=true, nullable=true)
+    */
+   protected $subTitle;
 
    /**
     * @Boolean()
