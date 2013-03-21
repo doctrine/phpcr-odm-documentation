@@ -266,8 +266,8 @@ will contain the referenced document.
 
         <doctrine-mapping>
             <document class="MyPersistentClass">
-                <referrers fieldName="specificReferrers" referrerDocument="FQN\Class\Name" referencedBy="otherFieldName" />
-                <referrers fieldName="cascadedReferrers" referrerDocument="Other\Class\Name" referencedBy="someFieldName" cascade="persist, remove" />
+                <referrers fieldName="specificReferrers" referring-document="FQN\Class\Name" referenced-by="otherFieldName" />
+                <referrers fieldName="cascadedReferrers" referring-document="Other\Class\Name" referenced-by="someFieldName" cascade="persist, remove" />
             </document>
         </doctrine-mapping>
 
