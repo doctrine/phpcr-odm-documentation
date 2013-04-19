@@ -53,6 +53,7 @@ Optional attributes:
 -  **versionable**: Set to true to enable versioning, implies *referenceable*.
 -  **referenceable**: Set to true to allow this node to be referenced.
 -  **translator**: Determines how translations are stored, one of ``attribute`` or ``child``. See :ref:`langauge mapping <multilang_mapping>`
+-  **mixins**: Optional list of PHPCR mixins that will be added to the node on creation. 
 
 Minimal example:
 
@@ -77,7 +78,8 @@ Full example:
     *   repositoryClass="MyProject\UserRepository",
     *   versionable=true,
     *   referenceable=true,
-    *   translator="child"
+    *   translator="child",
+    *   mixins={"mix:created", "mix:lastModified"}
     * )
     */
    class SomeDocument
