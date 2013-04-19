@@ -295,15 +295,63 @@ This script will simply echo the data to the console.
         }
     }
 
-
 Children need not be of the same document class as their parents. Be careful when reading
 children to be sure they are of the expected class.
 
+Even if children are not mapped, you can use the document manager to get all
+flushed children of a document.
 
-Some basic operations
----------------------
+.. code-block:: php
 
-One more script to show some basic operations you can do with the document manager.
+    <?php
+
+    $children = $documentManager->getChildren($parent);
+
+.. note:: *Difference from ORM*
+    While with the ORM, the natural thing to get data is to query, with
+    PHPCR-ODM the natural way is to use the hierarchy, that is parent-child
+    relations.
+
+    If you need to query, see :ref:`Querying in the Working with Objects section <workingobjects-query>`.
+
+
+Tree traversal
+--------------
+
+TODO: explain @Children and @Parent and $documentManager->getChildren.
+
+Add references
+--------------
+
+TODO: explain @ReferenceOne and @ReferenceMany and @Referrers
+and $documentManager->getReferrers
+
+
+Removing documents
+------------------
+
+To delete a document, call the ``remove`` method on the DocumentManager.
+
+.. code-block:: php
+
+    <?php
+    // src/manipulate.php
+    require_once '../bootstrap.php';
+
+    // remove a document
+    $doc = $documentManager->find(null, '/doc');
+    $documentManager->remove($doc);
+
+    // persist all operations
+    $documentManager->flush();
+
+
+Other helpful methods on the DocumentManager
+----------------------------------------------
+
+You can move a document to a different path with the ``move`` method.
+Alternatively, you can assign a different Parent and/or Nodename to move
+by assignment. The later is for example handy with Symfony2 forms.
 
 .. code-block:: php
 
@@ -314,20 +362,9 @@ One more script to show some basic operations you can do with the document manag
     // we move a node
     $child = $documentManager->find(null, '/doc/child');
     $documentManager->move($child, '/newpath');
-    // we can also change Parent and Name field to move and rename by assignment
-
-    // remove a document
-    $doc = $documentManager->find(null, '/doc');
-    $documentManager->remove($doc);
 
     // persist all operations
     $documentManager->flush();
-
-
-Add references
---------------
-
-TODO: explain @ReferenceOne and @ReferenceMany and @Referrers
 
 
 Conclusion

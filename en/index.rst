@@ -42,7 +42,7 @@ Mapping Objects onto a Document Repository
 Working with Objects
 --------------------
 
-* **Basic Reference**: TODO
+* **Basic Reference**:
   :doc:`Documents <reference/working-with-objects>` |
   :doc:`Events <reference/events>`
 

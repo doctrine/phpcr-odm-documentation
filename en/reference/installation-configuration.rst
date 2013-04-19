@@ -32,7 +32,7 @@ Then run ``composer install`` and you are done.
 PHPCR provider
 --------------
 
-Doctrine PHPCR-ODM uses the `PHP Content Repository API <http://phpcr.github.com/`_ for
+Doctrine PHPCR-ODM uses the `PHP Content Repository API <http://phpcr.github.io/>`_ for
 storage. You can force one of the available providers in your projects composer.json file
 "require" section by specifying one of the "suggest" libraries in the phpcr-odm composer.json
 
