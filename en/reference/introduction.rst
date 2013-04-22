@@ -1,7 +1,9 @@
 Getting Started
 ===============
 
-.. note:: *Difference from ORM*
+.. note::
+
+    **Difference from the ORM**
 
     Doctrine ORM knows several models of developing. If you know the ORM, please note that
     with PHPCR-ODM you can only develop "Code First". We do not (yet) have any generator to
@@ -330,7 +332,7 @@ and $documentManager->getReferrers
 Removing documents
 ------------------
 
-To delete a document, call the ``remove`` method on the DocumentManager.
+To delete a document, call the ``remove`` method on the ``DocumentManager``.
 
 .. code-block:: php
 
@@ -351,7 +353,7 @@ Other helpful methods on the DocumentManager
 
 You can move a document to a different path with the ``move`` method.
 Alternatively, you can assign a different Parent and/or Nodename to move
-by assignment. The later is for example handy with Symfony2 forms.
+by assignment. The latter is for example handy with Symfony2 forms.
 
 .. code-block:: php
 

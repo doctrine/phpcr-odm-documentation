@@ -470,7 +470,7 @@ the class being proxied. This happens in two situations:
 Reference Proxies
 ~~~~~~~~~~~~~~~~~
 
-The method ``DocumentManager#getReference($documentName, $identifier)``
+The method ``DocumentManager::getReference($documentName, $identifier)``
 lets you obtain a reference to a document for which the identifier
 is known, without loading that entity from the database. This is
 useful, for example, as a performance enhancement, when you want to

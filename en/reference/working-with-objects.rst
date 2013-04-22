@@ -1,30 +1,31 @@
 Working with Objects
 ====================
 
-This chapter explains you how to work with the ``DocumentManager`` and the
-``UnitOfWork``. The UnitOfWork encapsulates the information to be written
+This chapter explains how to work with the ``DocumentManager`` and the
+``UnitOfWork``. The Unit of Work encapsulates the information to be written
 to PHPCR when you call ``DocumentManager#flush()``.
 
-A UnitOfWork can be manually closed by calling ``DocumentManager#close()``.
+A Unit of Work can be manually closed by calling ``DocumentManager#close()``.
 Any changes to objects within this UnitOfWork that have not yet been
 persisted are lost.
 
 .. note::
 
     It is very important to understand that only
-    ``DocumentManager#flush()`` ever causes write operations against the
-    database to be executed. Any other methods such as
-    ``DocumentManager#persist($document)`` or
-    ``DocumentManager#remove($document)`` only notify the UnitOfWork to
+    ``DocumentManager::flush()`` ever causes write operations against the
+    repository to be executed. Any other methods such as
+    ``DocumentManager::persist($document)`` or
+    ``DocumentManager::remove($document)`` only notify the UnitOfWork to
     perform these operations during flush.
 
-    Not calling ``DocumentManager#flush()`` will lead to all changes
+    Not calling ``DocumentManager::flush()`` will lead to all changes
     during that request being lost.
 
 .. hint::
-    The DocumentManager is very similar to the Doctrine ORM EntityManager.
-    This chapter is shortened compared to the `corresponding ORM chapter <https://doctrine-orm.readthedocs.org/en/latest/reference/working-with-objects.html>`_
-    We try to highlight the places where PHPCR-ODM is different from the ORM.
+    The DocumentManager is very similar to the Doctrine ORM EntityManager and
+    this chapter similar to its `corresponding ORM chapter <https://doctrine-orm.readthedocs.org/en/latest/reference/working-with-objects.html>`_.
+    This chapter tries to help you by highlighting the places where PHPCR-ODM
+    is different from the ORM.
 
 
 Documents and the Identity Map
@@ -32,7 +33,7 @@ Documents and the Identity Map
 
 Every document has an identifier, which is its PHPCR path. The path is unique
 inside the workspace. Take the following example, where you find an article
-with the headline "Hello World" with the ID '/cms/article/hello-world':
+with the headline "Hello World" with the ID ``/cms/article/hello-world``:
 
 .. code-block:: php
 
@@ -41,9 +42,10 @@ with the headline "Hello World" with the ID '/cms/article/hello-world':
     $article->setHeadline('Hello World dude!');
 
     $article2 = $documentManager->find(null, '/cms/article/hello-world');
-    echo $article2->getHeadline();
+    echo $article2->getHeadline(); // Hello World dude!
 
 .. note::
+
     The first argument to ``find()`` is the document class name. While the ORM
     has a table per class and thus always needs the document class name,
     PHPCR-ODM has one tree for all documents. The above call will find you
@@ -51,15 +53,15 @@ with the headline "Hello World" with the ID '/cms/article/hello-world':
     the class name to have PHPCR-ODM detect if the document is not of the
     expected type.
 
-In this case, the Article is accessed from the document manager twice,
-but modified in between. Doctrine 2 realizes that it is the same ID and will only
-ever give you access to one instance of the Article with ID '/cms/article/hello-world',
-no matter how often do you retrieve it from the DocumentManager and
-even no matter what kind of Query method you are using (find,
-Repository Finder or DQL). This is called "Identity Map" pattern,
-which means Doctrine keeps a map of each document and ids that have
-been retrieved per PHP request and keeps returning you the same
-instances.
+In this case, the article is retrieved from the document manager twice,
+but modified in between. Doctrine 2 realizes that it is the same ID and will
+only ever give you access to one instance of the Article with ID
+``/cms/article/hello-world``, no matter how often do you retrieve it from
+the DocumentManager and even no matter what kind of Query method you are
+using (find, findBy, query builder, getDocumentsByPhpcrQuery). This is
+called "Identity Map" pattern, which means Doctrine keeps a map of each
+document that has been retrieved in the current PHP request and keeps
+returning you the same instances.
 
 In the previous example the ``echo`` prints "Hello World dude!" to the
 screen. You can even verify that ``$article`` and ``$article2`` are
@@ -75,13 +77,18 @@ code:
 
 Sometimes you want to clear the identity map of an DocumentManager to
 start over. We use this regularly in our unit tests to enforce
-loading objects from the database again instead of serving them
-from the identity map. You can call ``DocumentManager#clear()`` to
+loading objects from the repository again instead of serving them
+from the identity map. You can call ``DocumentManager::clear()`` to
 achieve this result.
 
-Note that as the ID is the PHPCR path, it is possible to change the ID
-of a document by moving it in the tree. There is the
-``DocumentManager::move()`` operation to move a document to a different path.
+.. note::
+
+    In PHPCR-ODM, the ID is the PHPCR path of the document. This means it is
+    possible to change the ID of a document by moving it in the tree using the
+    the ``DocumentManager::move()`` operation.
+    To create a reference to a document that is stable over move operations,
+    make the document *referenceable* and map the ``Uuid`` field. You can find
+    a document by its universally unique id.
 
 
 Document Object Graph Traversal
@@ -99,19 +106,29 @@ from newly opened DocumentManager:
 .. code-block:: php
 
     <?php
-    /** @Document */
+    /**
+     * @Document
+     */
     class Article
     {
-        /** @Id */
+        /**
+         * @Id
+         */
         private $id;
 
-        /** @String */
+        /**
+         * @String
+         */
         private $headline;
 
-        /** @ReferenceOne */
+        /**
+         * @ReferenceOne
+         */
         private $author;
 
-        /** @Referrers(referrerDocument="Comment", referencedBy="article") */
+        /**
+         * @Referrers(referrerDocument="Comment", referencedBy="article")
+         */
         private $comments;
 
         public function __construct {
@@ -124,10 +141,11 @@ from newly opened DocumentManager:
 
     $article = $em->find(null, '/cms/article/hello-world');
 
-This code retrieves the ``Article`` instance with ID '/cms/article/hello-world'
-executing a single getNode statement against the repository. You can still
-access the associated properties author and comments and the associated objects
-they contain.
+This code retrieves an ``Article`` instance with ID
+``/cms/article/hello-world``, executing a single ``getNode()`` operation
+on the repository, retrieving only the data required for the specified
+article. However, you can still access the associated properties author
+and comments and the associated objects they contain.
 
 This works by utilizing the lazy loading pattern. Instead of
 passing you back a real Author instance and a collection of
@@ -135,8 +153,14 @@ comments, Doctrine will create proxy instances for you. Only if you
 access these proxies for the first time they will go through the
 DocumentManager and load their state from the repository.
 
+.. note::
+
+    In PHPCR-ODM, relations between documents are expressed in *references*.
+    References are directed links. You can map the backlinks using the
+    ``Referrers`` mapping.
+
 This lazy-loading process happens behind the scenes, hidden from
-your code. See the following code:
+your code. Have a look at the following example:
 
 .. code-block:: php
 
@@ -146,14 +170,13 @@ your code. See the following code:
     // accessing a method of the user instance triggers the lazy-load
     echo "Author: " . $article->getAuthor()->getName() . "\n";
 
-    // Lazy Loading Proxies pass instanceof tests:
     if ($article->getAuthor() instanceof User) {
-        // a User Proxy is a generated "UserProxy" class
+        // getAuthor returns a proxy class which is instanceof User
     }
 
     // accessing the comments as an iterator triggers the lazy-load
-    // retrieving ALL the comments of this article from the database
-    // using a single SELECT statement
+    // retrieving ALL the comments of this article from the repository
+    // using a single getNodes call
     foreach ($article->getComments() AS $comment) {
         echo $comment->getText() . "\n\n";
     }
@@ -165,7 +188,7 @@ your code. See the following code:
     }
 
 A slice of the generated proxy classes code looks like the
-following piece of code. A real proxy class override ALL public
+following example. Real proxy class override *all* public
 methods along the lines of the ``getName()`` method shown below:
 
 .. code-block:: php
@@ -191,18 +214,18 @@ methods along the lines of the ``getName()`` method shown below:
     Traversing the object graph for parts that are lazy-loaded will
     easily trigger lots of repository lookups and will perform badly if used
     too heavily. If you often use child documents for example, look into
-    the `fetchDepth` configuration.
+    the ``fetchDepth`` configuration.
 
 
 Persisting documents
 --------------------
 
 When you create a new document, the DocumentManager knows nothing about it.
-You need to call ``DocumentManager#persist($document)`` to make the document
+You need to call ``DocumentManager::persist($document)`` to make the document
 MANAGED. You only need to do that on object instantiation. From now on,
 whenever you modify the object you loaded from the DocumentManager, it will
 automatically be synchronized with the repository when
-``DocumentManager#flush()`` is invoked.
+``DocumentManager::flush()`` is invoked.
 
 .. note::
 
@@ -210,9 +233,9 @@ automatically be synchronized with the repository when
     cause an immediate addNode on the repository.
     Doctrine applies a strategy called "transactional write-behind",
     which means that it will delay most SQL commands until
-    ``DocumentManager#flush()`` is invoked which will then issue all
+    ``DocumentManager::flush()`` is invoked which will then issue all
     necessary PHPCR calls to synchronize your objects with the
-    repository in the most efficient way and a single, short transaction,
+    repository in the most efficient way - a single, short transaction -
     taking care of maintaining referential integrity.
 
 
@@ -230,11 +253,11 @@ Example:
 
     Generated document identifiers / primary keys are
     guaranteed to be available after the next successful flush
-    operation that involves the document in question. You can not rely on
+    operation that involves the document in question. You may not rely on
     a generated identifier to be available directly after invoking
-    ``persist``. The inverse is also true. You can not rely on a
-    generated identifier being not available after a failed flush
-    operation.
+    ``persist``. The inverse is also true. After a failed flush,
+    a document may already show a generated identifier even though
+    it was not persisted.
 
 
 The semantics of the persist operation, applied on an document X, are
@@ -243,9 +266,9 @@ as follows:
 
 -  If X is a new document, it becomes managed. The document X will be
    entered into the repository as a result of the flush operation.
--  If X is a preexisting managed document, it is ignored by the
+-  If X is a pre-existing managed document, it is ignored by the
    persist operation. However, the persist operation is cascaded to
-   documents referenced by X, if the relationships from X to these
+   documents referenced by X if the relationships from X to these
    other documents are mapped with cascade=PERSIST or cascade=ALL (see
    "Transitive Persistence").
 -  If X is a removed document, it becomes managed.
@@ -256,17 +279,17 @@ Removing documents
 ------------------
 
 An document can be removed from persistent storage by passing it to
-the ``DocumentManager#remove($document)`` method. By applying the
+the ``DocumentManager::remove($document)`` method. By applying the
 ``remove`` operation on some document, that document becomes REMOVED,
 which means that its persistent state will be deleted once
-``DocumentManager#flush()`` is invoked.
+``DocumentManager::flush()`` is invoked.
 
 .. note::
 
     Just like ``persist``, invoking ``remove`` with a document
     does NOT cause an immediate remove() to be issued on the
     repository. The document will be deleted on the next invocation of
-    ``DocumentManager#flush()`` that involves that document. This
+    ``DocumentManager::flush()`` that involves that document. This
     means that documents scheduled for removal can still be queried
     for and appear in query and collection results. See
     the section on :ref:`Repository and UnitOfWork Out-Of-Sync <workingobjects_repository_uow_outofsync>`
@@ -297,13 +320,13 @@ as follows:
 -  If X is a detached document, an InvalidArgumentException will be
    thrown.
 -  If X is a removed document, it is ignored by the remove operation.
--  A removed document X will be removed from the database as a result
+-  A removed document X will be removed from the repository as a result
    of the flush operation.
 
 After a document has been removed, its in-memory state is the same as
 before the removal, except for generated identifiers.
 
-Removing a document will also automatically delete any children of it.
+Removing a document will also **automatically delete any children** of it.
 Note that no events will be triggered for the removed children, only for
 the document explicitly removed.
 
@@ -311,8 +334,8 @@ Deleting an object with all its references and referring objects can be
 achieved by cascading removal on the association mapping. If an association
 is marked as ``CASCADE=REMOVE``, PHPCR-ODM will fetch this association. If
 its a Single association it will pass this document to
-``DocumentManager#remove()``. If the association is a collection, Doctrine
-will loop over all its elements and pass them to``DocumentManager#remove()``.
+``DocumentManager::remove()``. If the association is a collection, Doctrine
+will loop over all its elements and pass them to``DocumentManager::remove()``.
 In both cases the cascade remove semantics are applied recursively.
 For large object graphs this removal strategy can be very costly.
 
@@ -327,10 +350,10 @@ Detaching documents
 -------------------
 
 A document is detached from an DocumentManager and thus no longer
-managed by invoking the ``DocumentManager#detach($document)`` method on
+managed by invoking the ``DocumentManager::detach($document)`` method on
 it or by cascading the detach operation to it. Changes made to the
 detached document, including removal of the document, will not
-be synchronized to the database after the document has been
+be synchronized to the repository after the document has been
 detached.
 
 Doctrine will not hold on to any references to a detached document.
@@ -364,7 +387,7 @@ There are several situations in which a document will become detached
 automatically without invoking the ``detach`` method:
 
 
--  When ``DocumentManager#clear()`` is invoked, all documents that are
+-  When ``DocumentManager::clear()`` is invoked, all documents that are
    currently managed by the DocumentManager instance become detached.
 -  When serializing a document. The document retrieved upon subsequent
    unserialization will be detached (This is the case for all documents
@@ -379,7 +402,7 @@ Merging documents
 Merging documents refers to the merging of (usually detached)
 documents into the context of a DocumentManager so that they become
 managed again. To merge the state of an document into an
-DocumentManager use the ``DocumentManager#merge($document)`` method. The
+DocumentManager use the ``DocumentManager::merge($document)`` method. The
 state of the passed document will be merged into a managed copy of
 this document and this copy will subsequently be returned.
 
@@ -432,10 +455,13 @@ to modify and persist such an document.
 
 .. warning::
 
-    If you need to perform multiple merges of documents that share certain subparts
-    of their object-graphs and cascade merge, then you have to call ``DocumentManager#clear()`` between the
-    successive calls to ``DocumentManager#merge()``. Otherwise you might end up with
-    multiple copies of the "same" object in the database, however with different ids.
+    If you need to perform multiple merges of documents that share
+    certain subparts of their object-graphs and cascade merge, then you
+    have to call ``DocumentManager::clear()`` between the successive
+    calls to ``DocumentManager::merge()``. Otherwise you might end up
+    with multiple copies of the "same" object in the repository, however
+    with different ids, or a duplicate id conflict - depending on how
+    you generate ids.
 
 .. note::
 
@@ -449,15 +475,15 @@ to modify and persist such an document.
 Synchronization with the Repository
 -----------------------------------
 
-The state of persistent documents is synchronized with the database
+The state of persistent documents is synchronized with the repository
 on flush of an ``DocumentManager`` which commits the underlying
 ``UnitOfWork``. The synchronization involves writing any updates to
-persistent documents and their relationships to the database.
+persistent documents and their relationships to the repository.
 Thereby bidirectional relationships are persisted based on the
 references held by the owning side of the relationship as explained
 in the Association Mapping chapter.
 
-When ``DocumentManager#flush()`` is called, Doctrine inspects all
+When ``DocumentManager::flush()`` is called, Doctrine inspects all
 managed, new and removed documents and will perform the following
 operations.
 
@@ -468,19 +494,19 @@ Effects of Repository and UnitOfWork being Out-Of-Sync
 
 As soon as you begin to change the state of documents, call persist or remove the
 contents of the UnitOfWork and the repository will get out of sync. They can
-only be synchronized by calling ``DocumentManager#flush()``. This section
+only be synchronized by calling ``DocumentManager::flush()``. This section
 describes the effects of repository and UnitOfWork being out of sync.
 
 -  Documents that are scheduled for removal can still be queried from the repository.
    They are returned from queries, calls to getReferrers and getChildren and
    stay visible in collections.
--  Documents that are passed to ``DocumentManager#persist`` do not turn up in query
+-  Documents that are passed to ``DocumentManager::persist`` do not turn up in query
    results and do not appear in collections.
 -  Documents that have changed will not be overwritten with the state from the repository.
    This is because the identity map will detect the construction of an already existing
    document and assumes its the most up to date version.
 
-``DocumentManager#flush()`` is never called implicitly by Doctrine. You always have to trigger it manually.
+``DocumentManager::flush()`` is never called implicitly by Doctrine. You always have to trigger it manually.
 
 Synchronizing New and Managed Documents
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -521,7 +547,7 @@ Synchronizing Removed Documents
 The flush operation applies to a removed document by deleting its
 persistent state from the repository. No cascade options are relevant
 for removed documents on flush, the cascade remove option is already
-executed during ``DocumentManager#remove($document)``.
+executed during ``DocumentManager::remove($document)``.
 
 The size of a Unit of Work
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -566,7 +592,7 @@ Direct access to a Unit of Work
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 You can get direct access to the Unit of Work by calling
-``DocumentManager#getUnitOfWork()``. This will return the UnitOfWork
+``DocumentManager::getUnitOfWork()``. This will return the UnitOfWork
 instance the DocumentManager is currently using.
 
 .. code-block:: php
@@ -609,7 +635,7 @@ A document is in MANAGED state if it is associated with an
 ``DocumentManager`` and it is not REMOVED.
 
 A document is in REMOVED state after it has been passed to
-``DocumentManager#remove()`` until the next flush operation of the
+``DocumentManager::remove()`` until the next flush operation of the
 same DocumentManager. A REMOVED document is still associated with an
 ``DocumentManager`` until the next flush operation.
 
@@ -635,7 +661,7 @@ By Primary Key
 
 The most basic way to query for a persistent object is by its
 identifier (PHPCR path) using the
-``DocumentManager#find(null, $id)`` method. Here is an
+``DocumentManager::find(null, $id)`` method. Here is an
 example:
 
 .. code-block:: php
@@ -648,7 +674,7 @@ The return value is either the found document instance or null if no
 instance could be found with the given identifier.
 
 If you need several documents and know their paths, you can have a considerable
-performance gain by using ``DocumentManager#findMany(null, $ids)`` as then
+performance gain by using ``DocumentManager::findMany(null, $ids)`` as then
 all those documents are loaded from the repository in one request.
 
 You can also specify the class name instead of null to filter to only find
@@ -682,7 +708,8 @@ methods on a repository as follows:
 
     Note that due to the nature of PHPCR, the primary id is no field.
     You can thus not use ``findBy(array('id' => '/my/path'))`` but should
-    pass the id into the ``find`` method.
+    pass the id into the ``find`` method. There is also findMany if you
+    need to fetch several documents.
 
 You can also load by owning side associations through the repository:
 
@@ -694,7 +721,7 @@ You can also load by owning side associations through the repository:
 
 Be careful that this only works by passing the uuid of the associated document, not yet by passing the associated document itself.
 
-The ``DocumentRepository#findBy()`` method additionally accepts orderings,
+The ``DocumentRepository::findBy()`` method additionally accepts orderings,
 limit and offset as second to fourth parameters:
 
 .. code-block:: php
@@ -760,7 +787,7 @@ Custom Repositories
 
 By default the DocumentManager returns a default implementation of
 ``Doctrine\ODM\PHPCR\DocumentRepository`` when you call
-``DocumentManager#getRepository($documentClass)``. You can overwrite
+``DocumentManager::getRepository($documentClass)``. You can overwrite
 this behaviour by specifying the class name of your own Document
 Repository in the Annotation, XML or YAML metadata. In large,
 applications that require lots of specialized queries using a
@@ -775,7 +802,7 @@ in a central location.
     use Doctrine\ODM\PHPCR\DocumentRepository;
 
     /**
-     * @document(repositoryClass="MyDomain\Model\UserRepository")
+     * @Document(repositoryClass="MyDomain\Model\UserRepository")
      */
     class User
     {
@@ -800,5 +827,3 @@ You can access your repository now by calling:
     /** @var $dm DocumentManager */
 
     $admins = $dm->getRepository('MyDomain\Model\User')->getAllAdminUsers();
-
-
