@@ -19,7 +19,7 @@ your project.
 `Composer <http://www.getcomposer.org>`_ is the recommended installation method for Doctrine PHPCR-ODM.
 Define the following requirement in your ``composer.json`` file:
 
-::
+.. code-block:: javascript
 
     {
         "require": {
@@ -47,9 +47,7 @@ Jackalope-Jackrabbit uses the Java backend jackrabbit for storage.
 Follow `Running Jackrabbit Server <http://github.com/jackalope/jackalope/wiki/Running-a-jackrabbit-server>`_
 from the Jackalope wiki to have the storage backend.
 
-Bootstrap will roughly look like this
-
-.. code-block:: php
+Bootstrap will roughly look like this::
 
     <?php
     $workspace = 'default';
@@ -72,9 +70,7 @@ Create the database as described in the documentation of
 `Jackalope Doctrine DBAL <http://github.com/jackalope/jackalope-doctrine-dbal>`_.
 
 
-Bootstrap will roughly look like this when using mysql as storage backend:
-
-.. code-block:: php
+Bootstrap will roughly look like this when using mysql as storage backend::
 
     <?php
     $workspace = 'default';
@@ -103,9 +99,7 @@ Bootstrap will roughly look like this when using mysql as storage backend:
 Jackalope Doctrine DBAL does currently not manage users, so the simple
 credentials are ignored.
 
-Jackalope Doctrine DBAL also works with sqlite. Use the following parameters:
-
-.. code-block:: php
+Jackalope Doctrine DBAL also works with sqlite. Use the following parameters::
 
     $params = array(
         'driver' => 'pdo_sqlite',
@@ -125,9 +119,7 @@ to run. On typical Linux setups getting the extension is as easy as:
 
     sudo apt-get install php5-midgard2
 
-Bootstrap will roughly look like this when using mysql as storage backend:
-
-.. code-block:: php
+Bootstrap will roughly look like this when using mysql as storage backend::
 
     <?php
     $workspace = 'default';
@@ -158,9 +150,7 @@ The `$user` and `$pass` are the credentials for the PHPCR user. The
 mysql driver of midgard to connect to the database.
 
 
-Midgard can also use sqlite, with the following parameters:
-
-.. code-block:: php
+Midgard can also use sqlite, with the following parameters::
 
     $params = array(
         'midgard2.configuration.db.type' => 'SQLite',
@@ -195,9 +185,8 @@ roughly exists of four steps:
 Class loading with composer
 ---------------------------
 
-Autoloading is taken care of by Composer. You just have to include the composer autoload file in your project:
-
-.. code-block:: php
+Autoloading is taken care of by Composer. You just have to include the
+composer autoload file in your project::
 
     <?php
     // Include Composer Autoload
@@ -239,8 +228,6 @@ Annotation Mapping Driver
     $driver = new \Doctrine\ODM\PHPCR\Mapping\Driver\AnnotationDriver($reader, array('/path/to/your/document/classes'));
 
 
-
-
 XML Mapping Driver
 ^^^^^^^^^^^^^^^^^^
 .. code-block:: php
@@ -250,18 +237,13 @@ XML Mapping Driver
 YML Mapping Driver
 ^^^^^^^^^^^^^^^^^^
 
-This needs your project to require symfony/yaml in composer.json.
-
-.. code-block:: php
+This needs your project to require symfony/yaml in composer.json::
 
     $driver = new \Doctrine\ODM\PHPCR\Mapping\Driver\YamlDriver(array('/path/to/your/yml-mapping/files'));
 
 
-
-
 Quick Configuration Example
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 
 .. code-block:: php
 
@@ -475,9 +457,7 @@ lets you obtain a reference to a document for which the identifier
 is known, without loading that entity from the database. This is
 useful, for example, as a performance enhancement, when you want to
 establish an association to an entity for which you have the
-identifier. You could simply do this:
-
-.. code-block:: php
+identifier. You could simply do this::
 
     <?php
     // $dm instanceof DocumentManager, $cart instanceof MyProject\Model\Cart
@@ -503,9 +483,7 @@ Generating Proxy classes
 
 Proxy classes can either be generated manually through the Doctrine
 Console or automatically by Doctrine. The configuration option that
-controls this behavior is:
-
-.. code-block:: php
+controls this behavior is::
 
     <?php
     $config->setAutoGenerateProxyClasses($bool);
@@ -524,9 +502,10 @@ proxy classes like so:
 
 TODO: implement generating proxies!
 
-.. code-block:: php
+.. code-block:: bash
 
-    $ ./doctrine phpcr:generate-proxies
+
+    $ ./bin/doctrine phpcr:generate-proxies
 
 Autoloading Proxies
 ~~~~~~~~~~~~~~~~~~~
@@ -534,9 +513,7 @@ Autoloading Proxies
 When you deserialize proxy objects from the session or any other storage
 it is necessary to have an autoloading mechanism in place for these classes.
 For implementation reasons Proxy class names are not PSR-0 compliant. This
-means that you have to register a special autoloader for these classes:
-
-.. code-block:: php
+means that you have to register a special autoloader for these classes::
 
     <?php
     use Doctrine\ORM\Proxy\Autoloader;
@@ -558,9 +535,7 @@ Multiple Metadata Sources
 When using different components using Doctrine 2 you may end up
 with them using two different metadata drivers, for example XML and
 YAML. You can use the DriverChain Metadata implementations to
-aggregate these drivers based on namespaces:
-
-.. code-block:: php
+aggregate these drivers based on namespaces::
 
     <?php
     use Doctrine\ORM\Mapping\Driver\DriverChain;
@@ -584,9 +559,7 @@ Default Repository (***OPTIONAL***)
 TODO: should we do that in PHPCR-ODM as well?
 
 Specifies the FQCN of a subclass of the EntityRepository.
-That will be available for all entities without a custom repository class.
-
-.. code-block:: php
+That will be available for all entities without a custom repository class::
 
     <?php
     $config->setDefaultRepositoryClassName($fqcn);
@@ -616,6 +589,6 @@ We provide a command that makes it trivial to register this type and the phpcr
 namespace.
 
 
-.. code-block: bash
+.. code-block:: bash
 
-    php bin/phpcr doctrine:phpcr:register-system-node-types
+    $ php bin/phpcr doctrine:phpcr:register-system-node-types

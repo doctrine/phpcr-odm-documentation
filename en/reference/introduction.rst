@@ -83,9 +83,8 @@ Then run the following commands on your command line
 
 This will download the dependencies into the vendor/ folder and generate vendor/autoload.php
 
-Now we bootstrap Doctrine PHPCR-ODM. Create a file called bootstrap.php in the project root directory
-
-.. code-block:: php
+Now we bootstrap Doctrine PHPCR-ODM. Create a file called ``bootstrap.php``
+in the project root directory::
 
     <?php
     // bootstrap.php
@@ -140,9 +139,7 @@ Building the model
 ------------------
 
 Models are plain PHP classes. Note that you have several ways to define the mapping.
-For easy readability, we use the annotation mapping in this tutorial.
-
-.. code-block:: php
+For easy readability, we use the annotation mapping in this tutorial::
 
     <?php
     // src/Demo/Document.php
@@ -240,9 +237,7 @@ Storing documents
 -----------------
 
 We write a simple PHP script to generate our data. Note that in real world, you should
-look into the doctrine fixtures (TODO: reference) when generating content in scripts.
-
-.. code-block:: php
+look into the doctrine fixtures (TODO: reference) when generating content in scripts::
 
     <?php
     // src/generate.php
@@ -277,9 +272,7 @@ look into the doctrine fixtures (TODO: reference) when generating content in scr
 Reading documents
 -----------------
 
-This script will simply echo the data to the console.
-
-.. code-block:: php
+This script will simply echo the data to the console::
 
     <?php
     // src/read.php
@@ -301,9 +294,7 @@ Children need not be of the same document class as their parents. Be careful whe
 children to be sure they are of the expected class.
 
 Even if children are not mapped, you can use the document manager to get all
-flushed children of a document.
-
-.. code-block:: php
+flushed children of a document::
 
     <?php
 
@@ -332,9 +323,7 @@ and $documentManager->getReferrers
 Removing documents
 ------------------
 
-To delete a document, call the ``remove`` method on the ``DocumentManager``.
-
-.. code-block:: php
+To delete a document, call the ``remove`` method on the ``DocumentManager``::
 
     <?php
     // src/manipulate.php
@@ -353,9 +342,7 @@ Other helpful methods on the DocumentManager
 
 You can move a document to a different path with the ``move`` method.
 Alternatively, you can assign a different Parent and/or Nodename to move
-by assignment. The latter is for example handy with Symfony2 forms.
-
-.. code-block:: php
+by assignment. The latter is for example handy with Symfony2 forms::
 
     <?php
     // src/manipulate.php

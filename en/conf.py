@@ -86,6 +86,8 @@ pygments_style = 'sphinx'
 # A list of ignored prefixes for module index sorting.
 #modindex_common_prefix = []
 
+# use PHP as the primary domain
+primary_domain = 'php'
 
 # -- Options for HTML output ---------------------------------------------------
 

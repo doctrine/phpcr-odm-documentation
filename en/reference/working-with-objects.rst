@@ -35,9 +35,7 @@ Documents and the Identity Map
 Objects managed by Doctrine PHPCR-ODM are called *documents*.
 Every document has an identifier, which is its PHPCR path. The path is unique
 inside the workspace. Take the following example, where you find an article
-with the headline "Hello World" with the ID ``/cms/article/hello-world``:
-
-.. code-block:: php
+with the headline "Hello World" with the ID ``/cms/article/hello-world``::
 
     <?php
     $article = $documentManager->find(null, '/cms/article/hello-world');
@@ -68,9 +66,7 @@ returning you the same instances.
 In the previous example the ``echo`` prints "Hello World dude!" to the
 screen. You can even verify that ``$article`` and ``$article2`` are
 indeed pointing to the same instance by running the following
-code:
-
-.. code-block:: php
+code::
 
     <?php
     if ($article === $article2) {
@@ -103,9 +99,7 @@ all the associations inside your document models as deep as you
 want.
 
 Take the following example of a single ``Article`` document fetched
-from newly opened DocumentManager:
-
-.. code-block:: php
+from newly opened DocumentManager::
 
     <?php
     /**
@@ -162,9 +156,7 @@ access these proxies for the first time they will go through the
     ``Referrers`` mapping.
 
 This lazy-loading process happens behind the scenes, hidden from
-your code. Have a look at the following example:
-
-.. code-block:: php
+your code. Have a look at the following example::
 
     <?php
     $article = $em->find(null, '/cms/article/hello-world');
@@ -191,9 +183,7 @@ your code. Have a look at the following example:
 
 A slice of the generated proxy classes code looks like the
 following example. Real proxy class override *all* public
-methods along the lines of the ``getName()`` method shown below:
-
-.. code-block:: php
+methods along the lines of the ``getName()`` method shown below::
 
     <?php
     class UserProxy extends User implements Proxy
@@ -241,9 +231,7 @@ automatically be synchronized with the repository when
     taking care of maintaining referential integrity.
 
 
-Example:
-
-.. code-block:: php
+Example::
 
     <?php
     $user = new User;
@@ -298,9 +286,7 @@ which means that its persistent state will be deleted once
     for more information.
 
 
-Example:
-
-.. code-block:: php
+Example::
 
     <?php
     $dm->remove($user);
@@ -360,9 +346,7 @@ detached.
 
 Doctrine will discard all references to a detached document.
 
-Example:
-
-.. code-block:: php
+Example::
 
     <?php
     $dm->detach($document);
@@ -406,9 +390,7 @@ managed again. To merge the state of a document into an
 state of the passed document will be merged into a managed copy of
 this document and this copy will subsequently be returned.
 
-Example:
-
-.. code-block:: php
+Example::
 
     <?php
     $detachedDocument = unserialize($serializedDocument); // some detached document
@@ -556,9 +538,7 @@ How costly a flush operation is, mainly depends on two factors:
 *  The size of the document manager's current Unit of Work;
 *  The configured change tracking policies
 
-You can get the size of a Unit of Work as follows:
-
-.. code-block:: php
+You can get the size of a Unit of Work as follows::
 
     <?php
     $uowSize = $dm->getUnitOfWork()->size();
@@ -585,9 +565,7 @@ Direct access to a Unit of Work
 
 You can get direct access to the Unit of Work by calling
 ``DocumentManager::getUnitOfWork()``. This will return the UnitOfWork
-instance the ``DocumentManager`` is currently using.
-
-.. code-block:: php
+instance the ``DocumentManager`` is currently using::
 
     <?php
     $uow = $em->getUnitOfWork();
@@ -607,9 +585,7 @@ As outlined in the architecture overview, a document can be in one of
 four possible states: NEW, MANAGED, REMOVED, DETACHED. If you
 explicitly need to find out what the current state of a document is
 in the context of a certain ``DocumentManager`` you can ask the
-underlying ``UnitOfWork``:
-
-.. code-block:: php
+underlying ``UnitOfWork``::
 
     <?php
     switch ($dm->getUnitOfWork()->getDocumentState($document)) {
@@ -654,9 +630,7 @@ By Primary Key
 The most basic way to query for a persisted document is by its
 identifier (PHPCR path) using the
 ``DocumentManager::find(null, $id)`` method. Here is an
-example:
-
-.. code-block:: php
+example::
 
     <?php
     /** @var $em DocumentManager */
@@ -680,9 +654,7 @@ By Simple Conditions
 
 To query for one or more documents based on several conditions that
 form a logical conjunction, use the ``findBy`` and ``findOneBy``
-methods on a repository as follows:
-
-.. code-block:: php
+methods on a repository as follows::
 
     <?php
     /** @var $dm DocumentManager */
@@ -703,38 +675,36 @@ methods on a repository as follows:
     pass the id into the ``find`` method. There is also findMany if you
     need to fetch several documents.
 
-You can also load by owning side associations through the repository:
-
-.. code-block:: php
+You can also load by owning side associations through the repository::
 
     <?php
     $number = $dm->find('MyProject\Domain\Phonenumber', '/path/to/phone/number');
     $user = $dm->getRepository('MyProject\Domain\User')->findOneBy(array('phone' => $number->getUuid()));
 
-Be careful that this only works by passing the uuid of the associated document, not yet by passing the associated document itself.
+Be careful that this only works by passing the uuid of the associated
+document, not yet by passing the associated document itself.
 
 The ``DocumentRepository::findBy()`` method additionally accepts orderings,
-limit and offset as second to fourth parameters:
-
-.. code-block:: php
+limit and offset as second to fourth parameters::
 
     <?php
-    $tenUsers = $dm->getRepository('MyProject\Domain\User')->findBy(array('age' => 20), array('name' => 'ASC'), 10, 0);
+    $tenUsers = $dm
+        ->getRepository('MyProject\Domain\User')
+        ->findBy(array('age' => 20), array('name' => 'ASC'), 10, 0);
 
-If you pass an array of values, Doctrine will convert the query into a WHERE field IN (..) query automatically:
-
-.. code-block:: php
+If you pass an array of values, Doctrine will convert the query into a WHERE
+field IN (..) query automatically::
 
     <?php
-    $users = $dm->getRepository('MyProject\Domain\User')->findBy(array('age' => array(20, 30, 40)));
+    $users = $dm
+        ->getRepository('MyProject\Domain\User')
+        ->findBy(array('age' => array(20, 30, 40)));
 
 TODO: __call is not implemented yet
 
 A DocumentRepository also provides a mechanism for more concise
 calls through its use of ``__call``. Thus, the following two
-examples are equivalent:
-
-.. code-block:: php
+examples are equivalent::
 
     <?php
     // A single user by its nickname
@@ -784,9 +754,7 @@ this behaviour by specifying the class name of your own Document
 Repository in the Annotation, XML or YAML metadata. In large,
 applications that require lots of specialized queries using a
 custom repository is one recommended way of grouping these queries
-in a central location.
-
-.. code-block:: php
+in a central location::
 
     <?php
     namespace MyDomain\Model;
@@ -811,9 +779,7 @@ in a central location.
         }
     }
 
-You can access your repository now by calling:
-
-.. code-block:: php
+You can access your repository now by calling::
 
     <?php
     /** @var $dm DocumentManager */
