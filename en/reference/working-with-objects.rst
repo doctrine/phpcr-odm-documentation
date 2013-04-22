@@ -441,12 +441,6 @@ as follows:
    navigation of the same association from X' yields a reference to a
    managed object Y' with the same persistent identity as Y.
 
-The ``merge`` operation will throw an ``OptimisticLockException``
-if the document being merged uses optimistic locking through a
-version field and the versions of the document being merged and the
-managed copy don't match. This usually means that the document has
-been modified while being detached.
-
 The ``merge`` operation is usually not as frequently needed and
 used as ``persist`` and ``remove``. The most common scenario for
 the ``merge`` operation is to reattach documents to an DocumentManager
