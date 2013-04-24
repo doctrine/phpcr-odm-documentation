@@ -86,7 +86,7 @@ achieve this result.
     the ``DocumentManager::move()`` operation.
     To create a reference to a document that is stable over move operations,
     make the document *referenceable* and map the ``Uuid`` field. You can find
-    a document by its universally unique id.
+    a document by its universally unique identifier.
 
 
 Document Graph Traversal
@@ -253,7 +253,6 @@ Example::
 The semantics of the persist operation, applied on a document X, are
 as follows:
 
-
 *  If X is a new document, it becomes managed. The document X will be
    entered into the repository as a result of the flush operation;
 *  If X is a pre-existing managed document, it is ignored by the
@@ -294,7 +293,6 @@ Example::
 
 The semantics of the remove operation, applied to a document X are
 as follows:
-
 
 *  If X is a new document, it is ignored by the remove operation.
    However, the remove operation is cascaded to documents referenced by
@@ -385,7 +383,7 @@ Merging documents
 
 Merging documents refers to the merging of (usually detached)
 documents into the context of a ``DocumentManager`` so that they become
-managed again. To merge the state of a document into an
+managed again. To merge the state of a document into a
 ``DocumentManager`` use the ``DocumentManager::merge($document)`` method. The
 state of the passed document will be merged into a managed copy of
 this document and this copy will subsequently be returned.
@@ -401,7 +399,6 @@ Example::
 
 The semantics of the merge operation, applied to a document X, are
 as follows:
-
 
 *  If X is a detached document, the state of X is copied onto a
    pre-existing managed document instance X' of the same identity;
@@ -436,8 +433,8 @@ to modify and persist such a document.
     have to call ``DocumentManager::clear()`` between the successive
     calls to ``DocumentManager::merge()``. Otherwise you might end up
     with multiple copies of the "same" object in the repository, however
-    with different ids, or a duplicate id conflict - depending on how
-    you generate ids.
+    with different IDs, or a duplicate ID conflict - depending on how
+    you generate IDs.
 
 .. note::
 
@@ -482,7 +479,8 @@ describes the effects of repository and UnitOfWork being out of sync.
    This is because the identity map will detect the construction of an already existing
    document and assumes its the most up to date version.
 
-``DocumentManager::flush()`` is never called implicitly by Doctrine. You always have to trigger it manually.
+``DocumentManager::flush()`` is never called implicitly by Doctrine. You
+always have to trigger it manually.
 
 Synchronizing New and Managed Documents
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -490,18 +488,18 @@ Synchronizing New and Managed Documents
 The flush operation applies to a managed document with the following
 semantics:
 
-
 *  The document itself is synchronized to the repository using PHPCR
    API calls, only if at least one persistent field has changed;
 *  No PHPCR API calls are executed if the document did not change.
 
 The flush operation applies to a new document with the following
-semantics: The document itself is synchronized to the repository using
-PHPCR API calls.
+semantics:
+
+* The document itself is synchronized to the repository using
+  PHPCR API calls.
 
 For all (initialized) relationships of the new or managed document
 the following semantics apply to each associated document X:
-
 
 *  If X is new and persist operations are configured to cascade on
    the relationship, X will be persisted;
@@ -512,8 +510,8 @@ the following semantics apply to each associated document X:
    on the relationship, an exception will be thrown as this indicates
    a programming error (X would be re-persisted by the cascade);
 *  If X is detached and persist operations are configured to
-   cascade on the relationship, an exception will be thrown (This is
-   semantically the same as passing X to persist()).
+   cascade on the relationship, an exception will be thrown (This leads
+   to the same result as passing X to persist()).
 
 Synchronizing Removed Documents
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -536,7 +534,7 @@ How costly a flush operation is, mainly depends on two factors:
 
 
 *  The size of the document manager's current Unit of Work;
-*  The configured change tracking policies
+*  The configured change tracking policies.
 
 You can get the size of a Unit of Work as follows::
 
@@ -560,7 +558,7 @@ during development.
     ``flush`` more than 0-2 times.
 
 
-Direct access to a Unit of Work
+Direct Access to a Unit of Work
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 You can get direct access to the Unit of Work by calling
@@ -599,21 +597,19 @@ underlying ``UnitOfWork``::
             ...
     }
 
-A document is in MANAGED state if it is associated with an
-``DocumentManager`` and it is not REMOVED.
+The states mean the following:
 
-A document is in REMOVED state after it has been passed to
-``DocumentManager::remove()`` until the next flush operation of the
-same ``DocumentManager``. A REMOVED document is still associated with an
-``DocumentManager`` until the next flush operation.
-
-A document is in DETACHED state if it has persistent state and
-identity but is currently not associated with an
-``DocumentManager``.
-
-A document is in NEW state if has no persistent state and identity
-and is not associated with a ``DocumentManager`` (for example those
-just created via the "new" operator).
+* **MANAGED**: The document is associated with a ``DocumentManager``
+  and it is not scheduled for removal.
+* **REMOVED**: The document has been passed to ``DocumentManager::remove()``
+  but no flush operation executing the removal was triggered yet. A
+  REMOVED document is still associated with a ``DocumentManager``
+  until the next flush operation.
+* **DETACHED**: The document has persistent state and identity but is
+  currently not associated with a ``DocumentManager``.
+* **NEW**: The document has no persistent state and identity
+  and is not associated with a ``DocumentManager`` (for example those
+  just created via the "new" operator).
 
 .. _workingobjects-query:
 
@@ -670,12 +666,12 @@ methods on a repository as follows::
 
 .. warning::
 
-    Note that due to the nature of PHPCR, the primary id is no field.
+    Note that due to the nature of PHPCR, the primary identifier is no field.
     You can thus not use ``findBy(array('id' => '/my/path'))`` but should
-    pass the id into the ``find`` method. There is also findMany if you
+    pass the ID into the ``find`` method. There is also findMany if you
     need to fetch several documents.
 
-You can also load by owning side associations through the repository::
+You can also query by references through the repository::
 
     <?php
     $number = $dm->find('MyProject\Domain\Phonenumber', '/path/to/phone/number');
@@ -751,9 +747,10 @@ By default the ``DocumentManager`` returns a default implementation of
 ``Doctrine\ODM\PHPCR\DocumentRepository`` when you call
 ``DocumentManager::getRepository($documentClass)``. You can overwrite
 this behaviour by specifying the class name of your own Document
-Repository in the Annotation, XML or YAML metadata. In large,
-applications that require lots of specialized queries using a
-custom repository is one recommended way of grouping these queries
+Repository in the Annotation, XML or YAML metadata.
+
+In applications that require lots of specialized queries, using a
+custom repository is the recommended way of grouping these queries
 in a central location::
 
     <?php
