@@ -1,7 +1,9 @@
 Getting Started
 ===============
 
-.. note:: *Difference from ORM*
+.. note::
+
+    **Difference from the ORM**
 
     Doctrine ORM knows several models of developing. If you know the ORM, please note that
     with PHPCR-ODM you can only develop "Code First". We do not (yet) have any generator to
@@ -81,9 +83,8 @@ Then run the following commands on your command line
 
 This will download the dependencies into the vendor/ folder and generate vendor/autoload.php
 
-Now we bootstrap Doctrine PHPCR-ODM. Create a file called bootstrap.php in the project root directory
-
-.. code-block:: php
+Now we bootstrap Doctrine PHPCR-ODM. Create a file called ``bootstrap.php``
+in the project root directory::
 
     <?php
     // bootstrap.php
@@ -138,9 +139,7 @@ Building the model
 ------------------
 
 Models are plain PHP classes. Note that you have several ways to define the mapping.
-For easy readability, we use the annotation mapping in this tutorial.
-
-.. code-block:: php
+For easy readability, we use the annotation mapping in this tutorial::
 
     <?php
     // src/Demo/Document.php
@@ -238,9 +237,7 @@ Storing documents
 -----------------
 
 We write a simple PHP script to generate our data. Note that in real world, you should
-look into the doctrine fixtures (TODO: reference) when generating content in scripts.
-
-.. code-block:: php
+look into the doctrine fixtures (TODO: reference) when generating content in scripts::
 
     <?php
     // src/generate.php
@@ -275,9 +272,7 @@ look into the doctrine fixtures (TODO: reference) when generating content in scr
 Reading documents
 -----------------
 
-This script will simply echo the data to the console.
-
-.. code-block:: php
+This script will simply echo the data to the console::
 
     <?php
     // src/read.php
@@ -295,26 +290,44 @@ This script will simply echo the data to the console.
         }
     }
 
-
 Children need not be of the same document class as their parents. Be careful when reading
 children to be sure they are of the expected class.
 
+Even if children are not mapped, you can use the document manager to get all
+flushed children of a document::
 
-Some basic operations
----------------------
+    <?php
 
-One more script to show some basic operations you can do with the document manager.
+    $children = $documentManager->getChildren($parent);
 
-.. code-block:: php
+.. note:: *Difference from ORM*
+    While with the ORM, the natural thing to get data is to query, with
+    PHPCR-ODM the natural way is to use the hierarchy, that is parent-child
+    relations.
+
+    If you need to query, see :ref:`Querying in the Working with Objects section <workingobjects-query>`.
+
+
+Tree traversal
+--------------
+
+TODO: explain @Children and @Parent and $documentManager->getChildren.
+
+Add references
+--------------
+
+TODO: explain @ReferenceOne and @ReferenceMany and @Referrers
+and $documentManager->getReferrers
+
+
+Removing documents
+------------------
+
+To delete a document, call the ``remove`` method on the ``DocumentManager``::
 
     <?php
     // src/manipulate.php
     require_once '../bootstrap.php';
-
-    // we move a node
-    $child = $documentManager->find(null, '/doc/child');
-    $documentManager->move($child, '/newpath');
-    // we can also change Parent and Name field to move and rename by assignment
 
     // remove a document
     $doc = $documentManager->find(null, '/doc');
@@ -324,10 +337,23 @@ One more script to show some basic operations you can do with the document manag
     $documentManager->flush();
 
 
-Add references
---------------
+Other helpful methods on the DocumentManager
+----------------------------------------------
 
-TODO: explain @ReferenceOne and @ReferenceMany and @Referrers
+You can move a document to a different path with the ``move`` method.
+Alternatively, you can assign a different Parent and/or Nodename to move
+by assignment. The latter is for example handy with Symfony2 forms::
+
+    <?php
+    // src/manipulate.php
+    require_once '../bootstrap.php';
+
+    // we move a node
+    $child = $documentManager->find(null, '/doc/child');
+    $documentManager->move($child, '/newpath');
+
+    // persist all operations
+    $documentManager->flush();
 
 
 Conclusion
