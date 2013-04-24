@@ -696,7 +696,11 @@ field IN (..) query automatically::
         ->getRepository('MyProject\Domain\User')
         ->findBy(array('age' => array(20, 30, 40)));
 
-TODO: __call is not implemented yet
+.. note::
+
+    The ORM has a shortcut for querying by one field, using the ``__call``
+    handler. In PHPCR-ODM this is not yet implemented, so the rest of this
+    section does not work yet.
 
 A DocumentRepository also provides a mechanism for more concise
 calls through its use of ``__call``. Thus, the following two
