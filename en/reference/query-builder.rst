@@ -268,7 +268,7 @@ Join two or more expressions with an *OR* constraint.
 
     <?php
 
-    $qb->expr()->andX(
+    $qb->expr()->orX(
         $qb->expr()->eq('tag', 'dogs'),
         $qb->expr()->eq('tag', 'cats')
     );
