@@ -14,23 +14,33 @@ The DocumentManager and PHPCR-ODM UnitOfWork trigger a bunch of events during
 the life-time of their registered documents.
 
 
-- prePersist - occurs before a new document is created in the repository
-- postPersist - occurs after a document has been created in repository. generated fields will be available in this state.
-- preUpdate - occurs before an existing document is updated in the repository, during the flush operation
-- postUpdate - occurs after an existing document has successfully been updated in the repository
-- postLoad - occurs after the document has been loaded from the repository
-- preMove - occurs before a document move operation is persisted to the PHPCR session during flush
-- postMove - occurs after a document move operation has been persisted to the PHPCR session during flush
-- preRemove - occurs before a document is removed from the repository
-- postRemove - occurs after the document has been successfully removed from the repository
-- preFlush - occurs at the very beginning of a flush operation. This event is not a lifecycle callback.
-- onFlush - occurs after the change-sets of all managed documents have been computed. This event is not a lifecycle
+- prePersist - occurs before a new document is created in the repository;
+- postPersist - occurs after a document has been created in repository.
+  Generated fields will be available in this state;
+- preUpdate - occurs before an existing document is updated in the repository,
+  during the flush operation;
+- postUpdate - occurs after an existing document has successfully been updated
+  in the repository;
+- postLoad - occurs after the document has been loaded from the repository;
+- preMove - occurs before a document move operation is persisted to the PHPCR
+  session during flush;
+- postMove - occurs after a document move operation has been persisted to the
+  PHPCR session during flush;
+- preRemove - occurs before a document is removed from the repository;
+- postRemove - occurs after the document has been successfully removed from the
+  repository;
+- preFlush - occurs at the very beginning of a flush operation. This event is
+  not a lifecycle callback;
+- onFlush - occurs after the change-sets of all managed documents have been
+  computed. This event is not a lifecycle callback;
+- postFlush - occurs at the end of a flush operation. This event is not a
+  lifecycle callback;
+- onClear - occurs when the DocumentManager#clear() operation is invoked, after
+  all references to documents have been removed from the unit of work. This
+  event is not a lifecycle callback;
+- loadClassMetadata - occurs after mapping metadata for a class has been loaded
+  from a mapping source (annotations/xml/yaml). This event is not a lifecycle
   callback.
-- postFlush - occurs at the end of a flush operation. This event is not a lifecycle callback.
-- onClear - occurs when the DocumentManager#clear() operation is invoked, after all references to documents
-  have been removed from the unit of work. This event is not a lifecycle callback.
-- loadClassMetadata - occurs after mapping metadata for a class has been loaded from a mapping source
-  (annotations/xml/yaml). Contrary to the others, this event is **not a lifecycle callback**.
 
 .. note::
 
