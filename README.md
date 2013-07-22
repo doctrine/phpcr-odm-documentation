@@ -1,11 +1,12 @@
 # Doctrine PHPCR-ODM Documentation
 
+## Read compiled doc online
+
+http://www.doctrine-project.org/projects/phpcr-odm.html
+
 ## Setup
 
 Git clone this repository.
-
-
-TODO: configure submodule
 
 Update the submodules (used for the doctrine theme)
 

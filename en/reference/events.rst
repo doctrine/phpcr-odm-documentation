@@ -30,7 +30,7 @@ the life-time of their registered documents.
 - onClear - occurs when the DocumentManager#clear() operation is invoked, after all references to documents
   have been removed from the unit of work. This event is not a lifecycle callback.
 - loadClassMetadata - occurs after mapping metadata for a class has been loaded from a mapping source
-  (annotations/xml/yaml).
+  (annotations/xml/yaml). Contrary to the others, this event is **not a lifecycle callback**.
 
 .. note::
 
