@@ -143,8 +143,6 @@ of the lifecycle of the instance variables document class.
 
 Common optional attributes:
 
-- **property**: Specify a name for the PHPCR property - defaults to annotated
-  property name.
 - **assoc**: Specify that this attribute should be an associative array. The value should
   be a string which will be used by the PHPCR node. Set to an empty string to automatically
   use the name of the annotated variable appended by "Keys".
@@ -162,7 +160,7 @@ Examples:
    <?php
 
    /**
-    * @String(translated=true, property="phpcr_title")
+    * @String(translated=true)
     */
    protected $title;
 
@@ -318,7 +316,10 @@ directly below the instance variables document class in the document hierarchy.
 Required attributes:
 
 - **nodeName**: PHPCR Node name of the child document to map, this should be a string.
-- **cascade**: TODO
+
+Optional attributes:
+
+- **cascade**: |cascade_definition| See :ref:`assocmap_cascading`
 
 .. code-block:: php
 
@@ -343,7 +344,7 @@ Optional attributes:
   this should be an integer.
 - **ignoreUntranslated**: Set to false to *not* throw exceptions on untranslated child
   documents.
-- **cascade**: TODO
+- **cascade**: |cascade_definition| See :ref:`assocmap_cascading`
 
 .. code-block:: php
 
@@ -357,6 +358,10 @@ Optional attributes:
 
 @ParentDocument
 ~~~~~~~~~~~~~~~
+
+Optional attributes:
+
+- **cascade**: |cascade_definition| See :ref:`assocmap_cascading`
 
 The annotated instance variable will contain the nodes parent document. Assigning
 a different parent will result in a move operation.
@@ -604,12 +609,9 @@ References
 
 Optional attributes:
 
--  **property**: Name of PHPCR property to use - defaults to the annotated
-  properties name.
 -  **targetDocument**: Specify type of target document class. Note that this
    is an optional parameter and by default you can associate *any* document.
 -  **strategy**: One of ``weak``, ``hard`` or ``path``. See :ref:`reference other documents <associationmapping_referenceotherdocuments>`.
--  **cascade**: TODO
 
 .. code-block:: php
 
@@ -620,6 +622,7 @@ Optional attributes:
     protected $phonenumbers;
 
 .. _annref_referenceone:
+.. _annref_reference:
 
 @ReferenceOne
 ~~~~~~~~~~~~~
@@ -629,6 +632,7 @@ Optional attributes:
 -  **targetDocument**: Specify type of target document class. Note that this
    is an optional parameter and by default you can associate *any* document.
 -  **strategy**: One of `weak`, `hard` or `path`. See :ref:`reference other documents <associationmapping_referenceotherdocuments>`.
+- **cascade**: |cascade_definition| See :ref:`assocmap_cascading`
 
 .. code-block:: php
 
@@ -643,29 +647,45 @@ Optional attributes:
 @Referrers
 ~~~~~~~~~~
 
-Mark the annotated instance variable to contain the documents which refer to this document.
+Mark the annotated instance variable to contain a collection of the documents
+of the given document class which refer to this document.
+
+Required attributes:
+
+- **referringDocument**: Full class name of referring document, the instances
+  of which should be collected in the annotated property.
 
 Optional attributes:
 
--  **filter**: Filters referrers by the referencing property name.
+- **referencedBy**: Name of the property from the referring document class
+  which referrers to this document class.
+- **cascade**: |cascade_definition| See :ref:`assocmap_cascading`
+
+.. code-block:: php
+
+   <?php
+   /**
+    * @Referrers(referringDocument="Address", referencedBy="addressbook")
+    */
+   protected $addresses;
+
+@MixedReferrers
+~~~~~~~~~~~~~~~
+
+Mark the annotated instance variable to hold a collection of *all* documents
+which refer to this document, regardless of document class.
+
+Optional attributes:
+
 -  **referenceType**: One of ``weak`` or ``hard``.
 
 .. code-block:: php
 
    <?php
    /**
-    * @Referrers(referenceType="hard")
+    * @MixedReferrers()
     */
-   protected $myReferrers;
-
-@MixedReferrers
-~~~~~~~~~~~~~~~
-
-Optional attributes:
-
--  **referenceType**: TODO
-
-TODO
+   protected $referrers;
 
 Translation
 -----------
@@ -747,3 +767,5 @@ documents with the versionable attribute.
 
 The annotated instance variable will be populated with the name
 of the current version as given by PHPCR.
+
+.. |cascade_definition| replace:: One of ``persist``, ``remove``, ``merge``, ``detach``, ``refresh``, ``translation`` or ``all``. 

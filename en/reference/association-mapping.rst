@@ -341,6 +341,8 @@ An example for this is the `Generic` document provided by phpcr-odm itself.
                 hardReferrers:
                     referenceType: hard
 
+.. _assocmap_cascading:
+.. _assocmap_transpers:
 
 Transitive persistence / Cascade Operations
 -------------------------------------------
