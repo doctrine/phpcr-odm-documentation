@@ -143,6 +143,8 @@ of the lifecycle of the instance variables document class.
 
 Common optional attributes:
 
+- **property**: Specify a name for the PHPCR property - defaults to annotated
+  property name.
 - **assoc**: Specify that this attribute should be an associative array. The value should
   be a string which will be used by the PHPCR node. Set to an empty string to automatically
   use the name of the annotated variable appended by "Keys".
@@ -160,7 +162,7 @@ Examples:
    <?php
 
    /**
-    * @String(translated=true)
+    * @String(translated=true, property="phpcr_title")
     */
    protected $title;
 
@@ -315,7 +317,8 @@ directly below the instance variables document class in the document hierarchy.
 
 Required attributes:
 
-- **name**: Node name of the child document to map, this should be a string.
+- **nodeName**: PHPCR Node name of the child document to map, this should be a string.
+- **cascade**: TODO
 
 .. code-block:: php
 
@@ -340,6 +343,7 @@ Optional attributes:
   this should be an integer.
 - **ignoreUntranslated**: Set to false to *not* throw exceptions on untranslated child
   documents.
+- **cascade**: TODO
 
 .. code-block:: php
 
@@ -600,9 +604,12 @@ References
 
 Optional attributes:
 
+-  **property**: Name of PHPCR property to use - defaults to the annotated
+  properties name.
 -  **targetDocument**: Specify type of target document class. Note that this
    is an optional parameter and by default you can associate *any* document.
 -  **strategy**: One of ``weak``, ``hard`` or ``path``. See :ref:`reference other documents <associationmapping_referenceotherdocuments>`.
+-  **cascade**: TODO
 
 .. code-block:: php
 
@@ -650,6 +657,15 @@ Optional attributes:
     * @Referrers(referenceType="hard")
     */
    protected $myReferrers;
+
+@MixedReferrers
+~~~~~~~~~~~~~~~
+
+Optional attributes:
+
+-  **referenceType**: TODO
+
+TODO
 
 Translation
 -----------
