@@ -11,11 +11,13 @@ An example query:
 .. code-block:: php
 
     $qb = $documentManager->createQueryBuilder();
-    $qb->from()->document('MyApp\User', 'u');
+
+    $qb->from()->document('MyApp\Document\User', 'u');
     $qb->where()->eq()->propertyValue('u', 'name')->literal('dtl');
+
     $query = $qb->getQuery();
 
-This query will select all documents of class ``MyApp\User`` which
+This query will select all documents of class ``MyApp\Document\User`` which
 have a value of ``dtl`` for the field ``name``.
 
 The first line retrieves a new instance of the query builder from the document
@@ -45,6 +47,33 @@ Alternatively the above query can be written more fluently by the using
           ->literal('dtl')
         ->end()
       ->end();
+
+
+Leaf and Factory Nodes
+----------------------
+
+The query builder is a tree structure composed of two different types of
+nodes. *Factory nodes* and *Leaf nodes*. Factory node methods create and
+add new nodes to the query builder tree and then return the newly created node. Factory methods
+accept no arguments and always have *children*. 
+
+Leaf nodes have no children and always return the parent node after adding
+themselves to the query builder tree. The parent node is always a factory
+node.
+
+.. code-block:: php
+
+    // the query builder is a factory node
+    $qb = $dm->createQueryBuilder();
+
+    // from() returns a new factory node
+    $from = $qb->from();
+
+    // document() is a leaf node, it returns the parent factory
+    $from = $from->document('MyApp\Document\Post');
+
+    // end() returns the parent, in this case the query builder.
+    $qb = $from->end();   
 
 Retrieving a query builder instance
 -----------------------------------
@@ -79,7 +108,9 @@ with the ``DocumentRepository``.
    $posts = $qb->getQuery()->execute();
 
 The above code block will select all documents in the document tree of class ``Post``. This
-feature is especially useful within a document repository class.
+feature is especially useful within a document repository class. Note that we
+specify the string "a" as an argument to ``createQueryBuilder`` - this is the
+selector, more on these later.
 
 Example showing the use of the query builder in a ``DocumentRepository``:
 
@@ -94,8 +125,8 @@ Example showing the use of the query builder in a ``DocumentRepository``:
    {
        public function getPostsByAuthor($authorName)
        {
-           $qb = $this->createQueryBuilder();
-           $qb->where()->eq()->propertyValue('author')->literal('dtl');
+           $qb = $this->createQueryBuilder('a');
+           $qb->where()->eq()->propertyValue('a', 'author')->literal('dtl');
 
            return $qb->getQuery()->execute();
        }
@@ -279,9 +310,46 @@ Adding multiple orderings using ``addOrderBy``:
    $qb->orderBy()->ascending()->propertyValue('username');
    $qb->addOrderBy()->ascending()->propertyValue('name');
 
-Reference
----------
+Builder Reference
+-----------------
 
-++++++++++++++++++ TODO +++++++++++++++++
++===============+==========+====================+
+| Method        | Type     | Factory            |
++===============+==========+====================+
+| select        | Factory  | select             |
++---------------+----------+--------------------+
+| addSelect     | Factory  | select             |
++---------------+----------+--------------------+
+| from          | Factory  | source             |
++---------------+----------+--------------------+
+| where         | Factory  | constraint         |
++---------------+----------+--------------------+
+| andWhere      | Factory  | constraint         |
++---------------+----------+--------------------+
+| orWhere       | Factory  | constraint         |
++---------------+----------+--------------------+
+| orderBy       | Factory  | order              |
++---------------+----------+--------------------+
+| addOrderBy    | Factory  | order              |
++---------------+----------+--------------------+
 
-Complete reference.
+Select Factory Reference
+------------------------
+
+The select node has only one leaf node
+
+.. code-block:: php
+    $qb
+        ->select()
+            ->property('a', 'property_1')
+            ->property('a', 'property_2')
+        ->end()
+        ->from()
+            ->document('MyApp\Document\Post')
+        ->end()
+    ;
+
+Source Factory Reference
+------------------------
+
+
