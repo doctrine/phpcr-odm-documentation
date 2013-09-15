@@ -10,6 +10,7 @@ An example query:
 
 .. code-block:: php
 
+    <?php
     $qb = $documentManager->createQueryBuilder();
 
     $qb->from()->document('Blog\User', 'u');
@@ -37,6 +38,7 @@ Alternatively the above query can be written more fluently by the using
 
 .. code-block:: php
 
+    <?php
     $qb = $documentManager->createQueryBuilder();
     $qb->from()
         ->document('Blog\User')
@@ -66,6 +68,7 @@ node.
 
 .. code-block:: php
 
+    <?php
     // the query builder is a factory node
     $qb = $dm->createQueryBuilder();
 
@@ -105,7 +108,6 @@ associated with the ``DocumentRepository``.
 .. code-block:: php
 
    <?php
-
    $postsRepository = $dm->getRepository('Blog\Post');
    $qb = $postsRepository->createQueryBuilder('p');
    $posts = $qb->getQuery()->execute();
@@ -335,28 +337,83 @@ Adding multiple orderings using ``addOrderBy``:
    $qb->orderBy()->ascending()->field('username');
    $qb->addOrderBy()->ascending()->field('name');
 
-Builder Reference
------------------
+Query Builder Reference
+-----------------------
 
-+===============+==========+====================+
-| Method        | Type     | Factory            |
-+===============+==========+====================+
-| select        | Factory  | select             |
-+---------------+----------+--------------------+
-| addSelect     | Factory  | select             |
-+---------------+----------+--------------------+
-| from          | Factory  | source             |
-+---------------+----------+--------------------+
-| where         | Factory  | constraint         |
-+---------------+----------+--------------------+
-| andWhere      | Factory  | constraint         |
-+---------------+----------+--------------------+
-| orWhere       | Factory  | constraint         |
-+---------------+----------+--------------------+
-| orderBy       | Factory  | order              |
-+---------------+----------+--------------------+
-| addOrderBy    | Factory  | order              |
-+---------------+----------+--------------------+
+The following reference lists each factory node type starting with the query
+builder itself.
+
+Query Builder Factory
+~~~~~~~~~~~~~~~~~~~~~
+
+The query builder factory node is the root node of the query builder tree
+and is the node you will initially work with.
+
+select()
+""""""""
+
+Example:
+
+.. code-block:: php
+  
+    // ...
+    $qb->from('Blog\Post', 'p');
+    $qb->select()
+        ->field('p.title')
+        ->field('p.username');
+
+* **Type**: Factory
+* **Returns**: :ref:`qbref_select`
+
+addSelect()
+"""""""""""
+
+Example:
+
+.. code-block:: php
+
+    // ...
+    $qb->addSelect()
+        ->field('p.posted_on');
+
+* **Type**: Factory
+* **Returns**: :ref:`qbref_select`
+
+from()
+""""""
+
+* **Type**: Factory
+* **Returns**: :ref:`qbref_sourcefactory`
+
+where()
+"""""""
+
+* **Type**: Factory
+* **Returns**: :ref:`qbref_constraintfactory`
+
+andWhere()
+""""""""""
+
+* **Type**: Factory
+* **Returns**: :ref:`qbref_constraintfactory`
+
+orWhere()
+""""""""""
+
+* **Type**: Factory
+* **Returns**: :ref:`qbref_constraintfactory`
+
+orderBy()
+"""""""""
+
+* **Type**: Factory
+* **Returns**: :ref:`qbref_orderby`
+
+addOrderBy()
+""""""""""""
+
+* **Type**: Factory
+* **Returns**: :ref:`qbref_orderby`
 
 Select Factory Reference
 ------------------------
@@ -364,6 +421,8 @@ Select Factory Reference
 The select node has only one leaf node
 
 .. code-block:: php
+
+    <?php
     $qb
         ->select()
             ->property('a', 'property_1')
@@ -376,3 +435,5 @@ The select node has only one leaf node
 
 Source Factory Reference
 ------------------------
+
+
