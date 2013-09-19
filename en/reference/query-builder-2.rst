@@ -57,14 +57,15 @@ Concepts
 Leaf and Factory Nodes
 ~~~~~~~~~~~~~~~~~~~~~~
 
-The query builder is a tree structure composed of two different types of
-nodes. *Factory nodes* and *Leaf nodes*. Factory node methods create and
+The query builder is a tree structure composed of two different categories of
+nodes. *Factory nodes* and *Leaf nodes*. Factory nodes create and
 add new nodes to the query builder tree and then return the newly created node. Factory methods
-accept no arguments and always have *children*. 
+accept no arguments and always have *children*. A factory node has zero
+arguments.
 
 Leaf nodes have no children and always return the parent node after adding
 themselves to the query builder tree. The parent node is always a factory
-node.
+node and the leaf node always has arguments.
 
 .. code-block:: php
 
@@ -79,7 +80,106 @@ node.
     $from = $from->document('Post', 'p');
 
     // end() returns the parent, in this case the query builder.
-    $qb = $from->end();   
+    $qb = $from->end();
+
+Fluent Interface
+~~~~~~~~~~~~~~~~
+
+The API makes use of a fluent API which enables an entire query to be
+constructed in a single, unbroken, statement.
+
+Factory node methods append nodes as children to themselves and return either
+other factory nodes or, if the factory method returns a leaf, the method will
+return its owning class instance.
+
+.. code-block:: php
+
+    <?php
+    $qb->where()->eq()->field('p.title', 'p')->literal('My Post');
+
+In the example above:
+
+* The ``where`` method of the ``QueryBuilder`` adds and returns a
+  ``ConstraintFactory`` which provides the ``eq()`` method. 
+
+* The ``eq()`` method adds and returns an ``OperandFactory`` which contains the
+  ``field()`` and ``literal()`` methods. 
+
+Up to this point the return values have all been factory classes. 
+
+* The ``field()`` and ``literal()`` methods add leaf nodes and they return the
+  same class of which they are part - the ``OperandFactory`` - the same node
+  which provides the ``eq()`` method.
+
+This model presents a problem when we want to proceed to a previous node
+without breaking the chain, this is where the ``end()`` method comes in.
+
+The ``end()`` method is a special method that will always return the parent of the
+current node, allowing us to construct the query in full without breaking the
+chain. A practical application of this is when we do more complicated things,
+such as chaining operands:
+
+.. code-block:: php
+
+    <?php
+    $qb->wwhere()->eq()->lowerCase()->field('p.title')->end()->literal('my post');
+
+Here the ``lowerCase()`` method would return the ``LowerCase`` operand, which will
+transform the value of its child member to lowercase. Because ``field()`` will
+return its parent we need to call ``end()`` to go back once more to the
+``ConstraintFactory`` (as returned by ``eq()``).
+
+.. note::
+
+    It is only necessary to add an ``end()`` terminator when you wish to
+    append additional leaf nodes in the *same statement*. In this document we
+    will not add ``end()`` terminators where they are not required.
+
+Types and Cardinality
+~~~~~~~~~~~~~~~~~~~~~
+
+Each node has an associated node type:
+
+.. code-block:: php
+
+    <?php
+    $qb->getNodeType(); // returns "builder"
+    $qb->where()->getNodeType(); // returns "where"
+    $qb->andWhere()->getNodeType(); // returns "where"
+    $qb->where()->eq()->getNodeType(); // returns "constraint"
+    $qb->where()->eq()->field()->getNodeType(); // returns "operand"
+
+Node types (not to be confused with PHPCR node types) are used to validate the
+query builder trees structure. Each factory node declares how many children of
+each type it is allowed, this is the node child cardinality map. The
+:doc:`query-builder-reference` document lists the cardinalities of all the
+factory nodes.
+
+Exceeding or not achieving the minimum or maximum child cardinality for a
+given node type will cause an exception to be thrown when retrieving the
+query, for example:
+
+.. code-block:: php
+
+    <?php
+    // throws exception, query builder node needs at least one "from".
+    $qb->getQuery(); 
+
+    // throws exception, eq() needs one dynamic and one static operand
+    $qb->where()->eq()->field('p.title');
+    $qb->getQuery();
+
+    // throws exception, eq() needs one dynamic and one static operand
+    $qb->where()->eq()->field('p.title')->field('p.name');
+    $qb->getQuery();
+
+    // ok
+    $qb->where()->eq()->field('p.title')->litreal('My Post');
+    $qb->getQuery();
+
+The cardinality for each node is documented in the
+:doc:`query-builder-reference`, for an example see
+:ref:`qbref_node_querybuilder`.
 
 Retrieving a query builder instance
 -----------------------------------
@@ -156,7 +256,7 @@ should be selected. This source can either be a specified document or a
 
     A raw PHPCR query will allow you to select from ALL records and to hydrate
     a result set of mixed document classes, the PHPCR-ODM query builder
-    requires however that you specify a single source - this is because the
+    requires however that you specify a single document source - this is because the
     PHPCR query builder is not bound to the field mappings of the ODM.
 
 From Single Source
@@ -187,7 +287,7 @@ Joins allow you to take other documents into account when selecting records.
     $qb->from()->joinInner()
         ->left()->document('Blog\Post', 'p')->end()
         ->right()->document('Blog\User', 'u')->end()
-        ->condition()->equi('p.username', 'u.username')->end();
+        ->condition()->equi('p.username', 'u.username');
 
     $qb->where()
         ->eq()->field('u.username')->literal('dantleech');
@@ -203,10 +303,10 @@ demonstrated.
 Selecting specific properties - select
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can fields to populate with values using the ``select`` factory node, this is
-currently only useful when :ref:`hydrating to PHPCR nodes
-<queryref_hydration>`. The default (object) hydration will *always* hydrate all
-fields regardless of what you specify.
+You can specify fields to populate with values using the ``select`` factory
+node, this is currently only useful when :ref:`hydrating to PHPCR nodes
+<queryref_hydration>`. The default (object) hydration will *always* hydrate
+all fields regardless of what you specify.
 
 .. code-block:: php
 
@@ -253,7 +353,7 @@ You can specify selection criteria using the ``where`` factory node.
 
    <?php
 
-   // setup our document source with selector "a"
+   // setup our document source with selector "u"
    $qb->from('Blog\User', 'u');
 
    // where name is "daniel"
@@ -336,104 +436,3 @@ Adding multiple orderings using ``addOrderBy``:
 
    $qb->orderBy()->ascending()->field('username');
    $qb->addOrderBy()->ascending()->field('name');
-
-Query Builder Reference
------------------------
-
-The following reference lists each factory node type starting with the query
-builder itself.
-
-Query Builder Factory
-~~~~~~~~~~~~~~~~~~~~~
-
-The query builder factory node is the root node of the query builder tree
-and is the node you will initially work with.
-
-select()
-""""""""
-
-Example:
-
-.. code-block:: php
-  
-    // ...
-    $qb->from('Blog\Post', 'p');
-    $qb->select()
-        ->field('p.title')
-        ->field('p.username');
-
-* **Type**: Factory
-* **Returns**: :ref:`qbref_select`
-
-addSelect()
-"""""""""""
-
-Example:
-
-.. code-block:: php
-
-    // ...
-    $qb->addSelect()
-        ->field('p.posted_on');
-
-* **Type**: Factory
-* **Returns**: :ref:`qbref_select`
-
-from()
-""""""
-
-* **Type**: Factory
-* **Returns**: :ref:`qbref_sourcefactory`
-
-where()
-"""""""
-
-* **Type**: Factory
-* **Returns**: :ref:`qbref_constraintfactory`
-
-andWhere()
-""""""""""
-
-* **Type**: Factory
-* **Returns**: :ref:`qbref_constraintfactory`
-
-orWhere()
-""""""""""
-
-* **Type**: Factory
-* **Returns**: :ref:`qbref_constraintfactory`
-
-orderBy()
-"""""""""
-
-* **Type**: Factory
-* **Returns**: :ref:`qbref_orderby`
-
-addOrderBy()
-""""""""""""
-
-* **Type**: Factory
-* **Returns**: :ref:`qbref_orderby`
-
-Select Factory Reference
-------------------------
-
-The select node has only one leaf node
-
-.. code-block:: php
-
-    <?php
-    $qb
-        ->select()
-            ->property('a', 'property_1')
-            ->property('a', 'property_2')
-        ->end()
-        ->from()
-            ->document('Post')
-        ->end()
-    ;
-
-Source Factory Reference
-------------------------
-
-
