@@ -46,10 +46,7 @@ Alternatively the above query can be written more fluently by the using
       ->where()
         ->eq()
           ->field('a.name')
-          ->literal('dtl')
-        ->end()
-      ->end();
-
+          ->literal('dtl');
 
 Concepts
 --------
