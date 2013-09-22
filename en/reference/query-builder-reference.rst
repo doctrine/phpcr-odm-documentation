@@ -19,7 +19,7 @@ Node: ConstraintAndx
 
 **Extends**: :ref:`ConstraintFactory <qbref_node_constraintfactory>`
 
-**Inherited methods**: :ref:`andX <qbref_method_constraintfactory_andx>`, :ref:`orX <qbref_method_constraintfactory_orx>`, :ref:`fieldExists <qbref_method_constraintfactory_fieldexists>`, :ref:`fullTextSearch <qbref_method_constraintfactory_fulltextsearch>`, :ref:`same <qbref_method_constraintfactory_same>`, :ref:`descendant <qbref_method_constraintfactory_descendant>`, :ref:`child <qbref_method_constraintfactory_child>`, :ref:`not <qbref_method_constraintfactory_not>`, :ref:`eq <qbref_method_constraintfactory_eq>`, :ref:`neq <qbref_method_constraintfactory_neq>`, :ref:`lt <qbref_method_constraintfactory_lt>`, :ref:`lte <qbref_method_constraintfactory_lte>`, :ref:`gt <qbref_method_constraintfactory_gt>`, :ref:`gte <qbref_method_constraintfactory_gte>`, :ref:`like <qbref_method_constraintfactory_like>`
+**Inherited methods**: :ref:`andX <qbref_method_constraintfactory_andx>`, :ref:`orX <qbref_method_constraintfactory_orx>`, :ref:`fieldIsset <qbref_method_constraintfactory_fieldisset>`, :ref:`fullTextSearch <qbref_method_constraintfactory_fulltextsearch>`, :ref:`same <qbref_method_constraintfactory_same>`, :ref:`descendant <qbref_method_constraintfactory_descendant>`, :ref:`child <qbref_method_constraintfactory_child>`, :ref:`not <qbref_method_constraintfactory_not>`, :ref:`eq <qbref_method_constraintfactory_eq>`, :ref:`neq <qbref_method_constraintfactory_neq>`, :ref:`lt <qbref_method_constraintfactory_lt>`, :ref:`lte <qbref_method_constraintfactory_lte>`, :ref:`gt <qbref_method_constraintfactory_gt>`, :ref:`gte <qbref_method_constraintfactory_gte>`, :ref:`like <qbref_method_constraintfactory_like>`
 
 **Child Cardinality**:
     * **1..*** :ref:`constraint <qbref_type_constraint>`
@@ -66,7 +66,7 @@ And composite constraint.
     
     <?php
     $qb->where()->andX()
-      ->fieldExists('f.foo')
+      ->fieldIsset('f.foo')
       ->gt()->field('f.max')->literal(40);
 
 
@@ -85,14 +85,14 @@ is added the "and" operands are nested.
     
     // when adding more than one,
     $qb->where()->andX()
-      ->fieldExists('f.foo')
+      ->fieldIsset('f.foo')
       ->gt()->field('f.max')->literal(40);
       ->eq()->field('f.zar')->literal('bar')
     
     // is equivilent to:
     $qb->where()->andX()
       ->andX()
-        ->fieldExists('f.foo')
+        ->fieldIsset('f.foo')
         ->gt()->field('f.max')->literal(40);
       ->eq()->field('f.zar')->litreal('bar');
 
@@ -113,8 +113,8 @@ Or composite constraint.
     <?php
     $qb->where()
       ->orX()
-        ->fieldExsts('prop_1', 'sel_1')
-        ->fieldExsts('prop_2', 'sel_1')
+        ->fieldIsset('sel_1.prop_1')
+        ->fieldIsset('sel_1.prop_1')
       ->end();
 
 
@@ -124,17 +124,18 @@ As with "andX", "orX" allows one to many operands.
 
 **Returns**: :ref:`ConstraintOrx <qbref_node_constraintorx>`
 
-.. _qbref_method_constraintfactory_fieldexists:
+.. _qbref_method_constraintfactory_fieldisset:
 
-->fieldExists
-^^^^^^^^^^^^^
+->fieldIsset
+^^^^^^^^^^^^
 
 Field existance constraint.
+
 
 .. code-block:: php
     
     <?php
-    $qb->where()->fieldExists('prop_1.sel_1');
+    $qb->where()->fieldIsset('prop_1.sel_1');
 
 
 **Type**: *constraint*
@@ -191,7 +192,7 @@ Relates to PHPCR QOM SameNodeInterface.
 **Arguments**:
 
 * **$path**: *string* - Path to reference document.
-* **$selectorName**: *string* - Name of selector to use.
+* **$alias**: *string* - Name of selector to use.
 
 .. _qbref_method_constraintfactory_descendant:
 
@@ -215,7 +216,7 @@ Relates to PHPCR QOM DescendantNodeInterface
 **Arguments**:
 
 * **$ancestorPath**: *string* - Select descendants of this path.
-* **$selectorName**: *string* - Name of selector to use.
+* **$alias**: *string* - Name of selector to use.
 
 .. _qbref_method_constraintfactory_child:
 
@@ -239,7 +240,7 @@ Relates to PHPCR QOM ChildNodeInterface.
 **Arguments**:
 
 * **$parentPath**: *string* - Select children of this path.
-* **$selectorName**: *string* - Name of selector to use
+* **$alias**: *string* - Name of selector to use
 
 .. _qbref_method_constraintfactory_not:
 
@@ -251,7 +252,7 @@ Inverts the truth of any given appended costraint.
 .. code-block:: php
     
     <?php
-    $qb->where()->not()->fieldExists('sel_1.foobar');
+    $qb->where()->not()->fieldIsset('sel_1.foobar');
 
 
 **Type**: *constraint*
@@ -271,8 +272,7 @@ Equality comparison constraint.
     $qb->where()
       ->eq()
         ->field('sel_1.foobar')->end()
-        ->literal('var_1')->end()
-      ->end();
+        ->literal('var_1');
 
 
 **Type**: *constraint*
@@ -292,8 +292,7 @@ Inequality comparison constraint
     $qb->where()
       ->neq()
         ->field('sel_1.foobar')->end()
-        ->literal('var_1')->end()
-      ->end();
+        ->literal('var_1');
 
 
 **Type**: *constraint*
@@ -313,8 +312,7 @@ Less than comparison constraint.
     $qb->where()
       ->lt()
         ->field('sel_1.foobar')->end()
-        ->literal(5)->end()
-      ->end();
+        ->literal(5);
 
 
 **Type**: *constraint*
@@ -334,8 +332,7 @@ Less than or equal to comparison constraint.
     $qb->where()
       ->lte()
         ->field('sel_1.foobar')->end()
-        ->literal(5)->end()
-      ->end();
+        ->literal(5);
 
 
 **Type**: *constraint*
@@ -355,8 +352,7 @@ Greater than comparison constraint.
     $qb->where()
       ->gt()
         ->field('sel_1.foobar')->end()
-        ->literal(5)->end()
-      ->end();
+        ->literal(5);
 
 
 **Type**: *constraint*
@@ -376,8 +372,7 @@ Greater than or equal to comparison constraint.
     $qb->where()
       ->gte()
         ->field('sel_1.foobar')->end()
-        ->literal(5)->end()
-      ->end();
+        ->literal(5);
 
 
 **Type**: *constraint*
@@ -399,8 +394,7 @@ Use "%" as wildcards.
     $qb->where()
       ->like()
         ->field('sel_1.foobar')->end()
-        ->literal('foo%')->end()
-      ->end();
+        ->literal('foo%');
 
 
 The above example will match "foo" and "foobar" but not "barfoo".
@@ -418,7 +412,7 @@ Node: ConstraintNot
 
 **Extends**: :ref:`ConstraintFactory <qbref_node_constraintfactory>`
 
-**Inherited methods**: :ref:`andX <qbref_method_constraintfactory_andx>`, :ref:`orX <qbref_method_constraintfactory_orx>`, :ref:`fieldExists <qbref_method_constraintfactory_fieldexists>`, :ref:`fullTextSearch <qbref_method_constraintfactory_fulltextsearch>`, :ref:`same <qbref_method_constraintfactory_same>`, :ref:`descendant <qbref_method_constraintfactory_descendant>`, :ref:`child <qbref_method_constraintfactory_child>`, :ref:`not <qbref_method_constraintfactory_not>`, :ref:`eq <qbref_method_constraintfactory_eq>`, :ref:`neq <qbref_method_constraintfactory_neq>`, :ref:`lt <qbref_method_constraintfactory_lt>`, :ref:`lte <qbref_method_constraintfactory_lte>`, :ref:`gt <qbref_method_constraintfactory_gt>`, :ref:`gte <qbref_method_constraintfactory_gte>`, :ref:`like <qbref_method_constraintfactory_like>`
+**Inherited methods**: :ref:`andX <qbref_method_constraintfactory_andx>`, :ref:`orX <qbref_method_constraintfactory_orx>`, :ref:`fieldIsset <qbref_method_constraintfactory_fieldisset>`, :ref:`fullTextSearch <qbref_method_constraintfactory_fulltextsearch>`, :ref:`same <qbref_method_constraintfactory_same>`, :ref:`descendant <qbref_method_constraintfactory_descendant>`, :ref:`child <qbref_method_constraintfactory_child>`, :ref:`not <qbref_method_constraintfactory_not>`, :ref:`eq <qbref_method_constraintfactory_eq>`, :ref:`neq <qbref_method_constraintfactory_neq>`, :ref:`lt <qbref_method_constraintfactory_lt>`, :ref:`lte <qbref_method_constraintfactory_lte>`, :ref:`gt <qbref_method_constraintfactory_gt>`, :ref:`gte <qbref_method_constraintfactory_gte>`, :ref:`like <qbref_method_constraintfactory_like>`
 
 **Child Cardinality**:
     * **1..1** :ref:`constraint <qbref_type_constraint>`
@@ -433,7 +427,7 @@ Node: ConstraintOrx
 
 **Extends**: :ref:`ConstraintFactory <qbref_node_constraintfactory>`
 
-**Inherited methods**: :ref:`andX <qbref_method_constraintfactory_andx>`, :ref:`orX <qbref_method_constraintfactory_orx>`, :ref:`fieldExists <qbref_method_constraintfactory_fieldexists>`, :ref:`fullTextSearch <qbref_method_constraintfactory_fulltextsearch>`, :ref:`same <qbref_method_constraintfactory_same>`, :ref:`descendant <qbref_method_constraintfactory_descendant>`, :ref:`child <qbref_method_constraintfactory_child>`, :ref:`not <qbref_method_constraintfactory_not>`, :ref:`eq <qbref_method_constraintfactory_eq>`, :ref:`neq <qbref_method_constraintfactory_neq>`, :ref:`lt <qbref_method_constraintfactory_lt>`, :ref:`lte <qbref_method_constraintfactory_lte>`, :ref:`gt <qbref_method_constraintfactory_gt>`, :ref:`gte <qbref_method_constraintfactory_gte>`, :ref:`like <qbref_method_constraintfactory_like>`
+**Inherited methods**: :ref:`andX <qbref_method_constraintfactory_andx>`, :ref:`orX <qbref_method_constraintfactory_orx>`, :ref:`fieldIsset <qbref_method_constraintfactory_fieldisset>`, :ref:`fullTextSearch <qbref_method_constraintfactory_fulltextsearch>`, :ref:`same <qbref_method_constraintfactory_same>`, :ref:`descendant <qbref_method_constraintfactory_descendant>`, :ref:`child <qbref_method_constraintfactory_child>`, :ref:`not <qbref_method_constraintfactory_not>`, :ref:`eq <qbref_method_constraintfactory_eq>`, :ref:`neq <qbref_method_constraintfactory_neq>`, :ref:`lt <qbref_method_constraintfactory_lt>`, :ref:`lte <qbref_method_constraintfactory_lte>`, :ref:`gt <qbref_method_constraintfactory_gt>`, :ref:`gte <qbref_method_constraintfactory_gte>`, :ref:`like <qbref_method_constraintfactory_like>`
 
 **Child Cardinality**:
     * **1..*** :ref:`constraint <qbref_type_constraint>`
@@ -497,7 +491,7 @@ See also: http://www.day.com/specs/jcr/2.0/6_Query.html#FullTextSearchScore
 
 **Arguments**:
 
-* **$selectorName**: *string* - Name of selector to use
+* **$alias**: *string* - Name of selector to use
 
 .. _qbref_method_operanddynamicfactory_length:
 
@@ -511,12 +505,10 @@ Length operand resolves to length of child operand.
     <?php
     $qb->where()
       ->gt()
-        ->length('sel_1.prop_1')->end()
-        ->literal(50)->end()
-      ->end()
+        ->length('alias_1.prop_1')->end()
+        ->literal(50);
     
-    $qb->orderBy()
-      ->ascending()->fullTextSearchScore('sel_1')->end()
+    $qb->orderBy()->asc()->fullTextSearchScore('sel_1');
 
 
 **Type**: *operand_dynamic*
@@ -540,8 +532,7 @@ LowerCase operand evaluates to lower-cased string of child operand:
     $qb->where()
       ->eq()
         ->lowerCase()->field('sel_1.prop_1')->end()
-        ->literal('lower_case')->end()
-      ->end()
+        ->literal('lower_case');
 
 
 **Type**: *operand_dynamic*
@@ -561,8 +552,7 @@ UpperCase operand evaluates to upper-cased string of child operand:
     $qb->where()
       ->eq()
           ->upperCase()->field('sel_1.prop_1')->end()
-          ->literal('UPPER_CASE')->end()
-      ->end()
+          ->literal('UPPER_CASE');
 
 
 **Type**: *operand_dynamic*
@@ -586,8 +576,7 @@ is the local node name.
     $qb->where()
       ->eq()
         ->localName('sel_1')
-        ->literal('my_node_name')
-      ->end()
+        ->literal('my_node_name');
 
 
 Relates to PHPCR NodeLocalNameInterface
@@ -598,7 +587,7 @@ Relates to PHPCR NodeLocalNameInterface
 
 **Arguments**:
 
-* **$selectorName**: *string* - Name of selector to use
+* **$alias**: *string* - Name of selector to use
 
 .. _qbref_method_operanddynamicfactory_name:
 
@@ -616,8 +605,7 @@ For example, if a node has the path "/path/to/bar:foobar", then
     $qb->where()
       ->eq()
         ->name('sel_1')
-        ->literal('namespace:my_node_name')
-      ->end()
+        ->literal('namespace:my_node_name');
 
 
 Relates to PHPCR NodeNameInterface.
@@ -628,7 +616,7 @@ Relates to PHPCR NodeNameInterface.
 
 **Arguments**:
 
-* **$selectorName**: *string* - Name of selector to use
+* **$alias**: *string* - Name of selector to use
 
 .. _qbref_method_operanddynamicfactory_field:
 
@@ -643,8 +631,7 @@ Resolves to the value of the specified field.
     $qb->where()
       ->eq()
         ->field('sel_1.prop_name')
-        ->literal('my_field_value')
-      ->end()
+        ->literal('my_field_value');
 
 
 **Type**: *operand_dynamic*
@@ -781,7 +768,7 @@ Node: OrderBy
 Factory/node class for order by.
 
 Query results can be ordered by any dynamic operand
-in either ascending or descending order.
+in either asc or desc order.
 
 **Type**: :ref:`order_by <qbref_type_order_by>`
 
@@ -789,17 +776,17 @@ in either ascending or descending order.
     * **0..*** :ref:`ordering <qbref_type_ordering>`
 
 
-.. _qbref_method_orderby_ascending:
+.. _qbref_method_orderby_asc:
 
-->ascending
-^^^^^^^^^^^
+->asc
+^^^^^
 
-Add ascending ordering:
+Add asc ordering:
 
 .. code-block:: php
     
     <?php
-    $qb->orderBy()->ascending()->field('sel_1.prop_1');
+    $qb->orderBy()->asc()->field('sel_1.prop_1');
 
 
 **Type**: *ordering*
@@ -815,7 +802,7 @@ Node: OrderByAdd
 
 **Extends**: :ref:`OrderBy <qbref_node_orderby>`
 
-**Inherited methods**: :ref:`ascending <qbref_method_orderby_ascending>`
+**Inherited methods**: :ref:`asc <qbref_method_orderby_asc>`
 
 **Child Cardinality**:
     * **0..*** :ref:`ordering <qbref_type_ordering>`
@@ -947,7 +934,7 @@ Replaces any existing from source.
 **Arguments**:
 
 * **$documentFqn**: *string* - Fully qualified class name for document.
-* **$selectorName**: *string* - Selector name.
+* **$alias**: *string* - Selector name.
 
 .. _qbref_method_querybuilder_addjoinleftouter:
 
@@ -1076,8 +1063,8 @@ Number of orderings is unbounded.
     
     <?php
     $qb->orderBy()
-        ->ascending()->field('a.prop_1')
-        ->descending()->field('a.prop_2')
+        ->asc()->field('a.prop_1')
+        ->desc()->field('a.prop_2')
       ->end()
 
 
@@ -1162,13 +1149,13 @@ Descendant join condition.
 .. code-block:: php
     
     <?php
-    $qb->from()
-      ->joinInner()
-        ->left()->document('Foo/Bar/One', 'sel_1')->end()
-        ->right()->document('Foo/Bar/Two', 'sel_2')->end()
-        ->condition()
-          ->descendant('sel_1', 'sel_2')
-        ->end()
+      $qb->from()
+        ->joinInner()
+          ->left()->document('Foo/Bar/One', 'alias_1')->end()
+          ->right()->document('Foo/Bar/Two', 'alias_2')->end()
+          ->condition()
+            ->descendant('alias_1', 'alias_2')
+          ->end()
       ->end()
 
 
@@ -1178,8 +1165,8 @@ Descendant join condition.
 
 **Arguments**:
 
-* **$descendantSelectorName**: *string* - Name of selector for descendant documents.
-* **$ancestorSelectorName**: *string* - Name of selector to match for ancestor documents.
+* **$descendantAlias**: *string* - Name of selector for descendant documents.
+* **$ancestorAlias**: *string* - Name of selector to match for ancestor documents.
 
 .. _qbref_method_sourcejoinconditionfactory_equi:
 
@@ -1191,14 +1178,11 @@ Equi (equality) join condition.
 .. code-block:: php
     
     <?php
-    $qb->from()
-      ->joinInner()
-        ->left()->document('Foo/Bar/One', 'sel_1')->end()
-        ->right()->document('Foo/Bar/Two', 'sel_2')->end()
-        ->condition()
-          ->equi('sel_1.prop_1', 'sel_2.prop_2')
-        ->end()
-      ->end()
+      $qb->from()
+        ->joinInner()
+          ->left()->document('Foo/Bar/One', 'alias_1')->end()
+          ->right()->document('Foo/Bar/Two', 'alias_2')->end()
+          ->condition()->equi('alias_1.prop_1', 'alias_2.prop_2');
 
 
 **Type**: *source_join_condition*
@@ -1220,14 +1204,11 @@ Child document join condition.
 .. code-block:: php
     
     <?php
-    $qb->from()
-      ->joinInner()
-        ->left()->document('Foo/Bar/One', 'sel_1')->end()
-        ->right()->document('Foo/Bar/Two', 'sel_2')->end()
-        ->condition()
-          ->child('sel_1', 'sel_2')
-        ->end()
-      ->end()
+      $qb->from()
+        ->joinInner()
+          ->left()->document('Foo/Bar/One', 'alias_1')->end()
+          ->right()->document('Foo/Bar/Two', 'alias_2')->end()
+          ->condition()->child('alias_1', 'alias_2');
 
 
 **Type**: *source_join_condition*
@@ -1236,8 +1217,8 @@ Child document join condition.
 
 **Arguments**:
 
-* **$childSelectorName**: *string* - Name of selector for child documents.
-* **$parentSelectorName**: *string* - Name of selector to match for parent documents.
+* **$childAlias**: *string* - Name of selector for child documents.
+* **$parentAlias**: *string* - Name of selector to match for parent documents.
 
 .. _qbref_method_sourcejoinconditionfactory_same:
 
@@ -1251,10 +1232,10 @@ Same document join condition:
     <?php
       $qb->from()
         ->joinInner()
-          ->left()->document('Foo/Bar/One', 'sel_1')->end()
-          ->right()->document('Foo/Bar/Two', 'sel_2')->end()
+          ->left()->document('Foo/Bar/One', 'alias_1')->end()
+          ->right()->document('Foo/Bar/Two', 'alias_2')->end()
           ->condition()
-            ->same('sel_1', 'sel_2', '/path_to/sel_2/document')
+            ->same('alias_1', 'alias_2', '/path_to/alias_2/document')
           ->end()
         ->end()
 
@@ -1265,9 +1246,9 @@ Same document join condition:
 
 **Arguments**:
 
-* **$selector1Name**: *string* - Name of first selector.
-* **$selector2Name**: *string* - Name of first selector.
-* **$selector2Path**: *string* - Path for documents of second selector.
+* **$alias1**: *string* - Name of first alias.
+* **$alias2**: *string* - Name of first alias.
+* **$alias2Path**: *string* - Path for documents of second selector.
 
 .. _qbref_node_sourcejoinleft:
 
@@ -1308,7 +1289,7 @@ Node: Where
 
 **Extends**: :ref:`ConstraintFactory <qbref_node_constraintfactory>`
 
-**Inherited methods**: :ref:`andX <qbref_method_constraintfactory_andx>`, :ref:`orX <qbref_method_constraintfactory_orx>`, :ref:`fieldExists <qbref_method_constraintfactory_fieldexists>`, :ref:`fullTextSearch <qbref_method_constraintfactory_fulltextsearch>`, :ref:`same <qbref_method_constraintfactory_same>`, :ref:`descendant <qbref_method_constraintfactory_descendant>`, :ref:`child <qbref_method_constraintfactory_child>`, :ref:`not <qbref_method_constraintfactory_not>`, :ref:`eq <qbref_method_constraintfactory_eq>`, :ref:`neq <qbref_method_constraintfactory_neq>`, :ref:`lt <qbref_method_constraintfactory_lt>`, :ref:`lte <qbref_method_constraintfactory_lte>`, :ref:`gt <qbref_method_constraintfactory_gt>`, :ref:`gte <qbref_method_constraintfactory_gte>`, :ref:`like <qbref_method_constraintfactory_like>`
+**Inherited methods**: :ref:`andX <qbref_method_constraintfactory_andx>`, :ref:`orX <qbref_method_constraintfactory_orx>`, :ref:`fieldIsset <qbref_method_constraintfactory_fieldisset>`, :ref:`fullTextSearch <qbref_method_constraintfactory_fulltextsearch>`, :ref:`same <qbref_method_constraintfactory_same>`, :ref:`descendant <qbref_method_constraintfactory_descendant>`, :ref:`child <qbref_method_constraintfactory_child>`, :ref:`not <qbref_method_constraintfactory_not>`, :ref:`eq <qbref_method_constraintfactory_eq>`, :ref:`neq <qbref_method_constraintfactory_neq>`, :ref:`lt <qbref_method_constraintfactory_lt>`, :ref:`lte <qbref_method_constraintfactory_lte>`, :ref:`gt <qbref_method_constraintfactory_gt>`, :ref:`gte <qbref_method_constraintfactory_gte>`, :ref:`like <qbref_method_constraintfactory_like>`
 
 **Child Cardinality**:
     * **1..1** :ref:`constraint <qbref_type_constraint>`
@@ -1325,7 +1306,7 @@ Append an additional "where" with an AND
 
 **Extends**: :ref:`Where <qbref_node_where>`
 
-**Inherited methods**: :ref:`andX <qbref_method_constraintfactory_andx>`, :ref:`orX <qbref_method_constraintfactory_orx>`, :ref:`fieldExists <qbref_method_constraintfactory_fieldexists>`, :ref:`fullTextSearch <qbref_method_constraintfactory_fulltextsearch>`, :ref:`same <qbref_method_constraintfactory_same>`, :ref:`descendant <qbref_method_constraintfactory_descendant>`, :ref:`child <qbref_method_constraintfactory_child>`, :ref:`not <qbref_method_constraintfactory_not>`, :ref:`eq <qbref_method_constraintfactory_eq>`, :ref:`neq <qbref_method_constraintfactory_neq>`, :ref:`lt <qbref_method_constraintfactory_lt>`, :ref:`lte <qbref_method_constraintfactory_lte>`, :ref:`gt <qbref_method_constraintfactory_gt>`, :ref:`gte <qbref_method_constraintfactory_gte>`, :ref:`like <qbref_method_constraintfactory_like>`
+**Inherited methods**: :ref:`andX <qbref_method_constraintfactory_andx>`, :ref:`orX <qbref_method_constraintfactory_orx>`, :ref:`fieldIsset <qbref_method_constraintfactory_fieldisset>`, :ref:`fullTextSearch <qbref_method_constraintfactory_fulltextsearch>`, :ref:`same <qbref_method_constraintfactory_same>`, :ref:`descendant <qbref_method_constraintfactory_descendant>`, :ref:`child <qbref_method_constraintfactory_child>`, :ref:`not <qbref_method_constraintfactory_not>`, :ref:`eq <qbref_method_constraintfactory_eq>`, :ref:`neq <qbref_method_constraintfactory_neq>`, :ref:`lt <qbref_method_constraintfactory_lt>`, :ref:`lte <qbref_method_constraintfactory_lte>`, :ref:`gt <qbref_method_constraintfactory_gt>`, :ref:`gte <qbref_method_constraintfactory_gte>`, :ref:`like <qbref_method_constraintfactory_like>`
 
 **Child Cardinality**:
     * **1..1** :ref:`constraint <qbref_type_constraint>`
@@ -1342,7 +1323,7 @@ Append an additional "where" with an OR
 
 **Extends**: :ref:`Where <qbref_node_where>`
 
-**Inherited methods**: :ref:`andX <qbref_method_constraintfactory_andx>`, :ref:`orX <qbref_method_constraintfactory_orx>`, :ref:`fieldExists <qbref_method_constraintfactory_fieldexists>`, :ref:`fullTextSearch <qbref_method_constraintfactory_fulltextsearch>`, :ref:`same <qbref_method_constraintfactory_same>`, :ref:`descendant <qbref_method_constraintfactory_descendant>`, :ref:`child <qbref_method_constraintfactory_child>`, :ref:`not <qbref_method_constraintfactory_not>`, :ref:`eq <qbref_method_constraintfactory_eq>`, :ref:`neq <qbref_method_constraintfactory_neq>`, :ref:`lt <qbref_method_constraintfactory_lt>`, :ref:`lte <qbref_method_constraintfactory_lte>`, :ref:`gt <qbref_method_constraintfactory_gt>`, :ref:`gte <qbref_method_constraintfactory_gte>`, :ref:`like <qbref_method_constraintfactory_like>`
+**Inherited methods**: :ref:`andX <qbref_method_constraintfactory_andx>`, :ref:`orX <qbref_method_constraintfactory_orx>`, :ref:`fieldIsset <qbref_method_constraintfactory_fieldisset>`, :ref:`fullTextSearch <qbref_method_constraintfactory_fulltextsearch>`, :ref:`same <qbref_method_constraintfactory_same>`, :ref:`descendant <qbref_method_constraintfactory_descendant>`, :ref:`child <qbref_method_constraintfactory_child>`, :ref:`not <qbref_method_constraintfactory_not>`, :ref:`eq <qbref_method_constraintfactory_eq>`, :ref:`neq <qbref_method_constraintfactory_neq>`, :ref:`lt <qbref_method_constraintfactory_lt>`, :ref:`lte <qbref_method_constraintfactory_lte>`, :ref:`gt <qbref_method_constraintfactory_gt>`, :ref:`gte <qbref_method_constraintfactory_gte>`, :ref:`like <qbref_method_constraintfactory_like>`
 
 **Child Cardinality**:
     * **1..1** :ref:`constraint <qbref_type_constraint>`

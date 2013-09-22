@@ -132,7 +132,7 @@ return its parent we need to call ``end()`` to go back once more to the
 .. note::
 
     It is only necessary to add an ``end()`` terminator when you wish to
-    append additional leaf nodes in the *same statement*. In this document we
+    append additional leaf nodes to the *same statement*. In this document we
     will not add ``end()`` terminators where they are not required.
 
 Types and Cardinality
@@ -152,7 +152,7 @@ Each node has an associated node type:
 Node types (not to be confused with PHPCR node types) are used to validate the
 query builder trees structure. Each factory node declares how many children of
 each type it is allowed, this is the node child cardinality map. The
-:doc:`query-builder-reference` document lists the cardinalities of all the
+:doc:`Query Builder Reference <query-builder-reference>` document lists the cardinalities of all the
 factory nodes.
 
 Exceeding or not achieving the minimum or maximum child cardinality for a
@@ -174,7 +174,7 @@ query, for example:
     $qb->getQuery();
 
     // ok
-    $qb->where()->eq()->field('p.title')->litreal('My Post');
+    $qb->where()->eq()->field('p.title')->literal('My Post');
     $qb->getQuery();
 
 The cardinality for each node is documented in the
@@ -367,7 +367,7 @@ You can specify selection criteria using the ``where`` factory node.
    // which is equivalent to
    $qb->where()->andX()
      ->eq()->field('u.username')->literal('dtl')->end()
-     ->eq()->field('u.name')->literal('daniel')->end();
+     ->eq()->field('u.name')->literal('daniel');
 
    // where username is "dtl" OR name is "daniel"
    $qb->where()->eq()->field('u.username')->literal('dtl');
@@ -376,18 +376,18 @@ You can specify selection criteria using the ``where`` factory node.
    // which is equivalent to
    $qb->where()->orX()
      ->eq()->field('u.username')->literal('dtl')->end()
-     ->eq()->field('u.name')->literal('daniel')->end();
+     ->eq()->field('u.name')->literal('daniel');
 
    // where the lowercase value of node name is equal to dtl
    $qb->where()
        ->eq()
-           ->lowercase()->documentLocalName('a')->end()
+           ->lowercase()->localName('a')->end()
            ->literal('dtl');
 
    // where the lowercase value of node name is NOT equal to dtl
    $qb->where()
        ->eq()
-           ->lowercase()->documentLocalName('a')->end()
+           ->lowercase()->localName('a')->end()
            ->literal('dtl');
 
 .. _qbref_ordering:
@@ -424,8 +424,8 @@ Add three orderings - equivilent to the SQL ``ORDER BY username ASC, name ASC, w
    <?php
 
    $qb->orderBy()
-     ->asc()->field('u.username');
-     ->asc()->field('u.name');
+     ->asc()->field('u.username')->end()
+     ->asc()->field('u.name')->end()
      ->desc()->field('u.website');
 
 Adding multiple orderings using ``addOrderBy``:
