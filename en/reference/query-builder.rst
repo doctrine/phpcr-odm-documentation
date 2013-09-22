@@ -3,19 +3,191 @@
 The QueryBuilder
 ================
 
-The ``QueryBuilder`` provides an API that is designed for
-programmatically constructing ODM :ref:`query <queryref>` objects.
+The PHPCR-ODM query builder enables you to create queries at the abstraction
+level of the ODM using a fluent interface.
 
-Creating a query builder instance
----------------------------------
+An example query:
 
-You can create instances of ``QueryBuilder`` in one of two ways, either via
+.. code-block:: php
+
+    <?php
+    $qb = $documentManager->createQueryBuilder();
+
+    $qb->from()->document('Blog\User', 'u');
+    $qb->where()->eq()->field('u.name')->literal('dtl');
+
+    $query = $qb->getQuery();
+
+This query will select all documents of class ``Blog\User`` which
+have a value of ``dtl`` for the field ``name``.
+
+The first line retrieves a new instance of the query builder from the document
+manager.
+
+The second specifies that we want documents of type ``Blog\User`` and that
+the string "u" will be used as the selector name.
+
+The third line says that we want only documents where the value of the
+field "name" from the selector named "u" is equal (eq) to the
+literal string "dtl".
+
+The forth and final line retrieves the :ref:`query <queryref>` object.
+
+Alternatively the above query can be written more fluently by the using
+``end()`` terminators as follows:
+
+.. code-block:: php
+
+    <?php
+    $qb = $documentManager->createQueryBuilder();
+    $qb->from()
+        ->document('Blog\User')
+      ->end()
+      ->where()
+        ->eq()
+          ->field('a.name')
+          ->literal('dtl');
+
+Concepts
+--------
+
+Leaf and Factory Nodes
+~~~~~~~~~~~~~~~~~~~~~~
+
+The query builder is a tree structure composed of two different categories of
+nodes. *Factory nodes* and *Leaf nodes*. Factory nodes create and
+add new nodes to the query builder tree and then return the newly created node. Factory methods
+accept no arguments and always have *children*. A factory node has zero
+arguments.
+
+Leaf nodes have no children and always return the parent node after adding
+themselves to the query builder tree. The parent node is always a factory
+node and the leaf node always has arguments.
+
+.. code-block:: php
+
+    <?php
+    // the query builder is a factory node
+    $qb = $dm->createQueryBuilder();
+
+    // from() returns a new factory node
+    $from = $qb->from();
+
+    // document() is a leaf node, it returns the parent factory
+    $from = $from->document('Post', 'p');
+
+    // end() returns the parent, in this case the query builder.
+    $qb = $from->end();
+
+Fluent Interface
+~~~~~~~~~~~~~~~~
+
+The API makes use of a fluent API which enables an entire query to be
+constructed in a single, unbroken, statement.
+
+Factory node methods append nodes as children to themselves and return either
+other factory nodes or, if the factory method returns a leaf, the method will
+return its owning class instance.
+
+.. code-block:: php
+
+    <?php
+    $qb->where()->eq()->field('p.title', 'p')->literal('My Post');
+
+In the example above:
+
+* The ``where`` method of the ``QueryBuilder`` adds and returns a
+  ``ConstraintFactory`` which provides the ``eq()`` method. 
+
+* The ``eq()`` method adds and returns an ``OperandFactory`` which contains the
+  ``field()`` and ``literal()`` methods. 
+
+Up to this point the return values have all been factory classes. 
+
+* The ``field()`` and ``literal()`` methods add leaf nodes and they return the
+  same class of which they are part - the ``OperandFactory`` - the same node
+  which provides the ``eq()`` method.
+
+This model presents a problem when we want to proceed to a previous node
+without breaking the chain, this is where the ``end()`` method comes in.
+
+The ``end()`` method is a special method that will always return the parent of the
+current node, allowing us to construct the query in full without breaking the
+chain. A practical application of this is when we do more complicated things,
+such as chaining operands:
+
+.. code-block:: php
+
+    <?php
+    $qb->wwhere()->eq()->lowerCase()->field('p.title')->end()->literal('my post');
+
+Here the ``lowerCase()`` method would return the ``LowerCase`` operand, which will
+transform the value of its child member to lowercase. Because ``field()`` will
+return its parent we need to call ``end()`` to go back once more to the
+``ConstraintFactory`` (as returned by ``eq()``).
+
+.. note::
+
+    It is only necessary to add an ``end()`` terminator when you wish to
+    append additional leaf nodes to the *same statement*. In this document we
+    will not add ``end()`` terminators where they are not required.
+
+Types and Cardinality
+~~~~~~~~~~~~~~~~~~~~~
+
+Each node has an associated node type:
+
+.. code-block:: php
+
+    <?php
+    $qb->getNodeType(); // returns "builder"
+    $qb->where()->getNodeType(); // returns "where"
+    $qb->andWhere()->getNodeType(); // returns "where"
+    $qb->where()->eq()->getNodeType(); // returns "constraint"
+    $qb->where()->eq()->field()->getNodeType(); // returns "operand"
+
+Node types (not to be confused with PHPCR node types) are used to validate the
+query builder trees structure. Each factory node declares how many children of
+each type it is allowed, this is the node child cardinality map. The
+:doc:`Query Builder Reference <query-builder-reference>` document lists the cardinalities of all the
+factory nodes.
+
+Exceeding or not achieving the minimum or maximum child cardinality for a
+given node type will cause an exception to be thrown when retrieving the
+query, for example:
+
+.. code-block:: php
+
+    <?php
+    // throws exception, query builder node needs at least one "from".
+    $qb->getQuery(); 
+
+    // throws exception, eq() needs one dynamic and one static operand
+    $qb->where()->eq()->field('p.title');
+    $qb->getQuery();
+
+    // throws exception, eq() needs one dynamic and one static operand
+    $qb->where()->eq()->field('p.title')->field('p.name');
+    $qb->getQuery();
+
+    // ok
+    $qb->where()->eq()->field('p.title')->literal('My Post');
+    $qb->getQuery();
+
+The cardinality for each node is documented in the
+:doc:`query-builder-reference`, for an example see
+:ref:`qbref_node_querybuilder`.
+
+Retrieving a query builder instance
+-----------------------------------
+
+You can create instances of the query builder in one of two ways, either via
 the ``DocumentManager`` or via a ``DocumentRepository``.
 
 Via the document manager
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can create the ``QueryBuilder`` with the ``DocumentManager`` using the 
+You can instantiate the ``QueryBuilder`` with the ``DocumentManager`` using the 
 ``createQueryBuilder`` method.
 
 .. code-block:: php
@@ -23,40 +195,23 @@ You can create the ``QueryBuilder`` with the ``DocumentManager`` using the
     <?php
     $qb = $documentManager->createQueryBuilder();
 
-The following example gets all documents where the ``name`` property
-is equal to ``daniel`` and orders the results by ``username`` in ascending order.
-
-.. code-block:: php
-
-   <?php
-
-   $qb->where($qb->expr()->eq('name', 'daniel'))
-      ->orderBy('username', 'ASC');
-
-   $query = $qb->getQuery();   
-   $users = $query->execute();
-
-.. note::
-
-   Unlike the ORM it is not nescessary to specify a source to select from, the above
-   example will find **any** class of document matching the criteria.
-
 Via a document repository
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can also create a ``QueryBuilder`` from a ``DocumentRepsitory`` instance, doing so
-will automatically select only those records which are associated with the ``DocumentRepository``.
+You can also instantiate a ``QueryBuilder`` from a ``DocumentRepsitory``
+instance, doing so will automatically select only those records which are
+associated with the ``DocumentRepository``.
 
 .. code-block:: php
 
    <?php
-
-   $postsRepository = $dm->getRepository('MyVendor/Blog/Document/Post');
-   $qb = $postsRepository->createQueryBuilder();
+   $postsRepository = $dm->getRepository('Blog\Post');
+   $qb = $postsRepository->createQueryBuilder('p');
    $posts = $qb->getQuery()->execute();
 
-The above code block will select all documents in the document tree of class ``Post``. This
-feature is especially useful within a document repository class.
+The above code block will select all documents in the document tree of class
+``Blog\Post``. This feature is especially useful within a document repository
+class. 
 
 Example showing the use of the query builder in a ``DocumentRepository``:
 
@@ -64,44 +219,105 @@ Example showing the use of the query builder in a ``DocumentRepository``:
 
    <?php
 
-   namespace MyVendor\Blog\Repository;
+   namespace Blog;
    use Doctrine\ODM\PHPCR\DocumentRepository;
 
-   class Post extends DocumentRepository
+   class PostRepository extends DocumentRepository
    {
        public function getPostsByAuthor($authorName)
        {
-           $qb = $this->createQueryBuilder();
-           $qb->where(
-               $qb->expr('author', 'dtl')
-           );
+           $qb = $this->createQueryBuilder('p');
+           $qb->where()->eq()->field('p.author')->literal('dtl');
 
            return $qb->getQuery()->execute();
        }
    }
 
-
-.. _qbref_workingwiththequerybuilder:
+Note that we specify the string "a" as an argument to
+``createQueryBuilder`` - this is the selector name (analagous to "alias" in
+Doctrine ORM terms), more on these later.
 
 Working with the QueryBuilder
 -----------------------------
+
+.. _qbref_from:
+
+Specifying the document source - from
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The ODM query builder requires you to specify a source from which records
+should be selected. This source can either be a specified document or a
+"join". Joins join two sources using a given "join condition".
+
+.. note::
+
+    A raw PHPCR query will allow you to select from ALL records and to hydrate
+    a result set of mixed document classes, the PHPCR-ODM query builder
+    requires however that you specify a single document source - this is because the
+    PHPCR query builder is not bound to the field mappings of the ODM.
+
+From Single Source
+""""""""""""""""""
+
+.. code-block:: php
+
+    <?php
+
+    // select documents of class Foo\Bar.
+    $qb->from()->document('Blog\Post', 'p');
+
+The above example will setup the query builder to select documents only of class
+``Blog\Post`` using the *selector name* "p". The selector name is the alias used
+in subsequent references to this document source or properties within this
+document.
+
+From Joined Source
+""""""""""""""""""
+
+Joins allow you to take other documents into account when selecting records.
+
+.. code-block:: php
+
+    <?php
+
+    // select documents from a join
+    $qb->from()->joinInner()
+        ->left()->document('Blog\Post', 'p')->end()
+        ->right()->document('Blog\User', 'u')->end()
+        ->condition()->equi('p.username', 'u.username');
+
+    $qb->where()
+        ->eq()->field('u.username')->literal('dantleech');
+
+Join two document sources using an inner join. We use an "equi" (equality)
+join condition where the property named "username" from selector "p"
+(``Blog\Post``) is equal to the property "username" from selector "u"
+(``Blog\User``). We can then reference the user document in a constraint as
+demonstrated.
 
 .. _qbref_select:
 
 Selecting specific properties - select
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+You can specify fields to populate with values using the ``select`` factory
+node, this is currently only useful when :ref:`hydrating to PHPCR nodes
+<queryref_hydration>`. The default (object) hydration will *always* hydrate
+all fields regardless of what you specify.
+
 .. code-block:: php
 
    <?php
-   $qb->select('username')
-      ->addSelect('firstname')
-      ->addSelect('lastname');
+   $qb->from('Demo\User', 'u');
+   $qb->select()
+     ->field('u.firstname')
+     ->field('u.lastname');
 
-.. note:: 
-   
-   Select is currently only usefull with PHPCR hydration, ODM hydration will
-   hydrate all fields regardless of the column selection.
+   $query = $qb->getQuery();
+
+   // field selection only used when hydrating to nodes
+   $node = $query->getSingleResult(Query::HYDRATE_PHPCR);
+   $node->getProperty('firstname');
 
 .. _qbref_limiting:
 
@@ -115,89 +331,70 @@ You can specify a maximum number of results and the index of the first result
 
    <?php
    // select a maximum of 10 records.
-   $qb->from('MyVendor/Blog/Document/User')
+   $qb->from()->document('User')
       ->setMaxResults(10);
 
    // select a maximum of 10 records from the position of the 20th record.
-   $qb->from('MyVendor/Blog/Document/User')
+   $qb->from()->document('User')
       ->setMaxResults(10)
       ->setFirstResult(20); 
-
-.. _qbref_from:
-.. _qbref_nodeType:
-
-Restrict query to document class or node type
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-You can restrict **either** the document class **or** the node type. Attempting to
-specify both will result in an Exception because by setting the document class
-you are implicitly setting the node type.
-
-.. code-block:: php
-
-   <?php
-
-   $dm->getQueryBuilder()
-      ->from('MyVendor/Blog/Document/User'); // select only from user documents
-
-   // or
-
-   $dm->getQueryBuilder()
-      ->nodeType('nt:mynodetype'); // select only documents with node type nt:mynodetype.
-
-   // but not
-
-   $dm->getQueryBuilder()
-      ->nodeType('nt:mynodetype')
-      ->from('MyVendor/Blog/Document/User')
-      ->getQuery(); // this will throw an Exception.
 
 .. _qbref_where:
 
 Specifying selection criteria
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can specify selection criteria, or :ref:`Expressions <qbref_expressionbuilder>`, with the ``where`` method. You
-can add additional Expressions with ``andWhere`` and ``orWhere``.
+You can specify selection criteria using the ``where`` factory node.
 
 .. code-block:: php
 
    <?php
 
+   // setup our document source with selector "u"
+   $qb->from('Blog\User', 'u');
+
    // where name is "daniel"
-   $qb->where($qb->expr()->eq('name', 'daniel'));
+   $qb->where()
+     ->eq()->field('u.name')->literal('daniel');
 
    // where username is "dtl" AND name is "daniel"
-   $qb->where($qb->expr()->eq('username', 'dtl'));
-      ->andWhere($qb->expr()->eq('name', 'daniel'));
+   $qb->where()->eq()->field('u.username')->literal('dtl');
+   $qb->andWhere()->eq()->field('u.name')->literal('daniel');
 
    // which is equivalent to
-   $qb->where($qb->expr()->andX(
-       $qb->expr()->eq('username', 'dtl'),
-       $qb->expr()->eq('name', 'daniel')
-   ));
+   $qb->where()->andX()
+     ->eq()->field('u.username')->literal('dtl')->end()
+     ->eq()->field('u.name')->literal('daniel');
 
    // where username is "dtl" OR name is "daniel"
-   $qb->where($qb->expr()->eq('username', 'dtl'))
-      ->orWhere($qb->expr()->eq('name', 'daniel'));
+   $qb->where()->eq()->field('u.username')->literal('dtl');
+   $qb->orWhere()->eq()->field('u.name')->literal('daniel');
 
    // which is equivalent to
-   $qb->where($qb->expr()->orX(
-       $qb->expr()->eq('username', 'dtl'),
-       $qb->expr()->eq('name', 'daniel')
-   ));
+   $qb->where()->orX()
+     ->eq()->field('u.username')->literal('dtl')->end()
+     ->eq()->field('u.name')->literal('daniel');
+
+   // where the lowercase value of node name is equal to dtl
+   $qb->where()
+       ->eq()
+           ->lowercase()->localName('a')->end()
+           ->literal('dtl');
+
+   // where the lowercase value of node name is NOT equal to dtl
+   $qb->where()
+       ->eq()
+           ->lowercase()->localName('a')->end()
+           ->literal('dtl');
 
 .. _qbref_ordering:
 
 Ordering results
 ~~~~~~~~~~~~~~~~
 
-You can specify the property or properties by which to order the queries results
-with the ``orderBy`` method. You can specify additional orderings with ``addOrderBy``,
-or you can pass an array of property names to ``orderBy``.
-
-The ordering direction is specified as either ``ASC`` (ascending order, e.g. a-z, 0-9) or ``DESC``
-(descending order, e.g. z-a, 9-0). The default is ``ASC``.
+You can specify the property or properties by which to order the queries
+results with the ``orderBy`` factory node. You can specify additional
+orderings with ``addOrderBy``.
 
 Add a single ordering:
 
@@ -205,7 +402,8 @@ Add a single ordering:
 
    <?php
 
-   $qb->orderBy('username', 'ASC'); // username assending
+   $qb->orderBy()
+     ->asc()->field('u.username'); // username asc
 
 Descending:
 
@@ -213,275 +411,69 @@ Descending:
 
    <?php
 
-   $qb->orderBy('username', 'DESC'); // username descending
+   $qb->orderBy()
+     ->desc()->field('u.username');
 
-Add two orderings:
-
-.. code-block:: php
-
-   <?php
-
-   $qb->orderBy('username');
-   $qb->addOrderBy('name'); // username then name ascending (ORDER BY username, name ASC)
-
-Add two orderings by passing an array to ``orderBy``:
+Add three orderings - equivilent to the SQL ``ORDER BY username ASC, name ASC, website DESC``:
 
 .. code-block:: php
 
    <?php
 
-   $qb->orderBy(array('username', 'name'), 'ASC'); // same as previous example
-
-.. _qbref_expressionbuilder:
-
-The Expression Builder
-----------------------
-
-The ``ExpressionBuilder`` is a class which allows you to programatically construct selection
-criteria. It is created through the factory method ``expr()`` of the query builder. The return
-value is accepted by :ref:`where <qbref_where>`.
-
-.. _qbref_expr_andx:
-
-andX (and eXpression)
-~~~~~~~~~~~~~~~~~~~~~
-
-Join two or more expressions with an *AND* constraint.
-
-.. code-block:: php
-
-    <?php
-
-    $qb->expr()->andX(
-        $qb->expr()->eq('tag', 'dogs'),
-        $qb->expr()->eq('owner', 'daniel')
-    );
-
-.. _qbref_expr_orx:
-
-orX (or eXpression)
-~~~~~~~~~~~~~~~~~~~
-
-Join two or more expressions with an *OR* constraint.
-
-.. code-block:: php
-
-    <?php
-
-    $qb->expr()->orX(
-        $qb->expr()->eq('tag', 'dogs'),
-        $qb->expr()->eq('tag', 'cats')
-    );
-
-.. _qbref_expr_eq:
-
-eq (equal)
-~~~~~~~~~~
-
-Specify that the value of the given field name on candidate documents must be 
-equal to the given value.
-
-.. code-block:: php
-
-    <?php
-
-    $qb->expr()->eq('tag', 'dogs');
-
-neq (not equal)
-~~~~~~~~~~~~~~~
-
-Specify that the value of the given field name on candidate documents must **not** 
-be equal to the given value.
-
-.. code-block:: php
-
-    <?php
-
-    $qb->expr()->neq('tag', 'cats');
-
-.. _qbref_expr_gt:
-
-gt (greater than)
-~~~~~~~~~~~~~~~~~
-
-Specify that the value of the given field name on candidate documents must be greater 
-than the given value.
-
-.. code-block:: php
-
-    <?php
-
-    $qb->expr()->gt('number_of_logins', 50);
-
-.. _qbref_expr_gte:
-
-gte (greater than or equal)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Specify that the value of the given field name on candidate documents must be greater 
-than or equal to the given value.
-
-.. code-block:: php
-
-    <?php
-
-    $qb->expr()->gte('number_of_logins', 50);
-
-.. _qbref_expr_lt:
-
-lt (less than)
-~~~~~~~~~~~~~~
-
-Specify that the value of the given field name on candidate documents must be less 
-than the given value.
-
-.. code-block:: php
-
-    <?php
-
-    $qb->expr()->lt('number_of_logins', 50);
-
-.. _qbref_expr_lte:
-
-lte (less than or equal)
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-Specify that the value of the given field name on candidate documents must be less 
-than or equal to the given value.
-
-.. code-block:: php
-
-    <?php
-
-    $qb->expr()->lte('number_of_logins', 50);
-
-.. _qbref_expr_like:
-
-like
-~~~~
-
-Specify that the value of the given field name on the candidate document must match 
-the given pattern.  "%" is a wildcard.
-
-.. code-block:: php
-
-    <?php
-
-    $qb->expr()->like('name', 'cAtS'); // case insesitive will match "CATS" and "cats"
-    $qb->expr()->like('name', '%og'); // will match "dog" but not "doggy" 
-    $qb->expr()->like('name', '%og%'); // will match "dog" and "dogs" 
-    $qb->expr()->like('name', 'dog%'); // will match "dog" and "dogs" but not "the dog"
-
-.. _qbref_expr_descendant:
-
-descendant
-~~~~~~~~~~
-
-Specify that candidate documents must be descendants of the ancestor at the given path.
-
-.. code-block:: php
-
-    <?php
-
-    $qb->expr()->descendant('/blog/posts');
-
-textSearch
-~~~~~~~~~~
-
-Perform a text search - perform a full text search on the specified field.
-
-See `the JCR reference <http://docs.jboss.org/jbossdna/0.7/manuals/reference/html/jcr-query-and-search.html#fulltext-search-query-language>`_ for more information about query syntax.
-
-Search on **all** document types where **body** fields are equal to **dog**:
+   $qb->orderBy()
+     ->asc()->field('u.username')->end()
+     ->asc()->field('u.name')->end()
+     ->desc()->field('u.website');
+
+Adding multiple orderings using ``addOrderBy``:
 
 .. code-block:: php
 
    <?php
 
-   $qb = // new query builder
-   $qb->expr()->textSearch('body', 'dog');
+   $qb->orderBy()->asc()->field('u.username');
+   $qb->addOrderBy()->asc()->field('u.name');
 
-Search on **all** document types where **any** field **contains** the word "computer":
+Using the Query Builder in Tests
+--------------------------------
 
-.. code-block:: php
+Mocking the query builder in a unit test is not easy - it requires that you
+mock the node classes and setup the methods to return the correct node classes
+at the correct time. In short, we recommend that you use the real query
+builder class and a special companion class, the ``QueryBuilderTester``.
 
-   <?php
+The ``QueryBuilderTester`` provides a couple of methods:
 
-   $qb = // new query builder
-   $qb->expr()->textSearch(null, '*computer*');
-
-.. _qbref_phpcrquerybuilder:
-
-The PHPCR QueryBuilder
-----------------------
-
-The PHPCR QueryBuilder is a lower level and more verbose query builder available in the PHPCR Utils
-package and is not part of the ODM package, as such we will not document it extensively here and it
-is recommended that you use the ODM query builder. 
-
-This query builder does not know about the ODM layer, which means that it produces PHPCR queries
-and not ODM queries. To hydrate Documents from the results of a PHPCR query you need to use the
-``getDocumentsByPhpcrQuery`` method of the document manager.
-
-See the `PHPCR Documentation <http://phpcr.github.com/doc/html-all/index.html>`_ for more information.
-
-Examples
-~~~~~~~~
-
-This query is equivalent to the JCR-SQL2 query ``SELECT * FROM nt:unstructured WHERE name NOT IS NULL``
+* **getNode**: Retrieve a node from the query builder by its "node type" path.
+* **dumpNodePaths**: Dump all the "node type" paths in the query builder
+  instance.
 
 .. code-block:: php
 
     <?php
+    use Doctrine\ODM\PHPCR\Query\Builder\QueryBuilder;
+    use Doctrine\ODM\PHPCR\Tools\Test\QueryBuilderTester;
 
-    /** @var $qb QueryBuilder */
-    $qb = $dm->getPhpcrQueryBuilder();
-    $factory = $qb->getQOMFactory();
-    $qb->from($factory->selector('nt:unstructured'))
-        ->where($factory->propertyExistence('name'))
-        ->execute();
+    $test = // pretend we have a PHPUnit_Framework_TestCase
+    $qb = new QueryBuilder;
+    $qb->where()->eq()->field('p.title')->literal('Foobar');
 
-    $result = $documentManager->getDocumentsByPhpcrQuery($qb->getQuery());
-    foreach ($result as $document) {
-        echo $document->getId();
-    }
+    $qbTester = new QueryBuilderTester($qb);
 
-The maximum number of results (limit) can be set with the setMaxResults method.
-Furthermore the position of the first result to be retrieved (offset) can be
-set with setFirstResult
+    // ->getNode - retrieve node by its nodetype path.
+    $literalNode = $qbTester->getNode('where.constraint.operand_statuc');
+    $fieldNode = $qbTester->getNode('where.constraint.operand_dynamic');
 
-.. code-block:: php
+    $test->assertEquals('Foobar', $literalNode->getValue());
+    $test->assertEquals('p', $fieldNode->getSelectorName());
+    $test->assertEquals('title', $fieldNode->getPropertyName());
 
-    <?php
+    $qb->where()->andX()
+        ->eq()->field('p.title')->literal('Foobar')->end()
+        ->fieldIsset('p.username');
 
-    /** @var $qb QueryBuilder */
-    $factory = $qb->getQOMFactory();
-    $qb->from($factory->selector('nt:unstructured'))
-        ->where($factory->propertyExistence('name'))
-        ->setFirstResult(5)
-        ->setMaxResults(10)
-        ->execute();
+    // first constraint is the "andX", the second constraint node of "andX" is "fieldIsset"
+    $fieldIsset = $qbTester->getNode('where.constraint.constraint[1]');
 
-Getting all descendant nodes of /dms is as simple as adding a descendant node constraint:
-
-.. code-block:: php
-
-    <?php
-
-    /** @var $qb QueryBuilder */
-    $factory = $qb->getQOMFactory();
-    $qb->from($factory->selector('nt:unstructured'))
-        ->where($factory->descendantNode('/dms'))
-        ->execute();
-
-Note that if you just need the direct children of a document, you should use
-the ``@Children`` annotation on the document.
-
-If you want to know the SQL2 statement generated call getStatement() on the query object.
-
-.. code-block:: php
-
-    <?php
-    //Prepare the query builder with the desired statement.
-    //..
-    echo $qb->getQuery()->getStatement();
+    // ->dumpNodePaths - dump all the node paths of the query builder
+    $res = $qbTester->dumpNodePaths();
