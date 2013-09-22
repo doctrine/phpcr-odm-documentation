@@ -406,7 +406,7 @@ Add a single ordering:
    <?php
 
    $qb->orderBy()
-     ->ascending()->field('username'); // username ascending
+     ->asc()->field('u.username'); // username asc
 
 Descending:
 
@@ -415,18 +415,18 @@ Descending:
    <?php
 
    $qb->orderBy()
-     ->descending()->field('username');
+     ->desc()->field('u.username');
 
-Add two orderings - equivilent to the SQL ``ORDER BY username, name ASC``:
+Add three orderings - equivilent to the SQL ``ORDER BY username ASC, name ASC, website DESC``:
 
 .. code-block:: php
 
    <?php
 
    $qb->orderBy()
-     ->ascending()->field('username');
-     ->ascending()->field('name');
-     ->descending()->field('website');
+     ->asc()->field('u.username');
+     ->asc()->field('u.name');
+     ->desc()->field('u.website');
 
 Adding multiple orderings using ``addOrderBy``:
 
@@ -434,5 +434,49 @@ Adding multiple orderings using ``addOrderBy``:
 
    <?php
 
-   $qb->orderBy()->ascending()->field('username');
-   $qb->addOrderBy()->ascending()->field('name');
+   $qb->orderBy()->asc()->field('u.username');
+   $qb->addOrderBy()->asc()->field('u.name');
+
+Using the Query Builder in Tests
+--------------------------------
+
+Mocking the query builder in a unit test is not easy - it requires that you
+mock the node classes and setup the methods to return the correct node classes
+at the correct time. In short, we recommend that you use the real query
+builder class and a special companion class, the ``QueryBuilderTester``.
+
+The ``QueryBuilderTester`` provides a couple of methods:
+
+* **getNode**: Retrieve a node from the query builder by its "node type" path.
+* **dumpNodePaths**: Dump all the "node type" paths in the query builder
+  instance.
+
+.. code-block:: php
+
+    <?php
+    use Doctrine\ODM\PHPCR\Query\Builder\QueryBuilder;
+    use Doctrine\ODM\PHPCR\Tools\Test\QueryBuilderTester;
+
+    $test = // pretend we have a PHPUnit_Framework_TestCase
+    $qb = new QueryBuilder;
+    $qb->where()->eq()->field('p.title')->literal('Foobar');
+
+    $qbTester = new QueryBuilderTester($qb);
+
+    // ->getNode - retrieve node by its nodetype path.
+    $literalNode = $qbTester->getNode('where.constraint.operand_statuc');
+    $fieldNode = $qbTester->getNode('where.constraint.operand_dynamic');
+
+    $test->assertEquals('Foobar', $literalNode->getValue());
+    $test->assertEquals('p', $fieldNode->getSelectorName());
+    $test->assertEquals('title', $fieldNode->getPropertyName());
+
+    $qb->where()->andX()
+        ->eq()->field('p.title')->literal('Foobar')->end()
+        ->fieldIsset('p.username');
+
+    // first constraint is the "andX", the second constraint node of "andX" is "fieldIsset"
+    $fieldIsset = $qbTester->getNode('where.constraint.constraint[1]');
+
+    // ->dumpNodePaths - dump all the node paths of the query builder
+    $res = $qbTester->dumpNodePaths();
