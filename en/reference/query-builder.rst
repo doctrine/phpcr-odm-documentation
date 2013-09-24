@@ -119,7 +119,7 @@ such as chaining operands:
 .. code-block:: php
 
     <?php
-    $qb->wwhere()->eq()->lowerCase()->field('p.title')->end()->literal('my post');
+    $qb->where()->eq()->lowerCase()->field('p.title')->end()->literal('my post');
 
 Here the ``lowerCase()`` method would return the ``LowerCase`` operand, which will
 transform the value of its child member to lowercase. Because ``field()`` will
