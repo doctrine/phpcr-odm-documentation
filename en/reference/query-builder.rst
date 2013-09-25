@@ -178,6 +178,35 @@ The cardinality for each node is documented in the
 :doc:`query-builder-reference`, for an example see
 :ref:`qbref_node_querybuilder`.
 
+Aliases and fields
+~~~~~~~~~~~~~~~~~~
+
+The term "alias" refers to the string that is assigned to a document source,
+either a ``SourceFrom`` or a ``SourceJoin``.
+
+.. code-block:: php
+
+    <?php
+    $qb->from('Blog\Post', 'post');
+
+In the example above, "post" is the alias. The alias is subsequently used
+whenever the source is referenced. The following example show some instances
+where we reference the alias.
+
+.. code-block:: php
+
+    <?php
+    $qb->where()->eq()->field('post.title')->literal('foobar');
+    // or
+    $qb->where()->fieldIsset('post.username');
+    // or
+    $qb->where()->child('/blog', 'post');
+
+The term "field" refers to the property of an aliased document. In the first
+of the above examples we reference the property ``$post`` on the dcoument
+``Blog\Post``. Note that the alias and property name are delimited by a dot
+".".
+
 Retrieving a query builder instance
 -----------------------------------
 
