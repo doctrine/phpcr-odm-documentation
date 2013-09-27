@@ -52,8 +52,12 @@ Optional attributes:
 -  **repositoryClass**: Name of the repository to use for this document.
 -  **versionable**: Set to true to enable versioning, implies *referenceable*.
 -  **referenceable**: Set to true to allow this node to be referenced.
--  **translator**: Determines how translations are stored, one of ``attribute`` or ``child``. See :ref:`langauge mapping <multilang_mapping>`
--  **mixins**: Optional list of PHPCR mixins that will be added to the node on creation. 
+-  **translator**: Determines how translations are stored, one of ``attribute``
+   or ``child``. See :ref:`langauge mapping <multilang_mapping>`
+-  **mixins**: Optional list of PHPCR mixins that will be added to the node on
+   creation. Note that if this field is present, it overwrites the same field
+   from the anchestor documents so you have to repeat mixins you want to keep
+   if you add a mixins field.
 
 Minimal example:
 
@@ -150,7 +154,7 @@ Common optional attributes:
   See :ref:`Mapping multivalue properties <basicmapping_mappingmultivalueproperties>`.
 - **translated**: ``true`` to specify that the property should be translatable, requires the
   ``translator`` attribute to be specified in :ref:`@Document<annref_document>`.
-- **nullable**: ``true`` to specifiy that this property doesn't have a required value, used 
+- **nullable**: ``true`` to specifiy that this property doesn't have a required value, used
   when loading a translation, to allow loading a node with a missing translated property.
 
 Examples:

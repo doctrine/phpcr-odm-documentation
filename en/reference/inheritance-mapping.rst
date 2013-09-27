@@ -9,6 +9,12 @@ inherited for the extending class. It is even possible to overwrite the mapping
 of the base class, but you should be very careful with that, as this can lead
 to semantically broken data structures.
 
+.. note::
+
+    Overwriting mixins works as overwriting any other setting. This means that
+    if your mapping has any mixins, you need to explicitly repeat any mixins
+    from anchestor classes that you want to keep.
+
 Typically, the purpose of such inheritance is to model the is-a relationship in
 your models and to reuse the mappings and functions of the base class.
 
@@ -28,4 +34,10 @@ your models and to reuse the mappings and functions of the base class.
     type, you will not find the super type documents.
 
 To use this feature, just have your document classes extend each other. You should not
-repeat mappings that exist in the super class, they are inherit automatically.
+repeat mappings that exist in the super class, they are inherited automatically.
+
+.. hint::
+
+    Doctrine will follow the inheritance of your document class. As soon as one
+    class is not mapped, it will stop the process. Make sure to map all parent
+    classes if you have a deep inheritance tree.
