@@ -97,12 +97,12 @@ return its owning class instance.
 In the example above:
 
 * The ``where`` method of the ``QueryBuilder`` adds and returns a
-  ``ConstraintFactory`` which provides the ``eq()`` method. 
+  ``ConstraintFactory`` which provides the ``eq()`` method.
 
 * The ``eq()`` method adds and returns an ``OperandFactory`` which contains the
-  ``field()`` and ``literal()`` methods. 
+  ``field()`` and ``literal()`` methods.
 
-Up to this point the return values have all been factory classes. 
+Up to this point the return values have all been factory classes.
 
 * The ``field()`` and ``literal()`` methods add leaf nodes and they return the
   same class of which they are part - the ``OperandFactory`` - the same node
@@ -160,7 +160,7 @@ query, for example:
 
     <?php
     // throws exception, query builder node needs at least one "from".
-    $qb->getQuery(); 
+    $qb->getQuery();
 
     // throws exception, eq() needs one dynamic and one static operand
     $qb->where()->eq()->field('p.title');
@@ -216,7 +216,7 @@ the ``DocumentManager`` or via a ``DocumentRepository``.
 Via the document manager
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can instantiate the ``QueryBuilder`` with the ``DocumentManager`` using the 
+You can instantiate the ``QueryBuilder`` with the ``DocumentManager`` using the
 ``createQueryBuilder`` method.
 
 .. code-block:: php
@@ -240,7 +240,7 @@ associated with the ``DocumentRepository``.
 
 The above code block will select all documents in the document tree of class
 ``Blog\Post``. This feature is especially useful within a document repository
-class. 
+class.
 
 Example showing the use of the query builder in a ``DocumentRepository``:
 
@@ -366,7 +366,7 @@ You can specify a maximum number of results and the index of the first result
    // select a maximum of 10 records from the position of the 20th record.
    $qb->from()->document('User')
       ->setMaxResults(10)
-      ->setFirstResult(20); 
+      ->setFirstResult(20);
 
 .. _qbref_where:
 
@@ -415,6 +415,11 @@ You can specify selection criteria using the ``where`` factory node.
        ->eq()
            ->lowercase()->localName('a')->end()
            ->literal('dtl');
+
+.. note::
+
+    If your code builds a query from distributed places, it is perfectly legal
+    to only use ``andWhere`` / ``orWhere`` without a first ``where``.
 
 .. _qbref_ordering:
 
