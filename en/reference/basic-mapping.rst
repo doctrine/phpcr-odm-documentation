@@ -131,7 +131,7 @@ See `PHPCR\\PropertyType <http://phpcr.github.com/doc/html/phpcr/propertytype.ht
 - ``String``: Arbitrary length strings
 - ``Binary``: Binary stream using PHP streams
 - ``Long``: Integer number (alias Int for convenience), limited by PHP_MAX_INT
-- ``Decimal``: Arbitrary length number value (PHP string type for use with `bcmath`)
+- ``Decimal``: Arbitrary length number value (PHP string type for use with ``bcmath``)
 - ``Double``: Floating point number (alias Float for convenience)
 - ``Date``: \DateTime object
 - ``Boolean``: Boolean value
@@ -257,7 +257,7 @@ Mapping multivalue properties
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 PHPCR handles multivalue (array) data natively. The PHPCR-ODM exposes this feature through the
-`multivalue` attribute of properties and adds support for hashmaps (storing the keys as well).
+``multivalue`` attribute of properties and adds support for hashmaps (storing the keys as well).
 Unless specified as true, properties are considered single value.
 
 .. configuration-block::
@@ -372,16 +372,28 @@ if you want to have access to the path for something.
 Identifier Generation Strategies
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-It is possible to choose the generator strategy.
-Currently, there are 3 strategies available:
+Every document needs a unique id. PHPCR-ODM provides a couple of id strategies.
+You can specify one of them explicitly on the id mapping, or let the PHPCR-ODM
+pick a fitting one. The order is:
 
-- With the default "assigned id" you need to assign a path to your id field and
-  have to make sure yourself that the parent exists.
-- The "parent and name" strategy determines the path from the @ParentDocument
-  and the @Nodename fields. This is the most failsave strategy.
-- The repository strategy lets your custom repository determine an id so you
-  can implement any logic you might need.
+- Explicitly specified strategy on the ``id`` mapping, for example
+  ``@Id(strategy="repository");``
+- If the document has a @ParentDocument and a @Nodename field, the
+  ``parent`` is used to determine the id from this information. This
+  is the most failsave strategy as it will ensure that there is a PHPCR parent
+  existing for the document;
+- If only an @ParentDocument field is present, the ``auto`` takes
+  the path from the @ParentDocument as the parent id generator does, but
+  generates the node name automatically using the PHPCR ``addNodeAutoNamed``
+  method;
+- If there is only an id field, the ``assigned`` is used. It expects
+  you to assign the repository path to the id field. You will have to make sure
+  yourself that the parent exists.
 
+Another strategy that is never chosen automatically but that you can assign
+explicitly is the ``RepositoryIdGenerator``. For this you need to configure a
+custom repository implementing ``RepositoryIdInterface``. This way you can
+implement any logic you might need.
 
 Parent and name strategy (recommended)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
