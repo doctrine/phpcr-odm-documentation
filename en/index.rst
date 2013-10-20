@@ -47,7 +47,8 @@ Working with Objects
   :doc:`Events <reference/events>`
 
 * **Query Reference**:
-  :doc:`Query Builder API <reference/query-builder>` |
+  :doc:`Query Builder Guide <reference/query-builder>` |
+  :doc:`Query Builder Reference <reference/query-builder-reference>` |
   :doc:`The Query Object <reference/query>`
 
 Advanced Topics
