@@ -248,7 +248,7 @@ are directional, they are always stored in the property of the document with
 the ReferenceOne or ReferenceMany field. Referrer is a purely virtual information
 that is not explicitly stored in the PHPCR database but determined at runtime.
 
-You need to specify the ``referrerDocument`` to specify the (base) class of the
+You need to specify the ``referringDocument`` to specify the (base) class of the
 document that has the reference, and ``referencedBy`` to tell which field of the
 referencing document contains the reference. After flushing, the reference property
 will contain the referenced document.
@@ -257,9 +257,9 @@ will contain the referenced document.
 
     .. code-block:: php
 
-        /** @Referrers(referrerDocument="FQN\Class\Name", referencedBy="otherFieldName") */
+        /** @Referrers(referringDocument="FQN\Class\Name", referencedBy="otherFieldName") */
         private $specificReferrers;
-        /** @Referrers(referrerDocument="Other\Class\Name", referencedBy="someFieldName", cascade="persist, remove") */
+        /** @Referrers(referringDocument="Other\Class\Name", referencedBy="someFieldName", cascade="persist, remove") */
         private $cascadedReferrers;
 
     .. code-block:: xml
@@ -276,10 +276,10 @@ will contain the referenced document.
         MyPersistentClass:
             referrers:
                 specificReferrers:
-                    referrerDocument: FQN\Class\Name
+                    referringDocument: FQN\Class\Name
                     referencedBy: otherFieldName
                 cascadedReferrers:
-                    referrerDocument: Other\Class\Name
+                    referringDocument: Other\Class\Name
                     referencedBy: someFieldName
                     cascade: persist, remove
 
