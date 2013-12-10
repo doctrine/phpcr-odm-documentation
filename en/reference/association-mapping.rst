@@ -126,7 +126,9 @@ id standard and is guaranteed to be unique for the whole PHPCR repository (all w
 
         MyPersistentClass:
           referenceable: true
-          uuid: uuid
+          fields:
+            uuid:
+              uuid: true
 
 .. note::
 
