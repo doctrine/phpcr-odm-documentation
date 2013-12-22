@@ -937,7 +937,7 @@ Set the from source for the query.
     
      // or with a join ...
     
-     -$qb->from()->joinInner()
+     -$qb->from('a')->joinInner()
        ->left()->document('Foobar', 'a')->end()
        ->right()->document('Barfoo', 'b')->end()
        ->condition()->equi('a.prop_1', 'b.prop_1');
@@ -946,6 +946,10 @@ Set the from source for the query.
 **Adds**: :ref:`from <qbref_node_from>` (From)
 
 **Returns**: :ref:`From <qbref_node_from>`
+
+**Arguments**:
+
+* **$primarySelector**: *string* - Alias to use as primary source (optional for single sources)
 
 .. _qbref_method_querybuilder_fromdocument:
 
@@ -977,7 +981,7 @@ Replaces any existing from source.
 **Arguments**:
 
 * **$documentFqn**: *string* - Fully qualified class name for document.
-* **$alias**: *string* - Selector name.
+* **$primarySelector**: *string* - Alias for document source and primary selector when using multiple sources.
 
 .. _qbref_method_querybuilder_addjoinleftouter:
 
@@ -997,7 +1001,7 @@ source as the left operand.
     ->end();
 
 
-Note that this method is currently not implemented until we can decide 
+Note that this method is currently not implemented until we can decide
 on how it should work.
 
 **Adds**: :ref:`select <qbref_node_select>` (Select)
@@ -1021,7 +1025,7 @@ source as the left operand.
         ->condition()->equi('a.prop_1', 'b.prop_2');
 
 
-Note that this method is currently not implemented until we can decide 
+Note that this method is currently not implemented until we can decide
 on how it should work.
 
 **Adds**: :ref:`select <qbref_node_select>` (Select)
@@ -1046,7 +1050,7 @@ source as the left operand.
     ->end()
 
 
-Note that this method is currently not implemented until we can decide 
+Note that this method is currently not implemented until we can decide
 on how it should work.
 
 **Adds**: :ref:`select <qbref_node_select>` (Select)
@@ -1058,7 +1062,7 @@ on how it should work.
 ->select
 ^^^^^^^^
 
-Method to add properties for selection to builder tree, replaces any 
+Method to add properties for selection to builder tree, replaces any
 existing select.
 
 Number of property nodes is unbounded.
@@ -1199,7 +1203,7 @@ Descendant join condition.
 .. code-block:: php
     
     <?php
-      $qb->from()
+      $qb->from('alias_1')
         ->joinInner()
           ->left()->document('Foo/Bar/One', 'alias_1')->end()
           ->right()->document('Foo/Bar/Two', 'alias_2')->end()
@@ -1228,7 +1232,7 @@ Equi (equality) join condition.
 .. code-block:: php
     
     <?php
-      $qb->from()
+      $qb->from('alias_1')
         ->joinInner()
           ->left()->document('Foo/Bar/One', 'alias_1')->end()
           ->right()->document('Foo/Bar/Two', 'alias_2')->end()
@@ -1256,7 +1260,7 @@ Child document join condition.
 .. code-block:: php
     
     <?php
-      $qb->from()
+      $qb->from('alias_1')
         ->joinInner()
           ->left()->document('Foo/Bar/One', 'alias_1')->end()
           ->right()->document('Foo/Bar/Two', 'alias_2')->end()
@@ -1282,7 +1286,7 @@ Same document join condition:
 .. code-block:: php
     
     <?php
-      $qb->from()
+      $qb->from('alias_1')
         ->joinInner()
           ->left()->document('Foo/Bar/One', 'alias_1')->end()
           ->right()->document('Foo/Bar/Two', 'alias_2')->end()
