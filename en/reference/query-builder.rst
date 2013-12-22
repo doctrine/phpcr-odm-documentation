@@ -305,24 +305,35 @@ From Joined Source
 
 Joins allow you to take other documents into account when selecting records.
 
+When selecting from multiple sources it is mandatory to specify a *primary
+selector* as an argument to the ``from`` factory node.
+
+The following will retrieve a collection of ``Blog\Post`` documents for active users:
+
 .. code-block:: php
 
     <?php
 
     // select documents from a join
-    $qb->from()->joinInner()
+    $qb->from('p')->joinInner()
         ->left()->document('Blog\Post', 'p')->end()
         ->right()->document('Blog\User', 'u')->end()
         ->condition()->equi('p.username', 'u.username');
 
     $qb->where()
-        ->eq()->field('u.username')->literal('dantleech');
+        ->eq()->field('u.status')->literal('active');
 
-Join two document sources using an inner join. We use an "equi" (equality)
-join condition where the property named "username" from selector "p"
-(``Blog\Post``) is equal to the property "username" from selector "u"
-(``Blog\User``). We can then reference the user document in a constraint as
-demonstrated.
+    $posts = $qb->getQuery()->execute();
+
+Using the document source ``p`` as the primary document source we select from
+a ``joinInner`` source, with ``Blog\Post`` documents on the left (alias ``p``)
+and ``Blog\User`` documents on the right (alias ``u``) we join the left and
+right sources using an ``equi`` (equality) join on the ``username`` columns.
+
+We then specify that only blog posts which have associated users with the
+status "active" are selected.
+
+For detailed information see :ref:`the query builder reference <qbref_method_querybuilder_from>`.
 
 .. _qbref_select:
 
