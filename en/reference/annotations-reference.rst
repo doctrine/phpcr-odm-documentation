@@ -319,7 +319,11 @@ directly below the instance variables document class in the document hierarchy.
 
 Required attributes:
 
-- **name**: Node name of the child document to map, this should be a string.
+- **nodeName**: PHPCR Node name of the child document to map, this should be a string.
+
+Optional attributes:
+
+- **cascade**: |cascade_definition| See :ref:`assocmap_cascading`
 
 .. code-block:: php
 
@@ -344,6 +348,7 @@ Optional attributes:
   this should be an integer.
 - **ignoreUntranslated**: Set to false to *not* throw exceptions on untranslated child
   documents.
+- **cascade**: |cascade_definition| See :ref:`assocmap_cascading`
 
 .. code-block:: php
 
@@ -357,6 +362,10 @@ Optional attributes:
 
 @ParentDocument
 ~~~~~~~~~~~~~~~
+
+Optional attributes:
+
+- **cascade**: |cascade_definition| See :ref:`assocmap_cascading`
 
 The annotated instance variable will contain the nodes parent document. Assigning
 a different parent will result in a move operation.
@@ -617,6 +626,7 @@ Optional attributes:
     protected $phonenumbers;
 
 .. _annref_referenceone:
+.. _annref_reference:
 
 @ReferenceOne
 ~~~~~~~~~~~~~
@@ -626,6 +636,7 @@ Optional attributes:
 -  **targetDocument**: Specify type of target document class. Note that this
    is an optional parameter and by default you can associate *any* document.
 -  **strategy**: One of `weak`, `hard` or `path`. See :ref:`reference other documents <associationmapping_referenceotherdocuments>`.
+- **cascade**: |cascade_definition| See :ref:`assocmap_cascading`
 
 .. code-block:: php
 
@@ -640,20 +651,45 @@ Optional attributes:
 @Referrers
 ~~~~~~~~~~
 
-Mark the annotated instance variable to contain the documents which refer to this document.
+Mark the annotated instance variable to contain a collection of the documents
+of the given document class which refer to this document.
+
+Required attributes:
+
+- **referringDocument**: Full class name of referring document, the instances
+  of which should be collected in the annotated property.
 
 Optional attributes:
 
--  **filter**: Filters referrers by the referencing property name.
+- **referencedBy**: Name of the property from the referring document class
+  which referrers to this document class.
+- **cascade**: |cascade_definition| See :ref:`assocmap_cascading`
+
+.. code-block:: php
+
+   <?php
+   /**
+    * @Referrers(referringDocument="Address", referencedBy="addressbook")
+    */
+   protected $addresses;
+
+@MixedReferrers
+~~~~~~~~~~~~~~~
+
+Mark the annotated instance variable to hold a collection of *all* documents
+which refer to this document, regardless of document class.
+
+Optional attributes:
+
 -  **referenceType**: One of ``weak`` or ``hard``.
 
 .. code-block:: php
 
    <?php
    /**
-    * @Referrers(referenceType="hard")
+    * @MixedReferrers()
     */
-   protected $myReferrers;
+   protected $referrers;
 
 Translation
 -----------
@@ -735,3 +771,5 @@ documents with the versionable attribute.
 
 The annotated instance variable will be populated with the name
 of the current version as given by PHPCR.
+
+.. |cascade_definition| replace:: One of ``persist``, ``remove``, ``merge``, ``detach``, ``refresh``, ``translation`` or ``all``. 
