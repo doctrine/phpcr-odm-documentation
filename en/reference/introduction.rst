@@ -119,6 +119,7 @@ in the project root directory::
     $pass = 'admin';
 
     /* --- transport implementation specific code begin --- */
+    // for more options, see https://github.com/jackalope/jackalope-doctrine-dbal#bootstrapping
     $dbConn = \Doctrine\DBAL\DriverManager::getConnection($params);
     $parameters = array('jackalope.doctrine_dbal_connection' => $dbConn);
     $repository = \Jackalope\RepositoryFactoryDoctrineDBAL::getRepository($parameters);
@@ -145,36 +146,36 @@ For easy readability, we use the annotation mapping in this tutorial::
     // src/Demo/Document.php
     namespace Demo;
 
-    use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCRODM;
+    use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
     /**
-     * @PHPCRODM\Document
+     * @PHPCR\Document
      */
     class MyDocument
     {
         /**
-         * @PHPCRODM\Id
+         * @PHPCR\Id
          */
         private $id;
         /**
-         * @PHPCRODM\ParentDocument
+         * @PHPCR\ParentDocument
          */
         private $parent;
         /**
-         * @PHPCRODM\Nodename
+         * @PHPCR\Nodename
          */
         private $name;
         /**
-         * @PHPCRODM\Children
+         * @PHPCR\Children
          */
         private $children;
         /**
-         * @PHPCRODM\String
+         * @PHPCR\String
          */
         private $title;
 
         /**
-         * @PHPCRODM\String
+         * @PHPCR\String
          */
         private $content;
 
@@ -230,14 +231,25 @@ for other possibilities.
 Initialize the repository
 -------------------------
 
-With jackalope-doctrine-dbal, you need to run the command to init the database. TODO: explain how to setup (see phpcr-odm)
-with any repo, you need to run register-system-nodetypes
+With jackalope-doctrine-dbal, you need to run the following command to
+init the database:
+
+.. code-block:: bash
+
+    bin/phpcrodm jackalope:init:dbal
+
+Then, regardless of the PHPCR implementation you use, you need to run
+another command to let Doctrine set up the repository for using it:
+
+.. code-block:: bash
+
+    bin/phpcrodm doctrine:phpcr:register-system-node-types
+
 
 Storing documents
 -----------------
 
-We write a simple PHP script to generate our data. Note that in real world, you should
-look into the doctrine fixtures (TODO: reference) when generating content in scripts::
+We write a simple PHP script to generate some sample data::
 
     <?php
     // src/generate.php
@@ -268,6 +280,11 @@ look into the doctrine fixtures (TODO: reference) when generating content in scr
     // store all changes, insertions, etc. with the storage backend
     $documentManager->flush();
 
+.. note::
+
+    In real projects, you should look into the `doctrine fixtures`_
+    to script generating content.
+
 
 Reading documents
 -----------------
@@ -279,9 +296,29 @@ This script will simply echo the data to the console::
     require_once '../bootstrap.php';
 
     $doc = $documentManager->find(null, "/doc");
+
     echo 'Found '.$doc->getId() ."\n";
     echo 'Title: '.$doc->getTitle()."\n";
     echo 'Content: '.$doc->getContent()."\n";
+
+The DocumentManager will automatically determine the document class when
+you pass ``null`` as first argument to ``find()``.
+
+Tree traversal
+--------------
+
+PHPCR is a tree based store. Every document must have a parent, and
+can have children. We already used this when creating the document.
+The ``@PHPCR\ParentDocument`` maps the parent of a document and is used
+to determine the position in the tree, together with ``@PHPCR\Nodename``.
+
+As the children of our sample document are mapped with ``@PHPCR\Children``,
+we can traverse them::
+
+    <?php
+
+    $doc = $documentManager->find(null, "/doc");
+
     foreach($doc->getChildren() as $child) {
         if ($child instanceof \Demo\Document) {
             echo 'Has child '.$child->getId() . "\n";
@@ -290,8 +327,10 @@ This script will simply echo the data to the console::
         }
     }
 
-Children need not be of the same document class as their parents. Be careful when reading
-children to be sure they are of the expected class.
+.. caution::
+
+    Children can be of any class. Be careful when looping over children
+    to be sure they are of the expected class.
 
 Even if children are not mapped, you can use the document manager to get all
 flushed children of a document::
@@ -301,6 +340,7 @@ flushed children of a document::
     $children = $documentManager->getChildren($parent);
 
 .. note:: *Difference from ORM*
+
     While with the ORM, the natural thing to get data is to query, with
     PHPCR-ODM the natural way is to use the hierarchy, that is parent-child
     relations.
@@ -308,16 +348,80 @@ flushed children of a document::
     If you need to query, see :ref:`Querying in the Working with Objects section <workingobjects-query>`.
 
 
-Tree traversal
---------------
-
-TODO: explain @Children and @Parent and $documentManager->getChildren.
-
 Add references
 --------------
 
-TODO: explain @ReferenceOne and @ReferenceMany and @Referrers
-and $documentManager->getReferrers
+PHPCR-ODM supports arbitrary links between documents. The referring
+document does not need to know what class it links to. Use
+``@PHPCR\ReferenceOne`` resp. ``@PHPCR\ReferenceMany`` to map the link
+to a document or a collection of links to documents.
+
+You can also map the inverse relation. ``@PHPCR\Referrers`` needs the
+referring class but can be used to add referencing documents.
+``@PHPCR\MixedReferrers`` maps all documents referencing this document,
+but is readonly.
+
+Lets look at an example of document ``A`` referencing ``B``::
+
+    <?php
+    // src/Demo/A.php
+    namespace Demo;
+
+    use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
+
+    /**
+     * @PHPCR\Document
+     */
+    class A
+    {
+        /**
+         * @PHPCR\ReferenceOne
+         */
+        private $ref;
+
+        ...
+    }
+
+    /**
+     * @PHPCR\Document
+     */
+    class B
+    {
+        /**
+         * @PHPCR\Referrers(referringDocument="Demo\A", referencedBy="ref")
+         */
+        private $referrers;
+    }
+
+We can now create a reference with the following code::
+
+    <?php
+
+    $parent = $dm->find(null, '/');
+    $a = new A();
+    $a->setParent($parent);
+    $a->setNodename('a');
+    $dm->persist($a);
+    $b = new B();
+    $b->setParent($parent);
+    $b->setNodename('b');
+
+    $a->setRef($b);
+
+    $dm->flush();
+    $dm->clear();
+
+    $b = $dm->find(null, '/b');
+
+    // output Demo\A
+    var_dump(get_class($b->getReferrers()));
+
+If referrers are not mapped on a document, you can use the document
+manager to get all flushed referrers of a document::
+
+    <?php
+
+    $referrers = $documentManager->getReferrers($b);
 
 
 Removing documents
@@ -365,3 +469,4 @@ Additional details on all the topics discussed here can be found in
 the respective manual chapters.
 
 
+.. _`doctrine fixtures`: https://github.com/doctrine/data-fixtures
