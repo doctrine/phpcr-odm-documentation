@@ -86,15 +86,15 @@ to be designated as an document. This can be done through the
     .. code-block:: xml
 
         <doctrine-mapping>
-          <document name="MyPersistentClass">
-              <!-- ... -->
-          </document>
+            <document name="MyPersistentClass">
+                <!-- ... -->
+            </document>
         </doctrine-mapping>
 
     .. code-block:: yaml
 
         MyPersistentClass:
-          # ...
+            # ...
 
 There is a couple of options you can specify for the document mapping.
 Some of them are explained here, the rest in the chapters on :ref:`References <association-mapping_referenceable>`,
@@ -112,9 +112,6 @@ Specify a repository class
 
 The ``repositoryClass`` attribute allows to specify a custom repository instead of the default
 repository implementation.
-
-
-
 
 Doctrine Mapping Types
 ----------------------
@@ -199,18 +196,20 @@ Example:
     .. code-block:: xml
 
         <doctrine-mapping>
-          <document name="MyPersistentClass">
-            <field fieldName="count" type="long" />
-            <field fieldName="name" type="string" />
-          </document>
+            <document name="MyPersistentClass">
+                <field fieldName="count" type="long" />
+                <field fieldName="name" type="string" />
+            </document>
         </doctrine-mapping>
 
     .. code-block:: yaml
 
         MyPersistentClass:
-          fields:
-            count: long
-            name:  string
+            fields:
+                count:
+                    type: long
+                name:
+                    type: string
 
 In that example we mapped the field ``count`` to the property ``count``
 using the mapping type ``integer`` and the field ``name`` is mapped
@@ -222,7 +221,7 @@ Mapping to a differently named PHPCR property
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 To specify a different name for the column, you
-can use the ``name`` attribute of the Column annotation as
+can use the ``property`` attribute of the Column annotation as
 follows:
 
 .. configuration-block::
@@ -230,25 +229,24 @@ follows:
     .. code-block:: php
 
         <?php
-        /** @Property(name="db_name") */
-        private $name;
+        /** @Property(property="db_name") */
+        private $myField;
 
     .. code-block:: xml
 
         <doctrine-mapping>
-          <document name="MyPersistentClass">
-            <field fieldName="name" TODO: how to specify repo name? fieldName="db_name" />
-          </document>
+            <document name="MyPersistentClass">
+                <field fieldName="myField" property="db_name" />
+            </document>
         </doctrine-mapping>
 
     .. code-block:: yaml
 
         MyPersistentClass:
-          type: document
-          fields:
-            name:
-              TODO: how to specify repo name?
-              property: db_name
+            type: document
+            fields:
+                myField:
+                    property: db_name
 
 
 .. _basicmapping_mappingmultivalueproperties:
@@ -279,10 +277,10 @@ Unless specified as true, properties are considered single value.
     .. code-block:: yaml
 
         MyPersistentClass:
-          type: document
-          fields:
-            names:
-              multivalue: true
+            type: document
+            fields:
+                names:
+                    multivalue: true
 
 This mapping expects the field $names to contain an array of strings. When reading from the database,
 a multivalue property is expected and the field will be set to the array of strings.
@@ -306,21 +304,21 @@ the list keys.
     .. code-block:: xml
 
         <doctrine-mapping>
-          <document name="MyPersistentClass">
-            <field fieldName="names" assoc="" />
-            <field fieldName="list" assoc="listArraykeys" />
-          </document>
+            <document name="MyPersistentClass">
+                <field fieldName="names" assoc="" />
+                <field fieldName="list" assoc="listArraykeys" />
+            </document>
         </doctrine-mapping>
 
     .. code-block:: yaml
 
         MyPersistentClass:
-          type: document
-          fields:
-            names:
-              assoc: ""
-            list:
-              assoc: "listArraykeys"
+            type: document
+            fields:
+                names:
+                    assoc: ""
+                list:
+                    assoc: "listArraykeys"
 
 Summary
 ~~~~~~~
@@ -340,10 +338,10 @@ Again a short list for the overview:
    property in the repository.
 -  ``multivalue``: (optional, defaults to false) If this is set to true, the
    property is an array of the specified type.
-- ``assoc``: (optional, defaults to false) If set to a string, the value is
-    considered multivalue and the keys are stored in the PHPCR property given
-    for the assoc property. If the value of assoc is empty, the name for the
-    key field is the normal field name with ``Keys`` appended.
+-  ``assoc``: (optional, defaults to false) If set to a string, the value is
+   considered multivalue and the keys are stored in the PHPCR property given
+   for the assoc property. If the value of assoc is empty, the name for the
+   key field is the normal field name with ``Keys`` appended.
 
 .. _basicmapping_identifiers:
 
@@ -420,17 +418,17 @@ the assigned id if either is missing.
     .. code-block:: xml
 
         <doctrine-mapping>
-          <document name="MyPersistentClass">
-            <parentdocument name="parent" />
-            <nodename name="nodename" />
-          </document>
+            <document name="MyPersistentClass">
+                <parentdocument name="parent" />
+                <nodename name="nodename" />
+            </document>
         </doctrine-mapping>
 
     .. code-block:: yaml
 
         MyPersistentClass:
-          parentdocument: parent
-          nodename: nodename
+            parentdocument: parent
+            nodename: nodename
 
 
 To create a new document, you do something like this:
@@ -464,15 +462,15 @@ representing any PHPCR-ODM document, though.)
     .. code-block:: xml
 
         <doctrine-mapping>
-          <document name="MyPersistentClass">
-            <id name="id" />
-          </document>
+            <document name="MyPersistentClass">
+                <id name="id" />
+            </document>
         </doctrine-mapping>
 
     .. code-block:: yaml
 
         MyPersistentClass:
-          id: id
+            id: ~
 
 
 To create a new document, you do something like this:
@@ -505,20 +503,19 @@ This gives you full control how you want to build the id path.
     .. code-block:: xml
 
         <doctrine-mapping>
-          <document name="MyPersistentClass">
-            <id name="id" type="id">
-              <generator strategy="repository" />
-            </id>
-          </entity>
+            <document name="MyPersistentClass">
+                <id name="id" type="id">
+                    <generator strategy="repository" />
+                </id>
+            </entity>
         </doctrine-mapping>
 
     .. code-block:: yaml
 
         MyPersistentClass:
-          id:
-            fieldName: id
-            generator:
-              strategy: repository
+            id:
+                generator:
+                    strategy: repository
 
 The corresponding code could look like this:
 

@@ -147,6 +147,8 @@ of the lifecycle of the instance variables document class.
 
 Common optional attributes:
 
+- **property**: The PHPCR property name where this field is stored.
+  Defaults to the field name.
 - **assoc**: Specify that this attribute should be an associative array. The value should
   be a string which will be used by the PHPCR node. Set to an empty string to automatically
   use the name of the annotated variable appended by "Keys".
@@ -162,6 +164,11 @@ Examples:
 .. code-block:: php
 
    <?php
+
+   /**
+    * @Property()
+    */
+   protected $author;
 
    /**
     * @String(translated=true)
@@ -188,6 +195,17 @@ Examples:
     */
    protected $exchangeRates; // e.g. array('GBP' => 0.810709, 'EUR' => 1, 'USD' => 1.307460)
 
+.. _annref_property:
+
+@Property
+~~~~~~~
+
+Base annotation for all fields. You can use this annotation with the
+``type`` attribute or the specific annotations below.
+
+Attributes:
+
+- Inherits :ref:`value field attributes <annref_valuefieldattribs>`.
 
 .. _annref_binary:
 
@@ -772,4 +790,4 @@ documents with the versionable attribute.
 The annotated instance variable will be populated with the name
 of the current version as given by PHPCR.
 
-.. |cascade_definition| replace:: One of ``persist``, ``remove``, ``merge``, ``detach``, ``refresh``, ``translation`` or ``all``. 
+.. |cascade_definition| replace:: One of ``persist``, ``remove``, ``merge``, ``detach``, ``refresh``, ``translation`` or ``all``.
