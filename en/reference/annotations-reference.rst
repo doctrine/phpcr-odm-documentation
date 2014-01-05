@@ -676,11 +676,11 @@ Required attributes:
 
 - **referringDocument**: Full class name of referring document, the instances
   of which should be collected in the annotated property.
+- **referencedBy**: Name of the property from the referring document class
+  which refers to this document class.
 
 Optional attributes:
 
-- **referencedBy**: Name of the property from the referring document class
-  which referrers to this document class.
 - **cascade**: |cascade_definition| See :ref:`assocmap_cascading`
 
 .. code-block:: php

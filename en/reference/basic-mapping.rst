@@ -526,16 +526,16 @@ The corresponding code could look like this:
 
     use Doctrine\ODM\PHPCR\Id\RepositoryIdInterface;
     use Doctrine\ODM\PHPCR\DocumentRepository as BaseDocumentRepository;
-    use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCRODM;
+    use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
     /**
-     * @PHPCRODM\Document(repositoryClass="Demo\DocumentRepository")
+     * @PHPCR\Document(repositoryClass="Demo\DocumentRepository")
      */
     class Document
     {
-        /** @PHPCRODM\Id(strategy="repository") */
+        /** @PHPCR\Id(strategy="repository") */
         private $id;
-        /** @PHPCRODM\String */
+        /** @PHPCR\String */
         private $title;
         //...
     }

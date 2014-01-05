@@ -37,8 +37,11 @@ plus an @Locale field.
     .. code-block:: php
 
         <?php
+
+        use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
+
         /**
-         * @PHPCRODM\Document(translator="attribute")
+         * @PHPCR\Document(translator="attribute")
          */
         class MyPersistentClass
         {
