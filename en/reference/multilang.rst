@@ -178,7 +178,7 @@ Then you have to register your translation strategy with the document manager du
     $dm = new \Doctrine\ODM\PHPCR\DocumentManager($session, $config);
     $dm->setTranslationStrategy('my_strategy_name', new MyTranslationStrategy());
 
-`my_strategy_name` would be the value for the translator attribute to use your custom strategy.
+``my_strategy_name`` would be the value for the translator attribute to use your custom strategy.
 
 
 Configure the language chooser strategy
@@ -214,9 +214,9 @@ any translatable documents:
     $dm = new \Doctrine\ODM\PHPCR\DocumentManager($session, $config);
     $dm->setLocaleChooserStrategy(new LocaleChooser($localePrefs, 'en'));
 
-The above says: When `en` is requested but you do not find it, then try `de` and finally `fr`.
+The above says: When ``en`` is requested but you do not find it, then try ``de`` and finally ``fr``.
 
-You can write your own strategy by implementing `Doctrine\ODM\PHPCR\Translation\LocaleChooser\LocaleChooserInterface`.
+You can write your own strategy by implementing ``Doctrine\ODM\PHPCR\Translation\LocaleChooser\LocaleChooserInterface``.
 This is useful to determine the default language based on some logic, or provide fallback orders based on user preferences.
 
 
@@ -270,6 +270,28 @@ Full Example
     $dm->flush(); // french is updated as the language is tracked by the dm
 
 
+Querying Translated Properties
+------------------------------
+
+The translation strategy will store translated strings into specific
+properties. When using the PHPCR SQL2 queries, you will need to look
+into implementation details to make them work.
+
+When using the PHPCR-ODM query builder, it will detect translated fields
+and adjust the query accordingly. By default, the current locale will be
+used, but you can manually call ``$qb->setLocale($locale)`` if you need
+a different locale.
+
+.. warning::
+
+    For now, this only works for the ``attribute`` translation strategy
+    but not yet for the ``child`` strategy. There is a
+    `github issue <https://github.com/doctrine/phpcr-odm/issues/402>`_
+    to track this.
+
+Read more in the :ref:`query builder documentation <qb-translation>`.
+
+
 Limitations
 -----------
 
@@ -282,13 +304,3 @@ The reason for this is that there can be only one tracked instance of a document
 if both copies where modified?...).
 
 For more details, see the `wiki page <https://github.com/doctrine/phpcr-odm/wiki/Multilanguage>`_.
-
-Incomplete translations not handled
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The provided translation strategies will report a translation as not existing
-if any of the fields declared in the document is not existing. This is a
-feature because you want to know when you try to load an incomplete document.
-But we are currently missing a concept how to do update the content to still be
-compatible when document annotations are changed. The solution could look
-similar to the ORM migrations concept.
