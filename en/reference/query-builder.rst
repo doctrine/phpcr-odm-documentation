@@ -479,6 +479,34 @@ Adding multiple orderings using ``addOrderBy``:
    $qb->orderBy()->asc()->field('u.username');
    $qb->addOrderBy()->asc()->field('u.name');
 
+.. _qb-translation:
+
+Querying translated documents
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If your documents contain :doc:`translated fields <multilang>`, the
+query builder automatically handles them both for ``where`` and ``orderBy``.
+It will use the "current" locale according to the LocaleChooser. If you want
+to query in a different locale, you can also specify the locale explicitly::
+
+    $qb = $dm->createQueryBuilder();
+    $qb
+        ->setLocale('fr')
+        ->from()
+            ->document('Demo\Document', 'd')
+        ->end()
+        ->where()->fieldIsset('d.title')->end()
+        ->orderBy()
+            ->asc()->field('d.title')->end()
+        ->end();
+
+.. warning::
+
+    For now, this only works for the ``attribute`` translation strategy
+    but not yet for the ``child`` strategy. There is a
+    `github issue <https://github.com/doctrine/phpcr-odm/issues/402>`_
+    to track this.
+
 Using the Query Builder in Tests
 --------------------------------
 
