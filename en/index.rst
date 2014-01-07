@@ -74,8 +74,9 @@ Cookbook
 --------
 
 * **Tricks**:
+  :doc:`Last modification timestamp <cookbook/last-modified>` |
   :doc:`Blending ORM and PHPCR-ODM <cookbook/blending-orm-and-phpcr-odm>` |
   :doc:`Mapping classes to ORM and PHPCR-ODM <cookbook/mapping-classes-to-orm-and-phpcr-odm>`
 
-* **Implementation**:
-  :doc:`Using Wakeup Or Clone <cookbook/implementing-wakeup-or-clone>`
+Also have a look at the `Doctrine ORM cookbook <http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/#cookbook>`_,
+notably the entries in the *Implementation* section apply to PHPCR-ODM as well.
