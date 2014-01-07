@@ -83,6 +83,8 @@ Then run the following commands on your command line
 
 This will download the dependencies into the vendor/ folder and generate vendor/autoload.php
 
+.. _intro-bootstrap:
+
 Now we bootstrap Doctrine PHPCR-ODM. Create a file called ``bootstrap.php``
 in the project root directory::
 

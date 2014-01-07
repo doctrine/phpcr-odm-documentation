@@ -75,6 +75,7 @@ Cookbook
 
 * **Tricks**:
   :doc:`Last modification timestamp <cookbook/last-modified>` |
+  :doc:`Custom Document Class Mapper <cookbook/custom_documentclass_mapper>` |
   :doc:`Blending ORM and PHPCR-ODM <cookbook/blending-orm-and-phpcr-odm>` |
   :doc:`Mapping classes to ORM and PHPCR-ODM <cookbook/mapping-classes-to-orm-and-phpcr-odm>`
 
