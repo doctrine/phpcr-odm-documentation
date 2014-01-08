@@ -25,10 +25,10 @@ The first line retrieves a new instance of the query builder from the document
 manager.
 
 The second specifies that we want documents of type ``Blog\User`` and that
-the string "u" will be used as the selector name.
+the string "u" will be used as the alias name.
 
 The third line says that we want only documents where the value of the
-field "name" from the selector named "u" is equal (eq) to the
+field "name" from the alias named "u" is equal (eq) to the
 literal string "dtl".
 
 The forth and final line retrieves the :ref:`query <queryref>` object.
@@ -263,7 +263,7 @@ Example showing the use of the query builder in a ``DocumentRepository``:
    }
 
 Note that we specify the string "a" as an argument to
-``createQueryBuilder`` - this is the selector name (analagous to "alias" in
+``createQueryBuilder`` - this is the alias name (analagous to "alias" in
 Doctrine ORM terms), more on these later.
 
 Working with the QueryBuilder
@@ -296,7 +296,7 @@ From Single Source
     $qb->from()->document('Blog\Post', 'p');
 
 The above example will setup the query builder to select documents only of class
-``Blog\Post`` using the *selector name* "p". The selector name is the alias used
+``Blog\Post`` using the *alias name* "p". The alias name is the alias used
 in subsequent references to this document source or properties within this
 document.
 
@@ -306,7 +306,7 @@ From Joined Source
 Joins allow you to take other documents into account when selecting records.
 
 When selecting from multiple sources it is mandatory to specify a *primary
-selector* as an argument to the ``from`` factory node.
+alias* as an argument to the ``from`` factory node.
 
 The following will retrieve a collection of ``Blog\Post`` documents for active users:
 
@@ -390,7 +390,7 @@ You can specify selection criteria using the ``where`` factory node.
 
    <?php
 
-   // setup our document source with selector "u"
+   // setup our document source with alias "u"
    $qb->from('Blog\User', 'u');
 
    // where name is "daniel"
