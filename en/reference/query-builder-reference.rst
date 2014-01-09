@@ -189,7 +189,7 @@ Full text search constraint.
 
 **Arguments**:
 
-* **$field**: *string* - Name of field to check, including selector name.
+* **$field**: *string* - Name of field to check, including alias name.
 * **$fullTextSearchExpression**: *string* - Search expression.
 
 .. _qbref_method_constraintfactory_same:
@@ -214,7 +214,7 @@ Relates to PHPCR QOM SameNodeInterface.
 **Arguments**:
 
 * **$path**: *string* - Path to reference document.
-* **$alias**: *string* - Name of selector to use.
+* **$alias**: *string* - Name of alias to use.
 
 .. _qbref_method_constraintfactory_descendant:
 
@@ -238,7 +238,7 @@ Relates to PHPCR QOM DescendantNodeInterface
 **Arguments**:
 
 * **$ancestorPath**: *string* - Select descendants of this path.
-* **$alias**: *string* - Name of selector to use.
+* **$alias**: *string* - Name of alias to use.
 
 .. _qbref_method_constraintfactory_child:
 
@@ -262,7 +262,7 @@ Relates to PHPCR QOM ChildNodeInterface.
 **Arguments**:
 
 * **$parentPath**: *string* - Select children of this path.
-* **$alias**: *string* - Name of selector to use
+* **$alias**: *string* - Name of alias to use
 
 .. _qbref_method_constraintfactory_eq:
 
@@ -503,7 +503,7 @@ See also: http://www.day.com/specs/jcr/2.0/6_Query.html#FullTextSearchScore
 
 **Arguments**:
 
-* **$alias**: *string* - Name of selector to use
+* **$alias**: *string* - Name of alias to use
 
 .. _qbref_method_operanddynamicfactory_length:
 
@@ -599,7 +599,7 @@ Relates to PHPCR NodeLocalNameInterface
 
 **Arguments**:
 
-* **$alias**: *string* - Name of selector to use
+* **$alias**: *string* - Name of alias to use
 
 .. _qbref_method_operanddynamicfactory_name:
 
@@ -628,7 +628,7 @@ Relates to PHPCR NodeNameInterface.
 
 **Arguments**:
 
-* **$alias**: *string* - Name of selector to use
+* **$alias**: *string* - Name of alias to use
 
 .. _qbref_method_operanddynamicfactory_field:
 
@@ -652,7 +652,7 @@ Evaluates to the value of the specified field.
 
 **Arguments**:
 
-* **$field**: *string* - name of field to check, including selector name.
+* **$field**: *string* - name of field to check, including alias name.
 
 .. _qbref_node_operanddynamiclowercase:
 
@@ -949,7 +949,7 @@ Set the from source for the query.
 
 **Arguments**:
 
-* **$primarySelector**: *string* - Alias to use as primary source (optional for single sources)
+* **$primaryAlias**: *string* - Alias to use as primary source (optional for single sources)
 
 .. _qbref_method_querybuilder_fromdocument:
 
@@ -981,7 +981,7 @@ Replaces any existing from source.
 **Arguments**:
 
 * **$documentFqn**: *string* - Fully qualified class name for document.
-* **$primarySelector**: *string* - Alias for document source and primary selector when using multiple sources.
+* **$primaryAlias**: *string* - Alias for document source and primary alias when using multiple sources.
 
 .. _qbref_method_querybuilder_addjoinleftouter:
 
@@ -1219,8 +1219,8 @@ Descendant join condition.
 
 **Arguments**:
 
-* **$descendantAlias**: *string* - Name of selector for descendant documents.
-* **$ancestorAlias**: *string* - Name of selector to match for ancestor documents.
+* **$descendantAlias**: *string* - Name of alias for descendant documents.
+* **$ancestorAlias**: *string* - Name of alias to match for ancestor documents.
 
 .. _qbref_method_sourcejoinconditionfactory_equi:
 
@@ -1273,8 +1273,8 @@ Child document join condition.
 
 **Arguments**:
 
-* **$childAlias**: *string* - Name of selector for child documents.
-* **$parentAlias**: *string* - Name of selector to match for parent documents.
+* **$childAlias**: *string* - Name of alias for child documents.
+* **$parentAlias**: *string* - Name of alias to match for parent documents.
 
 .. _qbref_method_sourcejoinconditionfactory_same:
 
@@ -1304,7 +1304,7 @@ Same document join condition:
 
 * **$alias1**: *string* - Name of first alias.
 * **$alias2**: *string* - Name of first alias.
-* **$alias2Path**: *string* - Path for documents of second selector.
+* **$alias2Path**: *string* - Path for documents of second alias.
 
 .. _qbref_node_sourcejoinleft:
 
