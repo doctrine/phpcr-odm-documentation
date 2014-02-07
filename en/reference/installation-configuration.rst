@@ -2,7 +2,7 @@ Installation
 ============
 
 If you use the Doctrine PHPCR ODM **Symfony Bundle**, please look into the
-`Tutorial to install the DoctrinePHPCRBundle <https://github.com/symfony-cmf/symfony-cmf-docs/blob/master/tutorials/installing-configuring-doctrine-phpcr-odm.rst>`_.
+`Tutorial to install the DoctrinePHPCRBundle <http://symfony.com/doc/master/cmf/cookbook/installing_configuring_doctrine_phpcr_odm.html>`_.
 This documentation explains how to use PHPCR ODM outside of symfony, which requires some
 manual initialization.
 
@@ -160,7 +160,6 @@ Midgard can also use sqlite, with the following parameters::
         'midgard2.configuration.db.init' => true,
     );
 
-
 Configuration
 =============
 
@@ -168,19 +167,17 @@ Bootstrapping Doctrine PHPCR-ODM is a relatively simple procedure that
 roughly exists of four steps:
 
 -  Installation (see above)
--  Making sure Doctrine class files can be loaded on demand.
+-  Making sure Doctrine class files are autoloaded.
 -  Obtaining a DocumentManager instance.
 -  Configuration of the Console Tool and run the register-system-node-types command
 
 .. tip::
 
-    A straightforward bootstrap file sample can be found in the root folder of phpcr-odm.
-    To use it in your project, simply copy it into your project root and adjust the path
-    to the DoctrineAnnotations to where this file is found in your installation.
-
-    Make sure to have an autoload section for your own code in your main composer.json if your
-    code relies on autoloading.
-
+    Straightforward bootstrap sample files for all PHPCR implementations
+    are found in the root folder of phpcr-odm. They are called
+    cli-config.*.php.dist. You will need one of those files to
+    :ref:`set up the console <installation_configuration_console>`, but it can
+    be used for the rest of your application too.
 
 Class loading with composer
 ---------------------------
@@ -192,7 +189,6 @@ composer autoload file in your project::
     // Include Composer Autoload
     // if this file does not exist, you forgot to run php composer.phar install
     require_once __DIR__ . "/vendor/autoload.php";
-
 
 Obtaining an ObjectManager
 --------------------------
@@ -214,39 +210,59 @@ See later in this chapter for more options with the mapping drivers.
 Annotation Mapping Driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. code-block:: php
+With the annotation driver, you can annotate the fields in your document
+classes with the mapping metadata::
 
+    <?php
     use Doctrine\Common\Annotations\AnnotationRegistry;
+    use Doctrine\Common\Annotations\AnnotationReader;
+    use Doctrine\ODM\PHPCR\Mapping\Driver\AnnotationDriver;
 
-    AnnotationRegistry::registerLoader(function($class) use ($autoload) {
-        $autoload->loadClass($class);
-        return class_exists($class, false);
-    });
-    AnnotationRegistry::registerFile(__DIR__.'/vendor/doctrine/phpcr-odm/lib/Doctrine/ODM/PHPCR/Mapping/Annotations/DoctrineAnnotations.php');
+    AnnotationRegistry::registerLoader(array($autoload, 'loadClass'));
 
-    $reader = new \Doctrine\Common\Annotations\AnnotationReader();
-    $driver = new \Doctrine\ODM\PHPCR\Mapping\Driver\AnnotationDriver($reader, array('/path/to/your/document/classes'));
+    $reader = new AnnotationReader();
+    $driver = new AnnotationDriver($reader, array('/path/to/your/document/classes'));
 
+.. note::
+
+    Since PHPCR-ODM 1.1, the annotations are autoloaded like any other class.
+
+    With version 1.0, you needed to register the annotation file::
+
+        use Doctrine\Common\Annotations\AnnotationRegistry;
+
+        AnnotationRegistry::registerLoader(function($class) use ($autoload) {
+            $autoload->loadClass($class);
+            return class_exists($class, false);
+        });
+        AnnotationRegistry::registerFile(__DIR__.'/vendor/doctrine/phpcr-odm/lib/Doctrine/ODM/PHPCR/Mapping/Annotations/DoctrineAnnotations.php');
 
 XML Mapping Driver
 ^^^^^^^^^^^^^^^^^^
-.. code-block:: php
 
-    $driver = new \Doctrine\ODM\PHPCR\Mapping\Driver\XmlDriver(array('/path/to/your/xml-mapping/files'));
+With the XML driver, you create separate XML files that map between your
+documents and PHPCR::
+
+    <?php
+    use Doctrine\ODM\PHPCR\Mapping\Driver\XmlDriver;
+    $driver = new XmlDriver(array('/path/to/your/xml-mapping/files'));
 
 YML Mapping Driver
 ^^^^^^^^^^^^^^^^^^
 
-This needs your project to require symfony/yaml in composer.json::
+Your project must require symfony/yaml in composer.json::
 
-    $driver = new \Doctrine\ODM\PHPCR\Mapping\Driver\YamlDriver(array('/path/to/your/yml-mapping/files'));
+    <?php
+    use Doctrine\ODM\PHPCR\Mapping\Driver\YamlDriver;
+    $driver = new YamlDriver(array('/path/to/your/yml-mapping/files'));
 
 
 Quick Configuration Example
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. code-block:: php
+A complete configuration could look like this::
 
+    <?php
     $workspace = 'default';
     $user = 'admin';
     $pass = 'admin';
@@ -273,20 +289,28 @@ Quick Configuration Example
     $session = $repository->login($credentials, $workspace);
 
     /* prepare the doctrine configuration */
-    $config = new \Doctrine\ODM\PHPCR\Configuration();
+    use Doctrine\Common\Annotations\AnnotationReader;
+    use Doctrine\ODM\PHPCR\Mapping\Driver\AnnotationDriver;
+    use Doctrine\ODM\PHPCR\DocumentManager;
 
-    $documentManager = \Doctrine\ODM\PHPCR\DocumentManager::create($session, $config);
+    $reader = new AnnotationReader();
+    $driver = new AnnotationDriver($reader, array('/path/to/your/document/classes'));
+
+    $config = new \Doctrine\ODM\PHPCR\Configuration();
+    $config->setMetadataDriverImpl($driver);
+
+    $documentManager = DocumentManager::create($session, $config);
 
 .. note::
 
-    Your PHPCR implementation should document the options for the repository factory.
+    Your PHPCR implementation should document the options for the repository
+    factory.
 
-    As you can see, the PHPCR implementation jackalope-doctrine-dbal used in this example uses a
-    Doctrine DBAL connection to store its data in a database. You can learn more about the options
-    for the connection in this case with the
+    As you can see, the PHPCR implementation jackalope-doctrine-dbal used in
+    this example needs a Doctrine DBAL connection to store its data in a
+    database. You can learn more about the options for the connection in this
+    case with the
     `Doctrine DBAL connection configuration reference <http://docs.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/configuration.html>`_.
-
-
 
 Configuration Options
 ---------------------
@@ -297,16 +321,14 @@ available on a ``Doctrine\ORM\Configuration`` instance.
 Proxy Directory (***REQUIRED***)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. code-block:: php
+Configure the directory where proxy objects are cached::
 
     <?php
     $config->setProxyDir($dir);
     $config->getProxyDir();
 
-Gets or sets the directory where Doctrine generates any proxy
-classes. For a detailed explanation on proxy classes and how they
-are used in Doctrine, refer to the "Proxy Objects" section further
-down.
+For a detailed explanation on proxy classes and how they are used in Doctrine,
+see :ref:`installation_proxy-objects`.
 
 Proxy Namespace (***REQUIRED***)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -334,8 +356,7 @@ Gets or sets the metadata driver implementation that is used by
 Doctrine to acquire the object-relational metadata for your
 classes.
 
-There are currently 4 available implementations:
-
+There are currently 4 implementations available:
 
 -  ``Doctrine\ODM\PHPCR\Mapping\Driver\AnnotationDriver``
 -  ``Doctrine\ODM\PHPCR\Mapping\Driver\XmlDriver``
@@ -347,11 +368,10 @@ used in the examples. For information on the usage of the XmlDriver
 or YamlDriver please refer to the dedicated chapters
 ``XML Mapping`` and ``YAML Mapping``.
 
-The easiest way to set up the annotation mapping is described above, in ``Enable annotation mapping``
-
-When you manually instantiate the annotation driver, you need to tell it the path to the
-entities. All metadata drivers accept either a single directory as a string or an array of
-directories. With this feature a single driver can support multiple directories of Documents.
+When you manually instantiate the annotation driver, you need to tell it the
+path to the entities. All metadata drivers accept either a single directory as
+a string or an array of directories. With this feature a single driver can
+support multiple directories of Documents.
 
 Metadata Cache (***RECOMMENDED***)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -382,7 +402,6 @@ The recommended implementations for production are:
 For development you should use the
 ``Doctrine\Common\Cache\ArrayCache`` which only caches data on a
 per-request basis.
-
 
 Auto-generating Proxy Classes (***OPTIONAL***)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -427,6 +446,7 @@ has to be an instance of ``PHPCR\SessionInterface``.
 See the documentation of your PHPCR implementation for further options when
 creating the session.
 
+.. _installation_proxy-objects:
 
 Proxy Objects
 -------------
@@ -489,23 +509,25 @@ controls this behavior is::
     $config->setAutoGenerateProxyClasses($bool);
     $config->getAutoGenerateProxyClasses();
 
-The default value is ``TRUE`` for convenient development. However,
+The default value is ``true`` for convenient development. However,
 this setting is not optimal for performance and therefore not
 recommended for a production environment. To eliminate the overhead
 of proxy class generation during runtime, set this configuration
-option to ``FALSE``. When you do this in a development environment,
+option to ``false``. When you do this in a development environment,
 note that you may get class/file not found errors if certain proxy
 classes are not available or failing lazy-loads if new methods were
-added to the entity class that are not yet in the proxy class. In
-such a case, simply use the Doctrine Console to (re)generate the
-proxy classes like so:
+added to the entity class that are not yet in the proxy class.
 
-TODO: implement generating proxies!
+When you set auto generate to ``false``, you need to generate the proxy classes
+each time you change anything on your class or mapping:
 
 .. code-block:: bash
 
+    $ ./vendor/bin/phpcrodm doctrine:phpcr:generate-proxies
 
-    $ ./bin/doctrine phpcr:generate-proxies
+.. note::
+
+    This command is only available since PHPCR-ODM 1.1.
 
 Autoloading Proxies
 ~~~~~~~~~~~~~~~~~~~
@@ -552,43 +574,52 @@ the entity class name against the namespace using a
 correctly if sub-namespaces use different metadata driver
 implementations.
 
-
 Default Repository (***OPTIONAL***)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-TODO: should we do that in PHPCR-ODM as well?
-
-Specifies the FQCN of a subclass of the EntityRepository.
-That will be available for all entities without a custom repository class::
+Specifies the FQCN of a subclass of the Doctrine\Common\Persistence\ObjectRepository.
+This will be used for all documents that do not specify a custom repository
+class::
 
     <?php
     $config->setDefaultRepositoryClassName($fqcn);
     $config->getDefaultRepositoryClassName();
 
-The default value is ``Doctrine\ORM\EntityRepository``.
-Any repository class must be a subclass of EntityRepository otherwise you got an ORMException
+The default value is ``Doctrine\ODM\PHPCR\DocumentRepository``.
+
+.. note::
+
+    This option was introduced in PHPCR-ODM 1.1.
+
+.. _installation_configuration_console:
 
 Setting up the Console
 ----------------------
 
-Doctrine uses the Symfony Console component for generating the command
-line interface. You can take a look at the ``bin/phpcr`` script  for inspiration how to
-setup the cli.
+Doctrine uses the Symfony Console component for generating the command line
+interface. You can take a look at the ``bin/phpcrodm.php`` script  for
+inspiration how to setup the cli.
 
-If you installed Doctrine PHPCR-ODM through Composer, then the ``phpcr`` script is
-available to you in the bin-dir, by default at ``vendor/bin/phpcr``.
+If you installed Doctrine PHPCR-ODM through Composer, then the ``phpcrodm``
+script is available to you in the bin-dir, by default at
+``vendor/bin/phpcrodm``. Otherwise create a symlink to the file or run it
+inside the phpcr-odm folder.
 
-See the next chapter on what the console provides you.
+Next, you need to copy the cli-config.<implementation>.php.dist file from the
+phpcr-odm folder to the parent folder of where you have the binary and adjust
+it to bootstrap your application. The details of what you can configure are
+explained above.
+
+The :doc:`Tools Chapter <tools>` explains the commands you have available.
 
 Register system node types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 PHPCR ODM uses a `custom node type <http://github.com/doctrine/phpcr-odm/wiki/Custom-node-type-phpcr%3Amanaged>`_
-to track meta information without interfering with your content.
-We provide a command that makes it trivial to register this type and the phpcr
-namespace.
-
+to track meta information without interfering with your content. Before you can
+use a PHPCR repository to store documents, you need to run the following
+command:
 
 .. code-block:: bash
 
-    $ php bin/phpcr doctrine:phpcr:register-system-node-types
+    $ php bin/phpcrodm doctrine:phpcr:register-system-node-types

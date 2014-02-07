@@ -20,8 +20,12 @@ when calling ``find`` methods and when persisting new documents.
 When a document is read, its current language is stored with the document, to make sure changes go
 to the correct language.
 
-Because every document may only exist once, and translations
-are considered the same document, you can not have multiple languages loaded at the same time.
+Because every document may only exist once, and translations are considered the same document, you can not have multiple languages loaded at the same time.
+
+For required fields (fields not having nullable=true), the behaviour is the
+same as with normal fields: On saving, an error is thrown when a required field
+is null. On loading, missing fields trigger no error. A translation exists as
+soon as at least one field in that locale exists.
 
 .. _multilang_mapping:
 

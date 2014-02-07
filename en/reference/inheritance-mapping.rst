@@ -36,7 +36,7 @@ your models and to reuse the mappings and functions of the base class.
 To use this feature, just have your document classes extend each other. You should not
 repeat mappings that exist in the super class, they are inherited automatically.
 
-.. hint::
+.. tip::
 
     Doctrine will follow the inheritance of your document class. As soon as one
     class is not mapped, it will stop the process. Make sure to map all parent

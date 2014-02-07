@@ -6,60 +6,44 @@ Doctrine Console
 
 The Doctrine Console is a Command Line Interface tool for
 simplifying common tasks during the development of a project that
-uses Doctrine PHPCR-ODM.
+uses Doctrine PHPCR-ODM. It is built on the `Symfony Console Component`_
 
-Take a look at the last section of :doc:`Installation and Configuration <installation-configuration>` for more
-information how to setup the console command.
-
-Getting Help
-~~~~~~~~~~~~
-
-Type ``bin/phpcr`` on the command line and you should see an
-overview of the available commands or use the --help flag to get
-information on the available commands. If you want to know more
-about the use of generate entities for example, you can call:
-
-.. code-block:: php
-
-    phpcr doctrine:phpcr:register-system-node-types --help
-
-Configuration
-~~~~~~~~~~~~~
-
-To use the commands, you need to define the phpcr binary.
-
-If you installed Doctrine PHPCR-ODM through Composer, then the ``phpcr``
-script is available to you in the bin-dir, by default at ``vendor/bin/phpcr``.
-
-If you installed Doctrine PHPCR-ODM by some other means, copy ``bin/phpcr``
-from the phpcr-odm folder and put it into your project directory.
+If you have not set up the console yet, take a look at the
+:ref:`Console Setup Section <installation_configuration_console>`.
 
 Command Overview
 ~~~~~~~~~~~~~~~~
 
-The following Commands are currently available:
+There are many commands, for example to import and export data, modify data in
+the repository, query or dump data from the repository or work with PHPCR
+workspaces.
 
-
--  ``help`` Displays help for a command (?)
--  ``list`` Lists commands
--  ``doctrine:phpcr:register-system-node-types`` Register system node types in the PHPCR repository
--  ``doctrine:phpcr:mapping:info``  Shows basic information about all mapped documents
--  ``phpcr:import``  Import xml data into the repository, either in JCR system view format or arbitrary xml
--  ``phpcr:export``  Export nodes from the repository, either to the JCR system view format or the document view format
--  ``phpcr:dump`` Dump the content repository
--  ``phpcr:purge``  Remove all content from the repository
--  ``phpcr:query``  Execute a JCR SQL2 statement
--  ``phpcr:register-node-types``  Register node types in the PHPCR repository
--  ``phpcr:workspace:create``  Create a workspace in the configured repository
--  ``phpcr:workspace:list``    List all available workspaces in the configured repository
-
+Run the console without any arguments to see a list of all commands. The
+commands are self documenting. See the next section how to get help.
 
 .. Note::
 
-    The commands prefixed with only phpcr come from the phpcr-utils and are not
-    specific to Doctrine PHPCR-ODM. If you use the PHPCR-ODM bundle in Symfony2,
-    all commands are prefixed with doctrine:phpcr.
+    PHPCR-ODM specific commands start with ``doctrine:``. The commands that
+    start with only ``phpcr:`` come from the phpcr-utils and are not specific
+    to Doctrine PHPCR-ODM.
 
+    If you use the PHPCR-ODM bundle in Symfony2, all commands will be prefixed
+    with ``doctrine:phpcr``.
+
+Getting documentation of a command
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Type ``./vendor/bin/phpcrodm`` on the command line and you should see an
+overview of the available commands or use the --help flag to get
+information on the available commands. If you want to know more
+about the use of the register command for example, call:
+
+.. code-block:: bash
+
+    ./vendor/bin/phpcrodm help doctrine:phpcr:register-system-node-types
+
+PHPCR implementation specific commands
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Jackrabbit specific commands
 """"""""""""""""""""""""""""
@@ -151,11 +135,16 @@ different from nt:unstructured, like a file or folder.
         $ php doctrine orm:convert-mapping xml /path/to/mapping-path-converted-to-xml
 
 
-Adding own commands
--------------------
+Adding your own commands
+------------------------
 
 You can also add your own commands on-top of the Doctrine supported
 tools by adding them to your binary.
 
-To include a new command on Doctrine Console, you just need to add your command to the list
-of commands to provide in ``bin/phpcr``.
+To include a new command in the console, either build your own console file
+or copy ``bin/phpcrodm.php`` into your project and add things as needed.
+
+Read more on the `Symfony Console Component`_ in the official symfony
+documentation.
+
+.. _`Symfony Console Component`: http://symfony.com/doc/current/components/console/index.html

@@ -21,7 +21,7 @@ persisted are lost.
     Not calling ``DocumentManager::flush()`` will lead to all changes
     during that request being lost.
 
-.. hint::
+.. tip::
 
     The ``DocumentManager`` is very similar to the Doctrine ORM EntityManager and
     this chapter is similar to its `corresponding ORM chapter <https://doctrine-orm.readthedocs.org/en/latest/reference/working-with-objects.html>`_.

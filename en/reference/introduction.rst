@@ -30,7 +30,7 @@ What are Documents?
 -------------------
 
 Documents are lightweight PHP Objects that don't need to extend any
-abstract base class or interface. An entity class must not be final
+abstract base class or interface. A document class must not be final
 or contain final methods. Additionally it must not implement
 **clone** nor **wakeup** or :doc:`do so safely <../cookbook/implementing-wakeup-or-clone>`.
 
@@ -85,8 +85,8 @@ This will download the dependencies into the vendor/ folder and generate vendor/
 
 .. _intro-bootstrap:
 
-Now we bootstrap Doctrine PHPCR-ODM. Create a file called ``bootstrap.php``
-in the project root directory::
+Now we bootstrap Doctrine PHPCR-ODM. Create a file called ``bootstrap.php`` in
+your project root directory::
 
     <?php
     // bootstrap.php
@@ -97,16 +97,8 @@ in the project root directory::
     if (file_exists($file)) {
         $autoload = require_once $file;
     } else {
-        throw new RuntimeException('Install dependencies to run test suite.');
+        throw new RuntimeException('Install dependencies with composer.');
     }
-
-    use Doctrine\Common\Annotations\AnnotationRegistry;
-
-    AnnotationRegistry::registerLoader(function($class) use ($autoload) {
-        $autoload->loadClass($class);
-        return class_exists($class, false);
-    });
-    AnnotationRegistry::registerFile(__DIR__.'/vendor/doctrine/phpcr-odm/lib/Doctrine/ODM/PHPCR/Mapping/Annotations/DoctrineAnnotations.php');
 
     $params = array(
         'driver'    => 'pdo_mysql',
@@ -131,12 +123,40 @@ in the project root directory::
     $session = $repository->login($credentials, $workspace);
 
     /* prepare the doctrine configuration */
-    $config = new \Doctrine\ODM\PHPCR\Configuration();
+    use Doctrine\Common\Annotations\AnnotationRegistry;
+    use Doctrine\Common\Annotations\AnnotationReader;
+    use Doctrine\ODM\PHPCR\Mapping\Driver\AnnotationDriver;
+    use Doctrine\ODM\PHPCR\Configuration;
+    use Doctrine\ODM\PHPCR\DocumentManager;
 
-    $documentManager = \Doctrine\ODM\PHPCR\DocumentManager::create($session, $config);
+    AnnotationRegistry::registerLoader(array($autoload, 'loadClass'));
+
+    $reader = new AnnotationReader();
+    $driver = new AnnotationDriver($reader, array(
+        // this is a list of all folders containing document classes
+        'vendor/doctrine/phpcr-odm/lib/Doctrine/ODM/PHPCR/Document',
+        'src/Demo',
+    ));
+
+    $config = new Configuration();
+    $config->setMetadataDriverImpl($driver);
+
+    $documentManager = DocumentManager::create($session, $config);
 
     return $autoload;
 
+To enable the command line, copy the cli-config.<implementation>.php.dist
+to cli-config.php in your vendor directory and adjust it to match your
+bootstrap.php. Or better, remove the duplicate code and include cli-config.php
+from your bootstrap.php file.
+
+If you want it in the root directory, configure the composer bin-dir to ``bin``:
+
+.. code-block:: javascript
+
+    "config": {
+        "bin-dir": "bin"
+    }
 
 Building the model
 ------------------
@@ -238,14 +258,14 @@ init the database:
 
 .. code-block:: bash
 
-    bin/phpcrodm jackalope:init:dbal
+    ./vendor/bin/phpcrodm jackalope:init:dbal
 
 Then, regardless of the PHPCR implementation you use, you need to run
 another command to let Doctrine set up the repository for using it:
 
 .. code-block:: bash
 
-    bin/phpcrodm doctrine:phpcr:register-system-node-types
+    ./vendor/bin/phpcrodm doctrine:phpcr:register-system-node-types
 
 
 Storing documents

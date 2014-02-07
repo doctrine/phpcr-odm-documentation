@@ -57,9 +57,3 @@ This field is populated on find, and as soon as you register the document with t
 
         MyPersistentClass:
             node: node
-
-Code example
-------------
-
-TODO: show an example, i.e. how to change the phpcr:class field to
-fix existing data after a document class name refactoring

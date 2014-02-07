@@ -198,7 +198,7 @@ Examples:
 .. _annref_property:
 
 @Property
-~~~~~~~
+~~~~~~~~~
 
 Base annotation for all fields. You can use this annotation with the
 ``type`` attribute or the specific annotations below.
