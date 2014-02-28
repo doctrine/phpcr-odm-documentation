@@ -282,13 +282,6 @@ and adjust the query accordingly. By default, the current locale will be
 used, but you can manually call ``$qb->setLocale($locale)`` if you need
 a different locale.
 
-.. warning::
-
-    For now, this only works for the ``attribute`` translation strategy
-    but not yet for the ``child`` strategy. There is a
-    `github issue <https://github.com/doctrine/phpcr-odm/issues/402>`_
-    to track this.
-
 Read more in the :ref:`query builder documentation <qb-translation>`.
 
 
