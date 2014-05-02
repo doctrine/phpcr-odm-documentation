@@ -32,9 +32,9 @@ soon as at least one field in that locale exists.
 Mapping
 -------
 
-To use translatable documents need to use the ``translated`` attribute on any field that
-should be translated and a ``translator`` attribute for the document translation strategy
-plus an @Locale field.
+To make a document translated, you need to define the ``translator`` attribute on the document
+configuration, and you need to map the ``locale`` field. Then you can use the ``translated``
+attribute on all fields that should be different depending on the locale.
 
 .. configuration-block::
 

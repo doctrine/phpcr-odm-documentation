@@ -86,7 +86,7 @@ To customize the lastModified logic, you can build a
 as needed. If you do this, you want to disable automated lastModified
 support in your PHPCR implementation.
 
-For Jackalope, you can set the `jackalope.auto_lastmodified` option to false
+For Jackalope, you can set the ``jackalope.auto_lastmodified`` option to false
 in the parameters to ``RepositoryFactory::getRepository``. This will only
 affect mix:lastModified but not mix:created.
 
