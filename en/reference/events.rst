@@ -13,7 +13,6 @@ Lifecycle Events
 The DocumentManager and PHPCR-ODM UnitOfWork trigger a bunch of events during
 the life-time of their registered documents.
 
-
 - prePersist - occurs before a new document is created in the repository;
 - postPersist - occurs after a document has been created in repository.
   Generated fields will be available in this state;
@@ -33,8 +32,11 @@ the life-time of their registered documents.
   not a lifecycle callback;
 - onFlush - occurs after the change-sets of all managed documents have been
   computed. This event is not a lifecycle callback;
-- postFlush - occurs at the end of a flush operation. This event is not a
-  lifecycle callback;
+- postFlush - occurs after the flush has been committed, but before the UOW
+  state has been reset. This event is not a lifecycle callback;
+- endFlush - occurs after the flush has been comitted *and* the UOW has been
+  reset. It is safe to call `flush()` again from this event. This event is not
+  a lifecycle callback.
 - onClear - occurs when the DocumentManager#clear() operation is invoked, after
   all references to documents have been removed from the unit of work. This
   event is not a lifecycle callback;
