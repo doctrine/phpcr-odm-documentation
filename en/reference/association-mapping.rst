@@ -299,9 +299,9 @@ referrers if desired.
 
 .. tip::
 
-    There is also the ``DocumentManager::getReferrers`` that allows you to control
-    what referencing documents to get more fine grained, if Referrers is to limited
-    and MixedReferrers too broad.
+    There is also the ``DocumentManager::getReferrers()`` method that allows you
+    to get more fine grained control on what referencing documents are returned,
+    if ``Referrers`` is too limited and ``MixedReferrers`` too broad.
 
 
 MixedReferrers
