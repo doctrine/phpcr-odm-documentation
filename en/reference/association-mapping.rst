@@ -3,10 +3,10 @@ Association Mapping
 
 This chapter introduces association mappings. PHPCR has a tree based model of the content.
 In addition to references to arbitrary other documents, every document has a parent and may
-has children.
+have children.
 
 We will start with the hierarchy associations and then go into the references, which work
-slightly different from what you are used from an RDBMS as well.
+slightly differently from what you are used from an RDBMS as well.
 
 .. _hierarchy-mappings:
 
@@ -24,7 +24,7 @@ To map children, you have two options:
 - Or you can map a :ref:`collection <collections>` of children, with the possibility to filter on the document name
 
 A single Child will always load only one document. If no explicit name is specified, the field
-name is used to retrieve the child document. The name is the last part of that documents id,
+name is used to retrieve the child document. The name is the last part of that document's id,
 resp. its Nodename mapping.
 
 To map a collection of children, use ``Children``. This will always be a collection, regardless of
@@ -145,7 +145,7 @@ As noted above, the target document needs to be referenceable. Apart from that, 
 no limitation on the type of the target document, giving you great flexibility.
 
 There are two mappings, ReferenceOne and ReferenceMany to reference one or several
-target documents. ReferenceMany is using doctrine/commons collections.
+target documents. ReferenceMany is using doctrine/common's collections.
 
 
 You can specify for each reference if it should ensure referencial integrity or just
@@ -203,7 +203,7 @@ A path reference will never ensure referential integrity.
                 pathGroup:
                   strategy: path
 
-ReferenceMany documents will always be handled as collection to allow for lazy loading,
+ReferenceMany documents will always be handled as collections to allow for lazy loading,
 regardless of the strategy chosen.
 
 All types of reference support the optional argument ``targetDocument``.
