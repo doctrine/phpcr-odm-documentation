@@ -91,7 +91,7 @@ a weak reference that does not ensure integrity, depending on your use case.
 Referenceable documents
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-To be allowed to reference a document, it needs to be referenceable. To achieve this, the fact needs
+To be allowed to reference a document, it needs to be referenceable. To achieve this, this fact needs
 to be specified in the Document mapping. Having a referenceable document also allows you to use the
 map its uuid to a field.
 
