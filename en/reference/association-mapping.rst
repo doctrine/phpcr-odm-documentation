@@ -145,7 +145,7 @@ As noted above, the target document needs to be referenceable. Apart from that, 
 no limitation on the type of the target document, giving you great flexibility.
 
 There are two mappings, ReferenceOne and ReferenceMany to reference one or several
-target documents. ReferenceMany is using doctrine commons collections.
+target documents. ReferenceMany is using doctrine/commons collections.
 
 
 You can specify for each reference if it should ensure referencial integrity or just
