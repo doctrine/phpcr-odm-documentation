@@ -20,8 +20,8 @@ parent, it will use it, otherwise ``Doctrine\ODM\PHPCR\Document\Generic`` is use
 
 To map children, you have two options:
 
-- You can map a single child with a specific name
-- Or you can map a :ref:`collection <collections>` of children, with the possibility to filter on the document name
+- You can map a single child with a specific name.
+- Or you can map a :ref:`collection <collections>` of children, with the possibility to filter on the document name.
 
 A single Child will always load only one document. If no explicit name is specified, the field
 name is used to retrieve the child document. The name is the last part of that document's id,
