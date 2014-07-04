@@ -15,8 +15,8 @@ Hierarchy mappings
 
 We have already seen the ``ParentDocument`` in the previous chapter in the section about
 identifier generation. The field with this annotation maps the parent document of this document
-(PHPCR\NodeInterface::getParent()). If the repository can determine the document class of the
-parent, it will use it, otherwise Doctrine\ODM\PHPCR\Document\Generic is used.
+(``PHPCR\NodeInterface::getParent()``). If the repository can determine the document class of the
+parent, it will use it, otherwise ``Doctrine\ODM\PHPCR\Document\Generic`` is used.
 
 To map children, you have two options:
 
@@ -145,7 +145,7 @@ As noted above, the target document needs to be referenceable. Apart from that, 
 no limitation on the type of the target document, giving you great flexibility.
 
 There are two mappings, ReferenceOne and ReferenceMany to reference one or several
-target documents. ReferenceMany is using doctrine/common's collections.
+target documents. ReferenceMany is using ``doctrine/common``'s collections.
 
 
 You can specify for each reference if it should ensure referencial integrity or just
@@ -203,7 +203,7 @@ A path reference will never ensure referential integrity.
                 pathGroup:
                   strategy: path
 
-ReferenceMany documents will always be handled as collections to allow for lazy loading,
+``ReferenceMany`` documents will always be handled as collections to allow for lazy loading,
 regardless of the strategy chosen.
 
 All types of reference support the optional argument ``targetDocument``.
