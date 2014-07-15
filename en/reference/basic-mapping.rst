@@ -548,7 +548,7 @@ The corresponding code could look like this:
          * @param object $document
          * @return string
          */
-        public function generateId($document)
+        public function generateId($document, $parent = null)
         {
             return '/functional/'.$document->getTitle();
         }
