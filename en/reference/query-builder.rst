@@ -507,8 +507,26 @@ to query in a different locale, you can also specify the locale explicitly::
     `github issue <https://github.com/doctrine/phpcr-odm/issues/402>`_
     to track this.
 
+Additional notes
+----------------
+
+Querying multivalue fields
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Multivalue fields can be queried using either `eq()` or `like()` in the same
+way as you would for a single value field:
+
+.. code-block:: php
+
+   <?php
+   // Find all posts which have a tag "general"
+   $qb->where()->eq()->field('p.tags')->literal('general');
+
+   // Find all posts which have a tag containing the string "foo"
+   $qb->where()->like()->field('p.tags')->literal('%foo%');
+
 Using the Query Builder in Tests
---------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Mocking the query builder in a unit test is not easy - it requires that you
 mock the node classes and setup the methods to return the correct node classes
