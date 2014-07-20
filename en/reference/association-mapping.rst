@@ -27,6 +27,15 @@ A single Child will always load only one document. If no explicit name is specif
 name is used to retrieve the child document. The name is the last part of that document's id,
 resp. its Nodename mapping.
 
+.. warning::
+
+    When persisting such a document, the name of the child document set on that
+    field must be empty or match the configured name. If it is not the expected
+    name, you will get an exception.
+
+    PHPCR-ODM 1.0 silently changed the name of the child to the name of the
+    mapping, which could lead to unexpected behaviour.
+
 To map a collection of children, use ``Children``. This will always be a collection, regardless of
 the number of found children. You can limit the children to a subset of all children by specifying
 a ``filter`` that acts on the node name. See `PHPCR\NodeInterface::getNodes() <http://phpcr.github.com/doc/html/phpcr/nodeinterface.html#getNodes()>`_
@@ -70,8 +79,6 @@ Some sample mappings:
             some:
              filter: "a*"
              fetchDepth: 3
-
-
 
 References
 ----------
@@ -401,7 +408,6 @@ operation. During each flush() operation Doctrine detects if there
 are new documents in any collection and three possible cases can
 happen:
 
-
 1. New documents in a collection marked as cascade persist will be
    directly persisted by Doctrine.
 2. New documents in a collection not marked as cascade persist will
@@ -493,3 +499,20 @@ been associated with a DocumentManager yet:
     $group = $documentManager->find(null, $groupId);
     $user = new User();
     $user->getGroups()->add($group);
+
+New Collections after Flushing
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+On flushing, Doctrine replaces all collection fields (children, reference many,
+referrers, mixed referrers) that contain plain arrays or ArrayCollection with
+the appropriate persistent collection class for the field type.
+
+When flushing a new document, their collections are *not* synchronized with the
+database, though cascading happens as explained above. The collections thus
+only show the documents that where explicitly added. If other documents are
+added directly (e.g. a child with assigned id), you will only see them after
+calling ``$dm->refresh()``, or in subsequent requests.
+
+On an existing document, setting a field to an array or new collection
+overwrites all existing documents that previously where in that field, leading
+to the deletion of the previous documents.
