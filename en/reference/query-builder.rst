@@ -333,6 +333,26 @@ right sources using an ``equi`` (equality) join on the ``username`` columns.
 We then specify that only blog posts which have associated users with the
 status "active" are selected.
 
+Joining with an Association
+"""""""""""""""""""""""""""
+
+The following is another example which joins on an *association*.  The
+``CmsUser`` class is associated with a single address:
+
+.. code-block:: php
+
+    <?php
+
+    $qb->fromDocument('Doctrine\Tests\Models\CMS\CmsUser', 'u');
+        ->addJoinInner()
+        ->right()->document('Doctrine\Tests\Models\CMS\CmsAddress', 'a')->end()
+        ->condition()->equi('u.address', 'a.uuid');
+        ->where()->eq()->field('a.city')->literal('Lyon');
+    $users = $qb->getQuery()->execute();
+
+This query selects all ``CmsUser`` documents which have an associated address
+where the ``city`` field has a value of ``Lyon``.
+
 For detailed information see :ref:`the query builder reference <qbref_method_querybuilder_from>`.
 
 .. _qbref_select:
