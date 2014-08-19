@@ -38,7 +38,7 @@ avoid unnecessary overhead if the user does not need it. It is however doable
 with having a field on your document that you set to your commit message and
 flush the document manager before calling checkin().
 
-For more background, read the `Versioning section in the PHPCR Tutorial <http://github.com/phpcr/phpcr/blob/master/doc/Tutorial.md>`_
+For more background, read the `Versioning section in the PHPCR Tutorial <http://phpcr.readthedocs.org/en/latest/book/versioning.html>`_
 and refer to the `JCR 2.0 specification, Chapter 15 <http://www.day.com/specs/jcr/2.0/15_Versioning.html>`_.
 
 PHPCR-ODM
