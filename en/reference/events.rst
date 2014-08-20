@@ -43,6 +43,16 @@ the life-time of their registered documents.
 - loadClassMetadata - occurs after mapping metadata for a class has been loaded
   from a mapping source (annotations/xml/yaml). This event is not a lifecycle
   callback.
+- postLoadTranslation - occurs when a translation of a document has been loaded
+  from the repository.
+- preBindTranslation - occurs before binding a translation, but after persist
+  (you need to persist before binding a translation)
+- postBindTranslation - occurs after a translation has been created in the
+  repository.
+- preRemoveTranslation - occurs before a document's translation is removed
+  from repository.
+- postRemoveTranslation - occurs after a document's translation was successfully
+  removed.
 
 .. note::
 
@@ -84,6 +94,25 @@ During the flush() operation of a modified document, the events get triggered in
 
 As the move event is triggered after the changeset has been calculated,
 modifications to the document are not taken into account anymore.
+
+Event order when handling with translations
+-------------------------------------------
+
+When binding/removing a translation or load it from repository, the events get
+triggered in the following order:
+
+* 1. prePersist (you need to persist before calling ``bindTranlation()``)
+* 2. preBindTranslation
+* 3. postBindTranslation
+
+Load a document by its translation
+
+* 4. postLoadTranslation
+
+Remove a translation
+
+* 5. preRemoveTranslation
+* 6. postRemoveTranslation
 
 
 Listening to events
@@ -140,6 +169,31 @@ event occurs.
         public function doStuffOnPreUpdate()
         {
             $this->value = 'changed from preUpdate callback!';
+        }
+        /** @PreBindTranslation */
+        public function doStuffOnPreBindTranslation()
+        {
+            $this->value = 'changed from preBindTranslation callback!';
+        }
+        /** @PostBindTranslation */
+        public function doStuffOnPostBindTranslation()
+        {
+            $this->value = 'changed from postBindTranslation callback!';
+        }
+        /** @postLoadTranslation */
+        public function doStuffOnPostLoadTranslation()
+        {
+            $this->value = 'changed from postLoadTranslation callback!';
+        }
+        /** @PreRemoveTranslation */
+        public function doStuffOnPreRemoveTranslation()
+        {
+            $this->value = 'changed from preRemoveTranslation callback!';
+        }
+        /** @PostRemoveTranslation */
+        public function doStuffOnPostRemoveTranslation()
+        {
+            $this->value = 'changed from postRemoveTranslation callback!';
         }
 
     .. code-block:: yaml
