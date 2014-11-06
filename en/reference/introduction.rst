@@ -66,8 +66,8 @@ Create a file composer.json in your project directory.
     {
         "minimum-stability": "dev",
         "require": {
-            "doctrine/phpcr-odm": "1.1.*",
-            "jackalope/jackalope-doctrine-dbal": "1.1.*"
+            "doctrine/phpcr-odm": "~1.2",
+            "jackalope/jackalope-doctrine-dbal": "~1.1"
         },
         "autoload": {
           "psr-0": { "Demo\\": "src/" }
