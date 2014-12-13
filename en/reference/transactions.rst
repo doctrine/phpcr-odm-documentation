@@ -37,3 +37,13 @@ since ``Doctrine\ODM\PHPCR\DocumentManager#transactional()`` will do it implicit
 If an ``Exception`` is thrown during ``Doctrine\ODM\PHPCR\DocumentManager#transactional()``
 execution, then the ``Doctrine\ODM\PHPCR\DocumentManager`` will be closed and the current transaction
 rolled back.
+
+.. note::
+
+    Multiple ``Doctrine\ODM\PHPCR\DocumentManager#transactional()`` calls are currently not supported,
+    as nested transaction support is not supported either.
+
+.. note::
+
+    ``Doctrine\ODM\PHPCR\DocumentManager#transactional()`` will be executed in a non transactional-safe
+    way if the underlying PHPCR transport does not support transactions.
