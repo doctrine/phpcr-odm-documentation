@@ -63,7 +63,8 @@ Advanced Topics
 * **Versioning**:
   :doc:`Versioning Documents <reference/versioning>`
 
-.. transactions?
+* **Transactions**:
+  :doc:`Transactions <reference/transactions>`
 
 * **Performance**:
   :doc:`Fetch Depth <reference/fetch-depth>`
