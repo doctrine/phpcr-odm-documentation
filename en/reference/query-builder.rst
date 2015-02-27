@@ -505,7 +505,9 @@ Querying translated documents
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If your documents contain :doc:`translated fields <multilang>`, the
-query builder automatically handles them both for ``where`` and ``orderBy``.
+query builder automatically handles them both for ``where`` and ``orderBy``
+when using the annotation or child translation strategy.
+
 It will use the "current" locale according to the LocaleChooser. If you want
 to query in a different locale, you can also specify the locale explicitly::
 
@@ -519,13 +521,6 @@ to query in a different locale, you can also specify the locale explicitly::
         ->orderBy()
             ->asc()->field('d.title')->end()
         ->end();
-
-.. warning::
-
-    For now, this only works for the ``attribute`` translation strategy
-    but not yet for the ``child`` strategy. There is a
-    `github issue <https://github.com/doctrine/phpcr-odm/issues/402>`_
-    to track this.
 
 Additional notes
 ----------------
