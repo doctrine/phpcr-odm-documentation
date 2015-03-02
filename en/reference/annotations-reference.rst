@@ -324,7 +324,8 @@ Hierarchy
 ---------
 
 These mappings mark the annotated instance variables to contain instances of Documents
-above or below the current Document in the document hierarchy. They need to be
+above or below the current Document in the document hierarchy, or information
+about the state of the document within the hierarchy. They need to be
 specified inside the instance variables associated PHP DocBlock comment.
 
 .. _annref_child:
@@ -375,6 +376,22 @@ Optional attributes:
      * @Children(filter="a*", fetchDepth=3)
      */
     private $children;
+
+.. _annref_depth:
+
+@Depth
+~~~~~~
+
+The annotated instance variable will be populated with an integer value
+representing the depth of the document within the document hierarchy.
+
+.. code-block:: php
+
+    <?php
+    /**
+     * @Depth()
+     */
+    private $depth;
 
 .. _annref_parentdocument:
 
