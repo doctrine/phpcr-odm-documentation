@@ -12,19 +12,12 @@ Getting Started
     As PHPCR allows NoSQL like data storage, we speak of Documents rather than Entities
     to stress the fact that there need not be a rigid database model.
 
-Doctrine PHPCR-ODM is an object-document mapper (ODM) for PHP 5.3.0+ that provides
-transparent persistence for PHP objects. It uses the Data Mapper pattern at
-the heart of this project, aiming for a complete separation of the domain/business
-logic from the persistence in a content repository. The benefit of Doctrine for
-the programmer is the ability to focus solely on the object-oriented business logic
-and worry about persistence only as a secondary task. This doesn't mean persistence
-is not important to Doctrine, however it is our belief that there are considerable benefits for
-object-oriented programming if persistence and documents are kept perfectly
-separated.
+Doctrine PHPCR-ODM is an object-document mapper (ODM) for PHP 5.3.0+. It uses
+the Data Mapper pattern to transparently map PHPCR nodes to standard PHP
+objects allowing the programmer to easily build a domain model for their
+application instead of dealing with raw data.
 
-Starting with the object-oriented model is called the *Code First* approach to
-Doctrine.
-
+Starting with the object-oriented model is called the "Code First" approach.
 
 What are Documents?
 -------------------
@@ -61,7 +54,7 @@ Setup Project
 
 Create a file composer.json in your project directory.
 
-::
+.. code-block:: javascript
 
     {
         "minimum-stability": "dev",
@@ -81,7 +74,7 @@ Then run the following commands on your command line
     $ curl -s http://getcomposer.org/installer | php --
     $ php composer.phar install
 
-This will download the dependencies into the vendor/ folder and generate vendor/autoload.php
+This will download the dependencies into the vendor/ folder and generate ``vendor/autoload.php``.
 
 .. _intro-bootstrap:
 
@@ -89,6 +82,7 @@ Now we bootstrap Doctrine PHPCR-ODM. Create a file called ``bootstrap.php`` in
 your project root directory::
 
     <?php
+
     // bootstrap.php
 
     $vendorDir = __DIR__.'/vendor';
@@ -245,6 +239,7 @@ strategies in the reference chapter :doc:`Objects and Fields <basic-mapping>`
 for other possibilities.
 
 .. note::
+
     PHPCR-ODM provides default classes for the standard PHPCR node types ``nt:file``,
     ``nt:folder`` and ``nt:resource``, as well as a GenericDocument for when a PHPCR node
     can not be mapped to a specific document. See the classes in lib/Doctrine/ODM/PHPCR/Document/

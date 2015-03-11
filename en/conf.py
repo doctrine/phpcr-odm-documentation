@@ -88,6 +88,7 @@ pygments_style = 'sphinx'
 
 # use PHP as the primary domain
 primary_domain = 'php'
+highlight_language='php'
 
 # -- Options for HTML output ---------------------------------------------------
 
