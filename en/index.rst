@@ -33,8 +33,8 @@ Mapping Objects onto a Document Repository
   :doc:`Hierarchies and References <reference/association-mapping>` |
   :doc:`Inheritance <reference/inheritance-mapping>`
 
-* **Mapping Driver References**: (TODO: build this in a sane way, without duplicating too much information)
-  :doc:`Docblock Annotations <reference/annotations-reference>` |
+* **Mapping Driver References**:
+  :doc:`Docblock Annotations <reference/annotations-mapping>` |
   :doc:`XML <reference/xml-mapping>` |
   :doc:`YAML <reference/yml-mapping>` |
   :doc:`Metadata Drivers <reference/metadata-drivers>`

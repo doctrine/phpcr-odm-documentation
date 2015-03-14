@@ -1,5 +1,5 @@
-Annotations Reference
-=====================
+Annotation Mapping
+==================
 
 In this chapter a reference of every PHPCR-ODM annotation is given with short
 explanations on their context and usage.
