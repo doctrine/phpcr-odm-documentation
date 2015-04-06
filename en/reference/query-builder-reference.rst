@@ -90,9 +90,12 @@ And composite constraint.
 .. code-block:: php
     
     <?php
-    $qb->where()->andX()
-      ->fieldIsset('f.foo')
-      ->gt()->field('f.max')->literal(40);
+    $qb->where()
+      ->andX()
+        ->fieldIsset('f.foo')
+        ->gt()->field('f.max')->literal(40)->end()
+      ->end()
+    ->end();
 
 
 The andX node allows you to add 1, 2 or many operand nodes. When
@@ -109,17 +112,24 @@ is added the "and" operands are nested.
     
     
     // when adding more than one,
-    $qb->where()->andX()
-      ->fieldIsset('f.foo')
-      ->gt()->field('f.max')->literal(40);
-      ->eq()->field('f.zar')->literal('bar')
-    
-    // is equivilent to:
-    $qb->where()->andX()
+    $qb->where()
       ->andX()
         ->fieldIsset('f.foo')
-        ->gt()->field('f.max')->literal(40);
-      ->eq()->field('f.zar')->litreal('bar');
+        ->gt()->field('f.max')->literal(40)->end()
+        ->eq()->field('f.zar')->literal('bar')->end()
+      ->end()
+    ->end();
+    
+    // is equivilent to:
+    $qb->where()
+      ->andX()
+        ->fieldIsset('f.foo')
+        ->andX()
+          ->gt()->field('f.max')->literal(40)->end()
+          ->eq()->field('f.zar')->litreal('bar')->end()
+        ->end()
+      ->end()
+    ->end();
 
 
 **Adds**: :ref:`constraint <qbref_node_constraint>` (ConstraintAndx)
@@ -140,7 +150,8 @@ Or composite constraint.
       ->orX()
         ->fieldIsset('sel_1.prop_1')
         ->fieldIsset('sel_1.prop_2')
-      ->end();
+      ->end()
+    ->end();
 
 
 As with "andX", "orX" allows one to many operands.
@@ -159,7 +170,7 @@ Field existance constraint:
 .. code-block:: php
     
     <?php
-    $qb->where()->fieldIsset('sel_1.prop_1');
+    $qb->where()->fieldIsset('sel_1.prop_1')->end();
 
 
 **Adds**: :ref:`constraint <qbref_node_constraint>` (ConstraintFieldIsset)
@@ -180,7 +191,7 @@ Full text search constraint.
 .. code-block:: php
     
     <?php
-    $qb->where()->fullTextSearch('sel_1.prop_1', 'search_expression');
+    $qb->where()->fullTextSearch('sel_1.prop_1', 'search_expression')->end();
 
 
 **Adds**: :ref:`constraint <qbref_node_constraint>` (ConstraintFullTextSearch)
@@ -202,7 +213,7 @@ Same document constraint.
 .. code-block:: php
     
     <?php
-    $qb->where()->same('/path/to/doc', 'sel_1');
+    $qb->where()->same('/path/to/doc', 'sel_1')->end();
 
 
 Relates to PHPCR QOM SameNodeInterface.
@@ -226,7 +237,7 @@ Descendant document constraint.
 .. code-block:: php
     
     <?php
-      $qb->where()->descendant('/ancestor/path', 'sel_1');
+      $qb->where()->descendant('/ancestor/path', 'sel_1')->end();
 
 
 Relates to PHPCR QOM DescendantNodeInterface
@@ -250,7 +261,7 @@ Select children of the aliased document at the given path.
 .. code-block:: php
     
     <?php
-    $qb->where()->child('/parent/path', 'sel_1');
+    $qb->where()->child('/parent/path', 'sel_1')->end();
 
 
 Relates to PHPCR QOM ChildNodeInterface.
@@ -277,7 +288,8 @@ Equality comparison constraint.
     $qb->where()
       ->eq()
         ->field('sel_1.foobar')
-        ->literal('var_1');
+        ->literal('var_1')
+      ->end();
 
 
 **Adds**: :ref:`constraint <qbref_node_constraint>` (ConstraintComparison)
@@ -297,7 +309,8 @@ Inequality comparison constraint
     $qb->where()
       ->neq()
         ->field('sel_1.foobar')
-        ->literal('var_1');
+        ->literal('var_1')
+      ->end();
 
 
 **Adds**: :ref:`constraint <qbref_node_constraint>` (ConstraintComparison)
@@ -317,7 +330,8 @@ Less than comparison constraint.
     $qb->where()
       ->lt()
         ->field('sel_1.foobar')
-        ->literal(5);
+        ->literal(5)
+      ->end();
 
 
 **Adds**: :ref:`constraint <qbref_node_constraint>` (ConstraintComparison)
@@ -337,7 +351,8 @@ Less than or equal to comparison constraint.
     $qb->where()
       ->lte()
         ->field('sel_1.foobar')
-        ->literal(5);
+        ->literal(5)
+      ->end();
 
 
 **Adds**: :ref:`constraint <qbref_node_constraint>` (ConstraintComparison)
@@ -357,7 +372,8 @@ Greater than comparison constraint.
     $qb->where()
       ->gt()
         ->field('sel_1.foobar')
-        ->literal(5);
+        ->literal(5)
+      ->end();
 
 
 **Adds**: :ref:`constraint <qbref_node_constraint>` (ConstraintComparison)
@@ -377,7 +393,8 @@ Greater than or equal to comparison constraint.
     $qb->where()
       ->gte()
         ->field('sel_1.foobar')
-        ->literal(5);
+        ->literal(5)
+      ->end();
 
 
 **Adds**: :ref:`constraint <qbref_node_constraint>` (ConstraintComparison)
@@ -399,7 +416,8 @@ Use "%" as wildcards.
     $qb->where()
       ->like()
         ->field('sel_1.foobar')
-        ->literal('foo%');
+        ->literal('foo%')
+      ->end();
 
 
 The above example will match "foo" and "foobar" but not "barfoo".
@@ -479,7 +497,7 @@ Factory node for dynamic operands.
 ->fullTextSearchScore
 ^^^^^^^^^^^^^^^^^^^^^
 
-Represents the aliased documents rank by relevance to the full text 
+Represents the aliased documents rank by relevance to the full text
 search expression given by the "fullTextSearch" constraint.
 
 See also: http://www.day.com/specs/jcr/2.0/6_Query.html#FullTextSearchScore
@@ -492,9 +510,11 @@ See also: http://www.day.com/specs/jcr/2.0/6_Query.html#FullTextSearchScore
         ->fullTextSearchScore('sel_1')
         ->literal(50)
       ->end()
+    ->end();
     
     $qb->orderBy()
-       ->asc()->fullTextSearchScore('sel_1');
+      ->asc()->fullTextSearchScore('sel_1')
+    ->end();
 
 
 **Adds**: :ref:`operand_dynamic <qbref_node_operand_dynamic>` (OperandDynamicFullTextSearchScore)
@@ -518,9 +538,11 @@ Length operand resolves to length of aliased document.
     $qb->where()
       ->gt()
         ->length('alias_1.prop_1')
-        ->literal(50);
+        ->literal(50)
+      ->end()
+    ->end();
     
-    $qb->orderBy()->asc()->fullTextSearchScore('sel_1');
+    $qb->orderBy()->asc()->fullTextSearchScore('sel_1')->end();
 
 
 **Adds**: :ref:`operand_dynamic <qbref_node_operand_dynamic>` (OperandDynamicLength)
@@ -544,7 +566,9 @@ LowerCase operand evaluates to lower-cased string of child operand:
     $qb->where()
       ->eq()
         ->lowerCase()->field('sel_1.prop_1')->end()
-        ->literal('lower_case');
+        ->literal('lower_case')
+      ->end()
+    ->end();
 
 
 **Adds**: :ref:`operand_dynamic <qbref_node_operand_dynamic>` (OperandDynamicLowerCase)
@@ -564,7 +588,9 @@ UpperCase operand evaluates to upper-cased string of child operand:
     $qb->where()
       ->eq()
           ->upperCase()->field('sel_1.prop_1')->end()
-          ->literal('UPPER_CASE');
+          ->literal('UPPER_CASE')
+      ->end()
+    ->end();
 
 
 **Adds**: :ref:`operand_dynamic <qbref_node_operand_dynamic>` (OperandDynamicUpperCase)
@@ -588,7 +614,9 @@ is the local node name.
     $qb->where()
       ->eq()
         ->localName('sel_1')
-        ->literal('my_node_name');
+        ->literal('my_node_name')
+      ->end()
+    ->end();
 
 
 Relates to PHPCR NodeLocalNameInterface
@@ -608,7 +636,7 @@ Relates to PHPCR NodeLocalNameInterface
 
 Evaluates to the namespaced name of the node being compared.
 
-For example, if a node has the path "/path/to/bar:foobar", then 
+For example, if a node has the path "/path/to/bar:foobar", then
 "bar:foobar" is the namespaced node name.
 
 .. code-block:: php
@@ -617,7 +645,9 @@ For example, if a node has the path "/path/to/bar:foobar", then
     $qb->where()
       ->eq()
         ->name('sel_1')
-        ->literal('namespace:my_node_name');
+        ->literal('namespace:my_node_name')
+      ->end()
+    ->end();
 
 
 Relates to PHPCR NodeNameInterface.
@@ -643,7 +673,9 @@ Evaluates to the value of the specified field.
     $qb->where()
       ->eq()
         ->field('sel_1.prop_name')
-        ->literal('my_field_value');
+        ->literal('my_field_value')
+      ->end()
+    ->end();
 
 
 **Adds**: :ref:`operand_dynamic <qbref_node_operand_dynamic>` (OperandDynamicField)
@@ -717,7 +749,7 @@ Relates to PHPCR BindVariableValueInterface
 .. code-block:: php
     
     <?php
-    $qb->where()->eq()->field('f.foobar')->parameter('param_1');
+    $qb->where()->eq()->field('f.foobar')->parameter('param_1')->end();
     $qb->setParameter('param_1', 'foo');
 
 
@@ -739,7 +771,7 @@ Evaluates to the given literal value.
 .. code-block:: php
     
     <?php
-    $qb->where()->eq()->field('f.foobar')->litreal('Literal Value');
+    $qb->where()->eq()->field('f.foobar')->literal('Literal Value')->end();
 
 
 **Adds**: :ref:`operand_static <qbref_node_operand_static>` (OperandStaticLiteral)
@@ -796,7 +828,7 @@ Add ascending ordering:
 .. code-block:: php
     
     <?php
-    $qb->orderBy()->asc()->field('sel_1.prop_1');
+    $qb->orderBy()->asc()->field('sel_1.prop_1')->end();
 
 
 **Adds**: :ref:`ordering <qbref_node_ordering>` (Ordering)
@@ -813,7 +845,7 @@ Add descending ordering:
 .. code-block:: php
     
     <?php
-    $qb->orderBy()->desc()->field('sel_1.prop_1');
+    $qb->orderBy()->desc()->field('sel_1.prop_1')->end();
 
 
 **Adds**: :ref:`ordering <qbref_node_ordering>` (Ordering)
@@ -894,7 +926,11 @@ Where factory node is used to specify selection criteria.
 .. code-block:: php
     
     <?php
-     $qb->where()->eq()->field('a.foobar')->literal('bar');
+    $qb->where()
+      ->eq()
+        ->field('a.foobar')->literal('bar')->end()
+      ->end()
+    ->end();
 
 
 **Adds**: :ref:`where <qbref_node_where>` (Where)
@@ -933,14 +969,15 @@ Set the from source for the query.
 .. code-block:: php
     
     <?php
-     $qb->from()->document('Foobar', 'a')
+    $qb->from()->document('Foobar', 'a');
     
-     // or with a join ...
+    // or with a join ...
     
-     -$qb->from('a')->joinInner()
-       ->left()->document('Foobar', 'a')->end()
-       ->right()->document('Barfoo', 'b')->end()
-       ->condition()->equi('a.prop_1', 'b.prop_1');
+    $qb->from('a')->joinInner()
+      ->left()->document('Foobar', 'a')->end()
+      ->right()->document('Barfoo', 'b')->end()
+      ->condition()->equi('a.prop_1', 'b.prop_1')->end()
+    ->end();
 
 
 **Adds**: :ref:`from <qbref_node_from>` (From)
@@ -961,7 +998,9 @@ Shortcut for:
 .. code-block:: php
     
     <?php
-    $qb->from()->document('Foobar', 'a')->end()
+    $qb->from()
+      ->document('Foobar', 'a')->end()
+    ->end();
 
 
 Which becomes:
@@ -969,7 +1008,7 @@ Which becomes:
 .. code-block:: php
     
     <?php
-    $qb->fromDocument('Foobar', 'a');
+    $qb->fromDocument('Foobar', 'a')->end();
 
 
 Replaces any existing from source.
@@ -995,9 +1034,10 @@ source as the left operand.
     
     <?php
     $qb->fromDocument('Foobar', 'a')
-    ->addJoinLeftOuter()
-      ->right()->document('Barfoo', 'b')->end()
-      ->condition()->equi('a.prop_1', 'b.prop_2');
+      ->addJoinLeftOuter()
+        ->right()->document('Barfoo', 'b')->end()
+        ->condition()->equi('a.prop_1', 'b.prop_2')->end()
+      ->end()
     ->end();
 
 
@@ -1021,8 +1061,10 @@ source as the left operand.
     <?php
     $qb->fromDocument('Foobar', 'a')
       ->addJoinRightOuter()
-        ->right()->document('Barfoo', 'b')->end()
-        ->condition()->equi('a.prop_1', 'b.prop_2');
+        ->right()->document('Barfoo', 'b')->end()->end()
+        ->condition()->equi('a.prop_1', 'b.prop_2')->end()
+      ->end()
+    ->end();
 
 
 Note that this method is currently not implemented until we can decide
@@ -1044,10 +1086,11 @@ source as the left operand.
     
     <?php
     $qb->fromDocument('Foobar', 'a')
-    ->addJoinInner()
-      ->right()->document('Barfoo', 'b')->end()
-      ->condition()->equi('a.prop_1', 'b.prop_2');
-    ->end()
+      ->addJoinInner()
+        ->right()->document('Barfoo', 'b')->end()
+        ->condition()->equi('a.prop_1', 'b.prop_2')->end()
+      ->end()
+    ->end();
 
 
 Note that this method is currently not implemented until we can decide
@@ -1073,7 +1116,8 @@ Number of property nodes is unbounded.
     $qb->select()
       ->field('a.prop_1')
       ->field('a.prop_2')
-      ->field('a.prop_3');
+      ->field('a.prop_3')
+    ->end();
 
 
 **Adds**: :ref:`select <qbref_node_select>` (Select)
@@ -1096,7 +1140,8 @@ Add additional properties to selection.
       ->addSelect()
         ->field('a.prop_2')
         ->field('a.prop_3')
-        ->field('a.prop_4');
+        ->field('a.prop_4')
+      ->end();
 
 
 **Adds**: :ref:`select <qbref_node_select>` (SelectAdd)
@@ -1116,8 +1161,9 @@ Number of orderings is unbounded.
     
     <?php
     $qb->orderBy()
-        ->asc()->field('a.prop_1')->end()
-        ->desc()->field('a.prop_2');
+      ->asc()->field('a.prop_1')->end()
+      ->desc()->field('a.prop_2')->end()
+    ->end();
 
 
 **Adds**: :ref:`order_by <qbref_node_order_by>` (OrderBy)
@@ -1170,8 +1216,6 @@ Factory node for adding additional selection fields.
 Node: SourceJoin
 ~~~~~~~~~~~~~~~~
 
-$from->joinInner()->left()->document()->
-
 **Type**: :ref:`source <qbref_type_source>`
 
 **Child Cardinality**:
@@ -1210,7 +1254,7 @@ Descendant join condition.
           ->condition()
             ->descendant('alias_1', 'alias_2')
           ->end()
-      ->end()
+      ->end();
 
 
 **Adds**: :ref:`source_join_condition <qbref_node_source_join_condition>` (SourceJoinConditionDescendant)
@@ -1236,7 +1280,9 @@ Equi (equality) join condition.
         ->joinInner()
           ->left()->document('Foo/Bar/One', 'alias_1')->end()
           ->right()->document('Foo/Bar/Two', 'alias_2')->end()
-          ->condition()->equi('alias_1.prop_1', 'alias_2.prop_2');
+          ->condition()->equi('alias_1.prop_1', 'alias_2.prop_2')
+        ->end()
+     ->end();
 
 
 See: http://en.wikipedia.org/wiki/Join_%28SQL%29#Equi-join
@@ -1264,7 +1310,9 @@ Child document join condition.
         ->joinInner()
           ->left()->document('Foo/Bar/One', 'alias_1')->end()
           ->right()->document('Foo/Bar/Two', 'alias_2')->end()
-          ->condition()->child('alias_1', 'alias_2');
+          ->condition()->child('alias_1', 'alias_2')->end()
+        ->end()
+     ->end();
 
 
 **Adds**: :ref:`source_join_condition <qbref_node_source_join_condition>` (SourceJoinConditionChildDocument)
@@ -1294,6 +1342,7 @@ Same document join condition:
             ->same('alias_1', 'alias_2', '/path_to/alias_2/document')
           ->end()
         ->end()
+      ->end();
 
 
 **Adds**: :ref:`source_join_condition <qbref_node_source_join_condition>` (SourceJoinConditionSameDocument)
