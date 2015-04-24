@@ -50,7 +50,7 @@ Optional attributes:
 
 -  **nodeType**: PHPCR type for this node, default ``nt:unstructured``.
 -  **repositoryClass**: Name of the repository to use for this document.
--  **versionable**: Set to true to enable versioning, implies *referenceable*.
+-  **versionable**: Set to "simple" or "full" to enable versioning (respectively simple and full level), implies *referenceable*.
 -  **referenceable**: Set to true to allow this node to be referenced.
 -  **translator**: Determines how translations are stored, one of ``attribute``
    or ``child``. See :ref:`langauge mapping <multilang_mapping>`
