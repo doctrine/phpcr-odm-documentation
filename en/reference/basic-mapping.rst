@@ -123,7 +123,7 @@ For example, the Doctrine Mapping Type ``string`` defines the
 mapping from a PHP string to a PHPCR\\PropertyType::STRING.
 Here is a quick overview of the built-in mapping types:
 
-See `PHPCR\\PropertyType <http://phpcr.github.com/doc/html/phpcr/propertytype.html>`_ for details about the types.
+See `PHPCR\\PropertyType <http://phpcr.github.io/doc/html/files/phpcr.src.PHPCR.PropertyType.html>`_ for details about the types.
 
 - ``String``: Arbitrary length strings
 - ``Binary``: Binary stream using PHP streams
