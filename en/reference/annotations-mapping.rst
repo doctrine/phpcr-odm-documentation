@@ -50,8 +50,8 @@ Optional attributes:
 
 -  **nodeType**: PHPCR type for this node, default ``nt:unstructured``.
 -  **repositoryClass**: Name of the repository to use for this document.
--  **versionable**: Set to ``"simple"`` or ``"full"`` to enable versioning 
-   (respectively simple or full level). Set to ``"false"`` to disable versioning
+-  **versionable**: *(string)* Set to ``simple`` or ``full`` to enable versioning 
+   (respectively simple or full level), ``false`` to disable versioning
    inheritance. Implies *referenceable*.
 -  **referenceable**: Set to true to allow this node to be referenced.
 -  **translator**: Determines how translations are stored, one of ``attribute``
@@ -82,7 +82,7 @@ Full example:
    /**
     * @Document(
     *   repositoryClass="MyProject\UserRepository",
-    *   versionable=true,
+    *   versionable="full",
     *   referenceable=true,
     *   translator="child",
     *   mixins={"mix:created", "mix:lastModified"}
