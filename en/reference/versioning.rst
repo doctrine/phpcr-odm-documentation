@@ -38,6 +38,14 @@ avoid unnecessary overhead if the user does not need it. It is however doable
 with having a field on your document that you set to your commit message and
 flush the document manager before calling checkin().
 
+.. warning::
+
+    Versioning is not supported by Jackalope Doctrine DBAL PHPCR provider, while
+    with Jackalope Jackrabbit provider currently you can use only ``full`` mode, 
+    because simple versioning is not yet implemented in Jackrabbit server
+    (see `JCR-2112 issue <https://issues.apache.org/jira/browse/JCR-2112>`_).
+    
+
 For more background, read the `Versioning section in the PHPCR Tutorial <http://phpcr.readthedocs.org/en/latest/book/versioning.html>`_
 and refer to the `JCR 2.0 specification, Chapter 15 <http://www.day.com/specs/jcr/2.0/15_Versioning.html>`_.
 
@@ -58,9 +66,7 @@ Mappings
 --------
 
 To version documents, you need to set the versionable attribute on the document mapping.
-You can choose between "full" and "simple" versionable. For PHPCR-ODM, both are equivalent,
-so if you do not plan to use the underlying PHPCR session to use full versioning, you should
-use simple versioning to be compatible with as many implementations as possible.
+You can choose between "full" and "simple" versionable. For PHPCR-ODM, both are equivalent.
 
 Due to implementation limitations, the Locale field is `required` on all translatable documents.
 
@@ -70,7 +76,7 @@ Due to implementation limitations, the Locale field is `required` on all transla
 
         <?php
         /**
-         * @Document(versionable="simple")
+         * @Document(versionable="full")
          */
         class MyPersistentClass
         {
@@ -84,7 +90,7 @@ Due to implementation limitations, the Locale field is `required` on all transla
     .. code-block:: xml
 
         <doctrine-mapping>
-            <document class="MyPersistentClass" versionable="simple">
+            <document class="MyPersistentClass" versionable="full">
                 <version-name fieldName="versionName"/>
                 <version-created fieldName="versionCreated"/>
             </document>
@@ -93,7 +99,7 @@ Due to implementation limitations, the Locale field is `required` on all transla
     .. code-block:: yaml
 
         MyPersistentClass:
-            versionable: simple
+            versionable: full
             versionName: versionName
             versionCreated: versionCreated
 

@@ -52,7 +52,8 @@ Optional attributes:
 -  **repositoryClass**: Name of the repository to use for this document.
 -  **versionable**: *(string)* Set to ``simple`` or ``full`` to enable versioning 
    (respectively simple or full level), ``false`` to disable versioning
-   inheritance. Implies *referenceable*.
+   inheritance. Implies *referenceable*. Note that not every PHPCR implementation
+   support this feature. See :doc:`Versioning <versioning>`.
 -  **referenceable**: Set to true to allow this node to be referenced.
 -  **translator**: Determines how translations are stored, one of ``attribute``
    or ``child``. See :ref:`langauge mapping <multilang_mapping>`
