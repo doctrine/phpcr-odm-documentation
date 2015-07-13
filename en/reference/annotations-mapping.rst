@@ -138,19 +138,29 @@ Optional attributes:
     }
 
 
-Value Fields
-------------
+Mapping Fields
+--------------
 
-These mappings mark the annotated instance variable as "persistent". They need to be
-specified inside the instance variables associated PHP DocBlock comment. Any value
-held inside these variables will be saved to and loaded from the storage layer as part
-of the lifecycle of the instance variables document class.
+You can annotate an instance variable with the ``@Field`` anotation to make it
+"persistent".
 
-.. _annref_valuefieldattribs:
+.. note::
 
-Common optional attributes:
+    Until PHPCR-ODM 1.2, the recommended way to map fields with annotations was using type specific
+    annotations like ``@Binary``, ``@Boolean``, ``@Date``, ``@Decimal``, ``@Double``, ``@Float``,
+    ``@Int``, ``@Long``, ``@Name``, ``@Path``, ``@String`` and ``@Uri``. These were deprecated in
+    the 1.3 release in favor of the newly added ``@Field(type="...")`` annotation to fix
+    incompatibilities with PHP 7.
 
-- **property**: The PHPCR property name where this field is stored.
+.. _annref_field:
+
+
+@Field
+~~~~~~
+
+Attributes:
+
+- **property**: The PHPCR property name to which this field is stored.
   Defaults to the field name.
 - **assoc**: Specify that this attribute should be an associative array. The value should
   be a string which will be used by the PHPCR node. Set to an empty string to automatically
@@ -161,6 +171,24 @@ Common optional attributes:
   ``translator`` attribute to be specified in :ref:`@Document<annref_document>`.
 - **nullable**: ``true`` to specifiy that this property doesn't have a required value, used
   when loading a translation, to allow loading a node with a missing translated property.
+- **type**: Type of the field, see table below.
+
+Types:
+
+- **binary**: Sets the type of the annotated instance variable to binary.
+- **boolean**: Sets the type of the annotated instance variable to boolean.
+- **date**: Sets the type of the annotated instance variable to DateTime.
+- **decimal**: Sets the type of the annotated instance variable to decimal,
+  the decimal field uses the BCMath library which supports numbers of any size
+  or precision.
+- **double**: Sets the type of the annotated instance variable to double. The PHP type will be **float**.
+- **long**: Sets the type of the annotated instance variable to long. The PHP type will be **integer**.
+- **name**: The annotated instance variable must be a valid XML CNAME value
+  and can be used to store a valid node name.
+- **path**: The annotated instance variable must be a valid PHPCR node path
+  and can be used to store an arbitrary reference to another node.
+- **string**: Sets the type of the annotated instance variable to string.
+- **uri**: The annotated instance variable will be validated as an URI.
 
 Examples:
 
@@ -169,159 +197,34 @@ Examples:
    <?php
 
    /**
-    * @Property()
+    * @Field(type="string")
     */
    protected $author;
 
    /**
-    * @String(translated=true)
+    * @Field(type="string", translated=true)
     */
    protected $title;
 
    /**
-    * @String(translated=true, nullable=true)
+    * @Field(type="string", translated=true, nullable=true)
     */
    protected $subTitle;
 
    /**
-    * @Boolean()
+    * @Field(type="boolean)
     */
    protected $enabled;
 
    /**
-    * @String(multivalue=true)
+    * @Field(type="string", multivalue=true)
     */
    protected $keywords; // e.g. array('dog', 'cat', 'mouse')
 
    /**
-    * @Double(assoc="")
+    * @Field(type="double", assoc="")
     */
    protected $exchangeRates; // e.g. array('GBP' => 0.810709, 'EUR' => 1, 'USD' => 1.307460)
-
-.. _annref_property:
-
-@Property
-~~~~~~~~~
-
-Base annotation for all fields. You can use this annotation with the
-``type`` attribute or the specific annotations below.
-
-Attributes:
-
-- Inherits :ref:`value field attributes <annref_valuefieldattribs>`.
-
-.. _annref_binary:
-
-@Binary
-~~~~~~~
-
-Sets the type of the annotated instance variable to binary.
-
-Attributes:
-
-- Inherits :ref:`value field attributes <annref_valuefieldattribs>`.
-
-.. _annref_boolean:
-
-@Boolean
-~~~~~~~~
-
-Sets the type of the annotated instance variable to boolean.
-
-Attributes:
-
-- Inherits :ref:`value field attributes <annref_valuefieldattribs>`.
-
-.. _annref_date:
-
-@Date
-~~~~~
-
-Sets the type of the annotated instance variable to DateTime.
-
-Attributes:
-
-- Inherits :ref:`value field attributes <annref_valuefieldattribs>`.
-
-.. _annref_decimal:
-
-@Decimal
-~~~~~~~~
-
-Sets the type of the annotated instance variable to decimal. The decimal field
-uses the BCMath library which supports numbers of any size or precision.
-
-Attributes:
-
-- Inherits :ref:`value field attributes <annref_valuefieldattribs>`.
-
-.. _annref_double:
-
-@Double
-~~~~~~~
-
-Sets the type of the annotated instance variable to double. The PHP type will be **float**.
-
-Attributes:
-
-- Inherits :ref:`value field attributes <annref_valuefieldattribs>`.
-
-.. _annref_long:
-
-@Long
-~~~~~
-
-Sets the type of the annotated instance variable to long. The PHP type will be **integer**.
-
-Attributes:
-
-- Inherits :ref:`value field attributes <annref_valuefieldattribs>`.
-
-.. _annref_name:
-
-@Name
-~~~~~
-
-The annotated instance variable must be a valid XML CNAME value and
-can be used to store a valid node name.
-
-Attributes:
-
-- Inherits :ref:`value field attributes <annref_valuefieldattribs>`.
-
-.. _annref_path:
-
-@Path
-~~~~~
-
-The annotated instance variable must be a valid PHPCR node path and can be used to
-store an arbitrary reference to another node.
-
-Attributes:
-
-- Inherits :ref:`value field attributes <annref_valuefieldattribs>`.
-
-.. _annref_string:
-
-@String
-~~~~~~~
-
-Sets the type of the annotated instance variable to string.
-
-Attributes:
-
-- Inherits :ref:`value field attributes <annref_valuefieldattribs>`.
-
-.. _annref_uri:
-
-@Uri
-~~~~
-
-The annotated instance variable will be validated as an URI.
-
-Attributes:
-
-- Inherits :ref:`value field attributes <annref_valuefieldattribs>`.
 
 Hierarchy
 ---------
