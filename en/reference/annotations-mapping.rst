@@ -144,7 +144,16 @@ Mapping Fields
 You can annotate an instance variable with the ``@Field`` anotation to make it
 "persistent".
 
+.. note::
+
+    Until PHPCR-ODM 1.2, the recommended way to map fields with annotations was using type specific
+    annotations like ``@Binary``, ``@Boolean``, ``@Date``, ``@Decimal``, ``@Double``, ``@Float``,
+    ``@Int``, ``@Long``, ``@Name``, ``@Path``, ``@String`` and ``@Uri``. These were deprecated in
+    the 1.3 release in favor of the newly added ``@Field(type="...")`` annotation to fix
+    incompatibilities with PHP 7.
+
 .. _annref_field:
+
 
 @Field
 ~~~~~~
