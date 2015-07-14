@@ -144,6 +144,13 @@ Mapping Fields
 You can annotate an instance variable with the ``@Field`` anotation to make it
 "persistent".
 
+.. note::
+
+    Prior to version 1.3 you were required to annotate properties using
+    `@String`, `@Boolean`, `@Date`, `@Long`, etc. As of 1.3 these annotations
+    are deprecated (to ensure PHP7 compatibility) and will be removed in the
+    next major version.
+
 .. _annref_field:
 
 @Field
