@@ -166,7 +166,7 @@ that hold scalar values like strings, numbers, etc, or arrays thereof.
 Although references are also stored as properties in PHPCR, they have
 their own mappings - see the chapter "Association Mapping".
 
-To mark a property for relational persistence the ``@Property``
+To mark a property for relational persistence the ``@Field``
 docblock annotation is used. This annotation requires at least 1 attribute
 to be set, the ``type``. The ``type`` attribute
 specifies the Doctrine Mapping Type to use for the field. If the
@@ -186,7 +186,7 @@ Example:
         /** @Document */
         class MyPersistentClass
         {
-            /** @Property(type="long") */
+            /** @Field(type="long") */
             private $count;
             /** @String */
             private $name; // type defaults to string
@@ -212,7 +212,7 @@ Example:
                     type: string
 
 In that example we mapped the field ``count`` to the property ``count``
-using the mapping type ``integer`` and the field ``name`` is mapped
+using the mapping type ``long`` and the field ``name`` is mapped
 to the property ``name`` with the mapping type ``string``. As
 you can see, by default the column names are assumed to be the same
 as the field names.
@@ -229,7 +229,7 @@ follows:
     .. code-block:: php
 
         <?php
-        /** @Property(property="db_name") */
+        /** @Field(property="db_name") */
         private $myField;
 
     .. code-block:: xml
