@@ -25,7 +25,9 @@ What are Documents?
 Documents are lightweight PHP Objects that don't need to extend any
 abstract base class or interface. A document class must not be final
 or contain final methods. Additionally it must not implement
-**clone** nor **wakeup** or :doc:`do so safely <../cookbook/implementing-wakeup-or-clone>`.
+**clone** nor **wakeup**.
+
+.. todo: or :doc:`do so safely <../cookbook/implementing-wakeup-or-clone>`.
 
 See the :doc:`architecture chapter <../reference/architecture>` for a full list of the restrictions
 that your entities need to comply with.
