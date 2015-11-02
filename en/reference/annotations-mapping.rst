@@ -49,8 +49,16 @@ Document
 Optional attributes:
 
 -  **nodeType**: PHPCR type for this node, default ``nt:unstructured``.
+-  **uniqueNodeType**: If this document has a unique node type, set to ``true``
+   in order to support outer joins correctly. See
+   :ref:`left outer join <_qbref_method_querybuilder_addjoinleftouter>` and
+   :ref:`right outer join <_qbref_method_querybuilder_addjoinrightouter>`.
+   To register a custom node type, use the ``phpcr:node-type:register`` console
+   command (use ``help phpcr:node-type:register`` for the syntax; see :doc:`Tools <tools>`
+   for more information). To verify that documents claiming to have unique node types
+   are truly unique, use the ``doctrine:phpcr:mapping:verify-unique-node-types`` command.
 -  **repositoryClass**: Name of the repository to use for this document.
--  **versionable**: *(string)* Set to ``simple`` or ``full`` to enable versioning 
+-  **versionable**: *(string)* Set to ``simple`` or ``full`` to enable versioning
    (respectively simple or full level), ``false`` to disable versioning
    inheritance. Implies *referenceable*. Note that not every PHPCR implementation
    support this feature. See :doc:`Versioning <versioning>`.
@@ -93,6 +101,10 @@ Full example:
    {
      // ...
    }
+
+.. note::
+
+   The ``uniqueNodeType`` attribute is not supported with the sqlite database.
 
 .. _annref_mappedsuperclass:
 
