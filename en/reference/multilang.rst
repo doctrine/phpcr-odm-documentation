@@ -114,6 +114,14 @@ through associations (see the section "Limitations" for an explanation).
 Having at least one property marked as translatable will require the whole document to
 have a translator strategy and a Locale field.
 
+.. note::
+
+    You need to be careful when refactoring documents that have existing data.
+    When you change fields to be translated or no longer translated, or change
+    the translation strategy, you need to migrate the data.
+
+    See :doc:`../cookbook/refactoring-multilang` for more information on the
+    tools to do the data migration.
 
 Interacting with translations
 -----------------------------
@@ -185,8 +193,11 @@ Then you have to register your translation strategy with the document manager du
 ``my_strategy_name`` would be the value for the translator attribute to use your custom strategy.
 
 
-Configure the language chooser strategy
----------------------------------------
+
+.. _multilang_chooser:
+
+Configure the locale chooser strategy
+-------------------------------------
 
 The language chooser is used when loading translated documents. If no language is specified,
 it provides the default language. If the requested language is not available for this document,
