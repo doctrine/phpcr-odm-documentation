@@ -688,14 +688,6 @@ limit and offset as second to fourth parameters::
         ->getRepository('MyProject\Domain\User')
         ->findBy(array('age' => 20), array('name' => 'ASC'), 10, 0);
 
-If you pass an array of values, Doctrine will convert the query into a WHERE
-field IN (..) query automatically::
-
-    <?php
-    $users = $dm
-        ->getRepository('MyProject\Domain\User')
-        ->findBy(array('age' => array(20, 30, 40)));
-
 .. note::
 
     The ORM has a shortcut for querying by one field, using the ``__call``
