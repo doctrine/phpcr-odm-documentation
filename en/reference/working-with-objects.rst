@@ -113,7 +113,7 @@ from newly opened DocumentManager::
         private $id;
 
         /**
-         * @String
+         * @Field(type="string")
          */
         private $headline;
 

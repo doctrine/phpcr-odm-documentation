@@ -120,7 +120,7 @@ A Doctrine Mapping Type defines the mapping between a PHP type and
 a PHPCR property type. PHPCR defines a finite set of allowed types for properties.
 
 For example, the Doctrine Mapping Type ``string`` defines the
-mapping from a PHP string to a PHPCR\\PropertyType::STRING.
+mapping from a PHP string to a ``PHPCR\\PropertyType::STRING``.
 Here is a quick overview of the built-in mapping types:
 
 See `PHPCR\\PropertyType <http://phpcr.github.io/doc/html/files/phpcr.src.PHPCR.PropertyType.html>`_ for details about the types.
@@ -135,8 +135,11 @@ See `PHPCR\\PropertyType <http://phpcr.github.io/doc/html/files/phpcr.src.PHPCR.
 - ``Name``: A valid PHPCR name
 - ``Path``: A valid PHPCR path
 - ``Uri``: A valid URI, for example a URL
-- ``Uuid``: A PHPCR universally unique id for a document (read only, see :ref:`References <association-mapping_referenceable>` for more)
 
+Each document can have a unique identifier for referencing it. While the uuid is
+also exposed as a read-only string property, the proper mapping for it is mapping
+it as UUID. See :ref:`References <association-mapping_referenceable>` for more
+information.
 
 .. note::
 
@@ -173,9 +176,6 @@ specifies the Doctrine Mapping Type to use for the field. If the
 type is not specified, PHPCR-ODM will try to let the PHPCR implementation determine
 a suitable type.
 
-Note that there are also shortcut annotations for each of the type, so you can use
-@String and so on.
-
 Example:
 
 .. configuration-block::
@@ -188,7 +188,7 @@ Example:
         {
             /** @Field(type="long") */
             private $count;
-            /** @String */
+            /** @Field(type="string") */
             private $name; // type defaults to string
             //...
         }
@@ -263,7 +263,7 @@ Unless specified as true, properties are considered single value.
     .. code-block:: php
 
         <?php
-        /** @String(multivalue=true) */
+        /** @Field(type="string", multivalue=true) */
         private $names;
 
     .. code-block:: xml
@@ -295,10 +295,10 @@ the list keys.
     .. code-block:: php
 
         <?php
-        /** @String(assoc="") */
+        /** @Field(type="string", assoc="") */
         private $names;
 
-        /** @String(assoc="listArraykeys") */
+        /** @Field(type="string", assoc="listArraykeys") */
         private $list;
 
     .. code-block:: xml
@@ -357,7 +357,7 @@ Every document has an identifier. The id in PHPCR-ODM is the PHPCR path.
     id will change. This was discussed thoroughly and is considered the best solution.
 
     If you need to reference a document reliably even when moving, look at the @ReferenceOne and the @Uuid
-    annotations explained in the next chapter.
+    annotations explained in the :doc:`next chapter <association-mapping>`.
 
 While you can manually assign the id, this is not recommended. When manually assigning, you need
 to ensure that the parent document resulting from the assigned path exists. The recommended way
