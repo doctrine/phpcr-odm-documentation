@@ -57,19 +57,19 @@ attribute on all fields that should be different depending on the locale.
 
             /**
              * Untranslated property
-             * @Date
+             * @Field(type="date")
              */
             private $publishDate;
 
             /**
              * Translated property
-             * @String(translated=true)
+             * @Field(type="string", translated=true)
              */
             private $topic;
 
             /**
              * Language specific image
-             * @Binary(translated=true)
+             * @Field(type="binary", translated=true)
              */
             private $image;
         }

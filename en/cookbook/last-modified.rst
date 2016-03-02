@@ -23,16 +23,16 @@ you can get timestamps on your documents by simply adding the mixins:
          */
         class SomeDocument
         {
-            /** @Date(property="jcr:created") */
+            /** @Field(type="date", property="jcr:created") */
             private $created;
 
-            /** @String(property="jcr:createdBy") */
+            /** @Field(type="string", property="jcr:createdBy") */
             private $createdBy;
 
-            /** @Date(property="jcr:lastModified") */
+            /** @Field(type="date", property="jcr:lastModified") */
             private $lastModified;
 
-            /** @String(property="jcr:lastModifiedBy") */
+            /** @Field(type="string", property="jcr:lastModifiedBy") */
             private $lastModifiedBy;
         }
 

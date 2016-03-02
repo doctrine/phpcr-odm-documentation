@@ -433,7 +433,7 @@ event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>`
 .. _annref_postpersist:
 
 @PostPersist
-~~~~~~~~~~~~~~
+~~~~~~~~~~~~
 
 Life cycle callback. The marked method will be called automatically on the ``postPersist``
 event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>`
@@ -452,7 +452,7 @@ event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>`
 .. _annref_postremove:
 
 @PostRemove
-~~~~~~~~~~~~~
+~~~~~~~~~~~
 
 Life cycle callback. The marked method will be called automatically on the ``postRemove``
 event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>`
@@ -471,7 +471,7 @@ event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>`
 .. _annref_postupdate:
 
 @PostUpdate
-~~~~~~~~~~~~~
+~~~~~~~~~~~
 
 Life cycle callback. The marked method will be called automatically on the ``postUpdate``
 event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>`
@@ -509,7 +509,7 @@ event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>`
 .. _annref_preremove:
 
 @PreRemove
-~~~~~~~~~~~~
+~~~~~~~~~~
 
 Life cycle callback. The marked method will be called automatically on the ``preRemove``
 event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>`
@@ -528,7 +528,7 @@ event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>`
 .. _annref_preupdate:
 
 @PreUpdate
-~~~~~~~~~~~~
+~~~~~~~~~~
 
 Life cycle callback. The marked method will be called automatically on the ``preUpdate``
 event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>`
@@ -666,7 +666,7 @@ Example:
        protected $locale;
 
        /**
-        * @String(translated=true)
+        * @Field(type="string", translated=true)
         */
        protected $title;
     }
