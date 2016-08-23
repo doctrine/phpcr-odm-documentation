@@ -224,7 +224,7 @@ Examples:
    protected $subTitle;
 
    /**
-    * @Field(type="boolean)
+    * @Field(type="boolean")
     */
    protected $enabled;
 
