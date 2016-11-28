@@ -76,7 +76,7 @@ Cookbook
 
 * **Tricks**:
   :doc:`Last modification timestamp <cookbook/last-modified>` |
-  :doc:`Custom Document Class Mapper <cookbook/custom_documentclass_mapper>`
+  :doc:`Custom Document Class Mapper <cookbook/custom_documentclass_mapper>` |
   :doc:`Convert documents between translated and untranslated <cookbook/refactoring-multilang>`
 
 .. TODO: write these
