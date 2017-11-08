@@ -51,12 +51,21 @@ Some sample mappings:
 
     .. code-block:: php
 
-        <?php
-        /** @Parentdocument */
+        use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
+
+        /**
+         * @PHPCR\Parentdocument
+         */
         private $parent;
-        /** @Child */
+
+        /**
+         * @PHPCR\Child
+         */
         private $mychild;
-        /** @Children(filter="a*", fetchDepth=3) */
+
+        /**
+         * @PHPCR\Children(filter="a*", fetchDepth=3)
+         */
         private $children;
 
     .. code-block:: xml
@@ -111,11 +120,16 @@ id standard and is guaranteed to be unique for the whole PHPCR repository (all w
     .. code-block:: php
 
         <?php
-        /** @Document(referenceable=true) **/
+
+        use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
+
+        /**
+         * @PHPCR\Document(referenceable=true)
+         */
         class MyPersistentClass
         {
             /**
-             * @Uuid
+             * @PHPCR\Uuid
              **/
             private $uuid;
 
@@ -166,17 +180,36 @@ A path reference will never ensure referential integrity.
 
     .. code-block:: php
 
-        /** @ReferenceOne(strategy="weak") */
+        use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
+
+        /**
+         * @PHPCR\ReferenceOne(strategy="weak")
+         */
         private $weakTarget;
-        /** @ReferenceOne(strategy="hard") */
+
+        /**
+         * @PHPCR\ReferenceOne(strategy="hard")
+         */
         private $hardTarget;
-        /** @ReferenceOne(strategy="path") */
+
+        /**
+         * @PHPCR\ReferenceOne(strategy="path")
+         */
         private $pathTarget;
-        /** @ReferenceMany(strategy="weak") */
+
+        /**
+         * @PHPCR\ReferenceMany(strategy="weak")
+         */
         private $weakGroup;
-        /** @ReferenceMany(strategy="hard") */
+
+        /**
+         * @PHPCR\ReferenceMany(strategy="hard")
+         */
         private $hardGroup;
-        /** @ReferenceMany(strategy="path") */
+
+        /**
+         * @PHPCR\ReferenceMany(strategy="path")
+         */
         private $pathGroup;
 
     .. code-block:: xml
@@ -266,9 +299,16 @@ will contain the referenced document.
 
     .. code-block:: php
 
-        /** @Referrers(referringDocument="FQN\Class\Name", referencedBy="otherFieldName") */
+        use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
+
+        /**
+         * @PHPCR\Referrers(referringDocument="FQN\Class\Name", referencedBy="otherFieldName")
+         */
         private $specificReferrers;
-        /** @Referrers(referringDocument="Other\Class\Name", referencedBy="someFieldName", cascade="persist, remove") */
+
+        /**
+         * @PHPCR\Referrers(referringDocument="Other\Class\Name", referencedBy="someFieldName", cascade="persist, remove")
+         */
         private $cascadedReferrers;
 
     .. code-block:: xml
@@ -291,7 +331,6 @@ will contain the referenced document.
                     referringDocument: Other\Class\Name
                     referencedBy: someFieldName
                     cascade: persist, remove
-
 
 
 Referrers can cascade like the other association mappings to persist or delete their
@@ -328,9 +367,16 @@ An example for this is the `Generic` document provided by phpcr-odm itself.
 
     .. code-block:: php
 
-        /** @MixedReferrers */
+        use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
+
+        /**
+         * @PHPCR\MixedReferrers
+         */
         private $allReferrers;
-        /** @MixedReferrers(referenceType="hard") */
+
+        /**
+         * @PHPCR\MixedReferrers(referenceType="hard")
+         */
         private $hardReferrers;
 
     .. code-block:: xml
@@ -420,7 +466,6 @@ persisted as long as the association is defined as cascade
 persist.
 
 
-
 .. _collections:
 
 Collections
@@ -447,10 +492,16 @@ contains a collection of groups:
 .. code-block:: php
 
     <?php
-    /** @Document **/
+    use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
+
+    /**
+     * @PHPCR\Document
+     */
     class User
     {
-        /** @ReferenceMany **/
+        /**
+         * @PHPCR\ReferenceMany
+         */
         private $groups;
 
         public function getGroups()
@@ -472,11 +523,16 @@ empty ``ArrayCollection`` in your documents constructor:
 
     <?php
     use Doctrine\Common\Collections\ArrayCollection;
+    use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
-    /** @Document **/
+    /**
+     * @PHPCR\Document
+     */
     class User
     {
-        /** @ReferenceMany **/
+        /**
+         * @PHPCR\ReferenceMany
+         */
         private $groups;
 
         public function __construct()

@@ -102,28 +102,30 @@ Take the following example of a single ``Article`` document fetched
 from newly opened DocumentManager::
 
     <?php
+    use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
+
     /**
-     * @Document
+     * @PHPCR\Document
      */
     class Article
     {
         /**
-         * @Id
+         * @PHPCR\Id
          */
         private $id;
 
         /**
-         * @Field(type="string")
+         * @PHPCR\Field(type="string")
          */
         private $headline;
 
         /**
-         * @ReferenceOne
+         * @PHPCR\ReferenceOne
          */
         private $author;
 
         /**
-         * @Referrers(referrerDocument="Comment", referencedBy="article")
+         * @PHPCR\Referrers(referrerDocument="Comment", referencedBy="article")
          */
         private $comments;
 
@@ -755,7 +757,7 @@ in a central location::
     use Doctrine\ODM\PHPCR\DocumentRepository;
 
     /**
-     * @Document(repositoryClass="MyDomain\Model\UserRepository")
+     * @PHPCR\Document(repositoryClass="MyDomain\Model\UserRepository")
      */
     class User
     {

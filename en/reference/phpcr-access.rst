@@ -36,12 +36,16 @@ This field is populated on find, and as soon as you register the document with t
     .. code-block:: php
 
         <?php
+        use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
+
         /**
-         * @Document
+         * @PHPCR\Document
          */
         class MyPersistentClass
         {
-            /** @Node */
+            /**
+             * @PHPCR\Node
+             */
             private $node;
         }
 

@@ -57,19 +57,19 @@ attribute on all fields that should be different depending on the locale.
 
             /**
              * Untranslated property
-             * @Field(type="date")
+             * @PHPCR\Field(type="date")
              */
             private $publishDate;
 
             /**
              * Translated property
-             * @Field(type="string", translated=true)
+             * @PHPCR\Field(type="string", translated=true)
              */
             private $topic;
 
             /**
              * Language specific image
-             * @Field(type="binary", translated=true)
+             * @PHPCR\Field(type="binary", translated=true)
              */
             private $image;
         }

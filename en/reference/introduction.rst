@@ -158,7 +158,7 @@ Building the model
 ------------------
 
 Models are plain PHP classes. Note that you have several ways to define the mapping.
-For easy readability, we use the annotation mapping in this tutorial::
+For easy readability, we use the annotation mapping with PHPCR namespace in this tutorial::
 
     <?php
     // src/Demo/Document.php
@@ -188,12 +188,12 @@ For easy readability, we use the annotation mapping in this tutorial::
          */
         private $children;
         /**
-         * @PHPCR\String
+         * @PHPCR\Field(type="string")
          */
         private $title;
 
         /**
-         * @PHPCR\String
+         * @PHPCR\Field(type="string")
          */
         private $content;
 
@@ -328,10 +328,10 @@ Tree traversal
 
 PHPCR is a tree based store. Every document must have a parent, and
 can have children. We already used this when creating the document.
-The ``@PHPCR\ParentDocument`` maps the parent of a document and is used
-to determine the position in the tree, together with ``@PHPCR\Nodename``.
+The ``@ParentDocument`` maps the parent of a document and is used
+to determine the position in the tree, together with ``@Nodename``.
 
-As the children of our sample document are mapped with ``@PHPCR\Children``,
+As the children of our sample document are mapped with ``@Children``,
 we can traverse them::
 
     <?php
@@ -372,12 +372,12 @@ Add references
 
 PHPCR-ODM supports arbitrary links between documents. The referring
 document does not need to know what class it links to. Use
-``@PHPCR\ReferenceOne`` resp. ``@PHPCR\ReferenceMany`` to map the link
+``ReferenceOne`` resp. ``@ReferenceMany`` to map the link
 to a document or a collection of links to documents.
 
-You can also map the inverse relation. ``@PHPCR\Referrers`` needs the
+You can also map the inverse relation. ``@Referrers`` needs the
 referring class but can be used to add referencing documents.
-``@PHPCR\MixedReferrers`` maps all documents referencing this document,
+``@MixedReferrers`` maps all documents referencing this document,
 but is readonly.
 
 Lets look at an example of document ``A`` referencing ``B``::
