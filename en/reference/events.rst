@@ -70,12 +70,10 @@ the life-time of their registered documents.
 
 
 You can access the Event constants from the ``Event`` class in the
-PHPCR-ODM package.
+PHPCR-ODM package::
 
-.. code-block:: php
-
-    <?php
     use Doctrine\ODM\PHPCR\Event;
+
     echo Event::preUpdate;
 
 Event order when moving

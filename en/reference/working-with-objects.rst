@@ -37,7 +37,6 @@ Every document has an identifier, which is its PHPCR path. The path is unique
 inside the workspace. Take the following example, where you find an article
 with the headline "Hello World" with the ID ``/cms/article/hello-world``::
 
-    <?php
     $article = $documentManager->find(null, '/cms/article/hello-world');
     $article->setHeadline('Hello World dude!');
 
@@ -68,7 +67,6 @@ screen. You can even verify that ``$article`` and ``$article2`` are
 indeed pointing to the same instance by running the following
 code::
 
-    <?php
     if ($article === $article2) {
         echo "Yes we are the same!";
     }
@@ -101,7 +99,6 @@ want.
 Take the following example of a single ``Article`` document fetched
 from newly opened DocumentManager::
 
-    <?php
     use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
     /**
@@ -160,7 +157,6 @@ access these proxies for the first time they will go through the
 This lazy-loading process happens behind the scenes, hidden from
 your code. Have a look at the following example::
 
-    <?php
     $article = $em->find(null, '/cms/article/hello-world');
 
     // accessing a method of the user instance triggers the lazy-load
@@ -187,7 +183,6 @@ A slice of the generated proxy classes code looks like the
 following example. Real proxy class override *all* public
 methods along the lines of the ``getName()`` method shown below::
 
-    <?php
     class UserProxy extends User implements Proxy
     {
         private function _load()
@@ -235,7 +230,6 @@ automatically be synchronized with the repository when
 
 Example::
 
-    <?php
     $user = new User;
     $user->setName('Mr.Right');
     $dm->persist($user);
@@ -289,7 +283,6 @@ which means that its persistent state will be deleted once
 
 Example::
 
-    <?php
     $dm->remove($user);
     $dm->flush();
 
@@ -348,7 +341,6 @@ Doctrine will discard all references to a detached document.
 
 Example::
 
-    <?php
     $dm->detach($document);
 
 The semantics of the detach operation, applied to a document X are
@@ -392,7 +384,6 @@ this document and this copy will subsequently be returned.
 
 Example::
 
-    <?php
     $detachedDocument = unserialize($serializedDocument); // some detached document
     $document = $em->merge($detachedDocument);
     // $document now refers to the fully managed copy returned by the merge operation.
@@ -540,7 +531,6 @@ How costly a flush operation is, mainly depends on two factors:
 
 You can get the size of a Unit of Work as follows::
 
-    <?php
     $uowSize = $dm->getUnitOfWork()->size();
 
 The size represents the number of managed documents in the Unit of
@@ -567,7 +557,6 @@ You can get direct access to the Unit of Work by calling
 ``DocumentManager::getUnitOfWork()``. This will return the UnitOfWork
 instance the ``DocumentManager`` is currently using::
 
-    <?php
     $uow = $em->getUnitOfWork();
 
 .. note::
@@ -587,7 +576,6 @@ explicitly need to find out what the current state of a document is
 in the context of a certain ``DocumentManager`` you can ask the
 underlying ``UnitOfWork``::
 
-    <?php
     switch ($dm->getUnitOfWork()->getDocumentState($document)) {
         case UnitOfWork::STATE_MANAGED:
             ...
@@ -630,7 +618,6 @@ identifier (PHPCR path) using the
 ``DocumentManager::find(null, $id)`` method. Here is an
 example::
 
-    <?php
     /** @var $em DocumentManager */
     $user = $em->find('MyProject\Domain\User', $id);
 
@@ -654,7 +641,6 @@ To query for one or more documents based on several conditions that
 form a logical conjunction, use the ``findBy`` and ``findOneBy``
 methods on a repository as follows::
 
-    <?php
     /** @var $dm DocumentManager */
 
     // All users that are 20 years old
@@ -675,7 +661,6 @@ methods on a repository as follows::
 
 You can also query by references through the repository::
 
-    <?php
     $number = $dm->find('MyProject\Domain\Phonenumber', '/path/to/phone/number');
     $user = $dm->getRepository('MyProject\Domain\User')->findOneBy(array('phone' => $number->getUuid()));
 
@@ -685,7 +670,6 @@ document, not yet by passing the associated document itself.
 The ``DocumentRepository::findBy()`` method additionally accepts orderings,
 limit and offset as second to fourth parameters::
 
-    <?php
     $tenUsers = $dm
         ->getRepository('MyProject\Domain\User')
         ->findBy(array('age' => 20), array('name' => 'ASC'), 10, 0);
@@ -700,7 +684,6 @@ A DocumentRepository also provides a mechanism for more concise
 calls through its use of ``__call``. Thus, the following two
 examples are equivalent::
 
-    <?php
     // A single user by its nickname
     $user = $dm->getRepository('MyProject\Domain\User')->findOneBy(array('nickname' => 'romanb'));
 
@@ -751,7 +734,6 @@ In applications that require lots of specialized queries, using a
 custom repository is the recommended way of grouping these queries
 in a central location::
 
-    <?php
     namespace MyDomain\Model;
 
     use Doctrine\ODM\PHPCR\DocumentRepository;
@@ -776,7 +758,6 @@ in a central location::
 
 You can access your repository now by calling::
 
-    <?php
     /** @var $dm DocumentManager */
 
     $admins = $dm->getRepository('MyDomain\Model\User')->getAllAdminUsers();

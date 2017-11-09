@@ -6,11 +6,8 @@ The QueryBuilder
 The PHPCR-ODM query builder enables you to create queries at the abstraction
 level of the ODM using a fluent interface.
 
-An example query:
+An example query::
 
-.. code-block:: php
-
-    <?php
     $qb = $documentManager->createQueryBuilder();
 
     $qb->from()->document('Blog\User', 'u');
@@ -34,11 +31,8 @@ literal string "dtl".
 The forth and final line retrieves the :ref:`query <queryref>` object.
 
 Alternatively the above query can be written more fluently by the using
-``end()`` terminators as follows:
+``end()`` terminators as follows::
 
-.. code-block:: php
-
-    <?php
     $qb = $documentManager->createQueryBuilder();
     $qb->from()
         ->document('Blog\User')
@@ -62,11 +56,8 @@ arguments.
 
 Leaf nodes have no children and always return the parent node after adding
 themselves to the query builder tree. The parent node is always a factory
-node and the leaf node always has arguments.
+node and the leaf node always has arguments::
 
-.. code-block:: php
-
-    <?php
     // the query builder is a factory node
     $qb = $dm->createQueryBuilder();
 
@@ -87,11 +78,8 @@ constructed in a single, unbroken, statement.
 
 Factory node methods append nodes as children to themselves and return either
 other factory nodes or, if the factory method returns a leaf, the method will
-return its owning class instance.
+return its owning class instance::
 
-.. code-block:: php
-
-    <?php
     $qb->where()->eq()->field('p.title', 'p')->literal('My Post');
 
 In the example above:
@@ -114,11 +102,8 @@ without breaking the chain, this is where the ``end()`` method comes in.
 The ``end()`` method is a special method that will always return the parent of the
 current node, allowing us to construct the query in full without breaking the
 chain. A practical application of this is when we do more complicated things,
-such as chaining operands:
+such as chaining operands::
 
-.. code-block:: php
-
-    <?php
     $qb->where()->eq()->lowerCase()->field('p.title')->end()->literal('my post');
 
 Here the ``lowerCase()`` method would return the ``LowerCase`` operand, which will
@@ -135,11 +120,8 @@ return its parent we need to call ``end()`` to go back once more to the
 Types and Cardinality
 ~~~~~~~~~~~~~~~~~~~~~
 
-Each node has an associated node type:
+Each node has an associated node type::
 
-.. code-block:: php
-
-    <?php
     $qb->getNodeType(); // returns "builder"
     $qb->where()->getNodeType(); // returns "where"
     $qb->andWhere()->getNodeType(); // returns "where"
@@ -154,11 +136,8 @@ factory nodes.
 
 Exceeding or not achieving the minimum or maximum child cardinality for a
 given node type will cause an exception to be thrown when retrieving the
-query, for example:
+query, for example::
 
-.. code-block:: php
-
-    <?php
     // throws exception, query builder node needs at least one "from".
     $qb->getQuery();
 
@@ -182,20 +161,14 @@ Aliases and fields
 ~~~~~~~~~~~~~~~~~~
 
 The term "alias" refers to the string that is assigned to a document source,
-either a ``SourceFrom`` or a ``SourceJoin``.
+either a ``SourceFrom`` or a ``SourceJoin``::
 
-.. code-block:: php
-
-    <?php
     $qb->from('Blog\Post', 'post');
 
 In the example above, "post" is the alias. The alias is subsequently used
 whenever the source is referenced. The following example show some instances
-where we reference the alias.
+where we reference the alias::
 
-.. code-block:: php
-
-    <?php
     $qb->where()->eq()->field('post.title')->literal('foobar');
     // or
     $qb->where()->fieldIsset('post.username');
@@ -217,11 +190,8 @@ Via the document manager
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 You can instantiate the ``QueryBuilder`` with the ``DocumentManager`` using the
-``createQueryBuilder`` method.
+``createQueryBuilder`` method::
 
-.. code-block:: php
-
-    <?php
     $qb = $documentManager->createQueryBuilder();
 
 Via a document repository
@@ -229,11 +199,8 @@ Via a document repository
 
 You can also instantiate a ``QueryBuilder`` from a ``DocumentRepsitory``
 instance, doing so will automatically select only those records which are
-associated with the ``DocumentRepository``.
+associated with the ``DocumentRepository``::
 
-.. code-block:: php
-
-   <?php
    $postsRepository = $dm->getRepository('Blog\Post');
    $qb = $postsRepository->createQueryBuilder('p');
    $posts = $qb->getQuery()->execute();
@@ -242,13 +209,10 @@ The above code block will select all documents in the document tree of class
 ``Blog\Post``. This feature is especially useful within a document repository
 class.
 
-Example showing the use of the query builder in a ``DocumentRepository``:
-
-.. code-block:: php
-
-   <?php
+Example showing the use of the query builder in a ``DocumentRepository``::
 
    namespace Blog;
+
    use Doctrine\ODM\PHPCR\DocumentRepository;
 
    class PostRepository extends DocumentRepository
@@ -290,8 +254,6 @@ From Single Source
 
 .. code-block:: php
 
-    <?php
-
     // select documents of class Foo\Bar.
     $qb->from()->document('Blog\Post', 'p');
 
@@ -308,11 +270,7 @@ Joins allow you to take other documents into account when selecting records.
 When selecting from multiple sources it is mandatory to specify a *primary
 alias* as an argument to the ``from`` factory node.
 
-The following will retrieve a collection of ``Blog\Post`` documents for active users:
-
-.. code-block:: php
-
-    <?php
+The following will retrieve a collection of ``Blog\Post`` documents for active users::
 
     // select documents from a join
     $qb->from('p')->joinInner()
@@ -337,11 +295,7 @@ Joining with an Association
 """""""""""""""""""""""""""
 
 The following is another example which joins on an *association*.  The
-``CmsUser`` class is associated with a single address:
-
-.. code-block:: php
-
-    <?php
+``CmsUser`` class is associated with a single address::
 
     $qb->fromDocument('Doctrine\Tests\Models\CMS\CmsUser', 'u');
         ->addJoinInner()
@@ -363,11 +317,8 @@ Selecting specific properties - select
 You can specify fields to populate with values using the ``select`` factory
 node, this is currently only useful when :ref:`hydrating to PHPCR nodes
 <queryref_hydration>`. The default (object) hydration will *always* hydrate
-all fields regardless of what you specify.
+all fields regardless of what you specify::
 
-.. code-block:: php
-
-   <?php
    $qb->from('Demo\User', 'u');
    $qb->select()
      ->field('u.firstname')
@@ -385,11 +336,8 @@ Limiting the number of results
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 You can specify a maximum number of results and the index of the first result
-(the offset).
+(the offset)::
 
-.. code-block:: php
-
-   <?php
    // select a maximum of 10 records.
    $qb->from()->document('User')
       ->setMaxResults(10);
@@ -404,11 +352,7 @@ You can specify a maximum number of results and the index of the first result
 Specifying selection criteria
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can specify selection criteria using the ``where`` factory node.
-
-.. code-block:: php
-
-   <?php
+You can specify selection criteria using the ``where`` factory node::
 
    // setup our document source with alias "u"
    $qb->from('Blog\User', 'u');
@@ -461,40 +405,24 @@ You can specify the property or properties by which to order the queries
 results with the ``orderBy`` factory node. You can specify additional
 orderings with ``addOrderBy``.
 
-Add a single ordering:
-
-.. code-block:: php
-
-   <?php
+Add a single ordering::
 
    $qb->orderBy()
      ->asc()->field('u.username'); // username asc
 
-Descending:
-
-.. code-block:: php
-
-   <?php
+Descending::
 
    $qb->orderBy()
      ->desc()->field('u.username');
 
-Add three orderings - equivilent to the SQL ``ORDER BY username ASC, name ASC, website DESC``:
-
-.. code-block:: php
-
-   <?php
+Add three orderings - equivilent to the SQL ``ORDER BY username ASC, name ASC, website DESC``::
 
    $qb->orderBy()
      ->asc()->field('u.username')->end()
      ->asc()->field('u.name')->end()
      ->desc()->field('u.website');
 
-Adding multiple orderings using ``addOrderBy``:
-
-.. code-block:: php
-
-   <?php
+Adding multiple orderings using ``addOrderBy``::
 
    $qb->orderBy()->asc()->field('u.username');
    $qb->addOrderBy()->asc()->field('u.name');
@@ -529,11 +457,8 @@ Querying multivalue fields
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Multivalue fields can be queried using either `eq()` or `like()` in the same
-way as you would for a single value field:
+way as you would for a single value field::
 
-.. code-block:: php
-
-   <?php
    // Find all posts which have a tag "general"
    $qb->where()->eq()->field('p.tags')->literal('general');
 
@@ -556,7 +481,6 @@ The ``QueryBuilderTester`` provides a couple of methods:
 
 .. code-block:: php
 
-    <?php
     use Doctrine\ODM\PHPCR\Query\Builder\QueryBuilder;
     use Doctrine\ODM\PHPCR\Tools\Test\QueryBuilderTester;
 

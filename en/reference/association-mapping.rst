@@ -119,8 +119,6 @@ id standard and is guaranteed to be unique for the whole PHPCR repository (all w
 
     .. code-block:: php
 
-        <?php
-
         use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
         /**
@@ -487,11 +485,8 @@ Initializing Collections
 
 You have to be careful when using document fields that contain a
 collection of related documents. Say we have a User document that
-contains a collection of groups:
+contains a collection of groups::
 
-.. code-block:: php
-
-    <?php
     use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
     /**
@@ -517,11 +512,8 @@ fresh instance of the User. When your user document is still new
 ``$groups`` will obviously be null.
 
 This is why we recommend to initialize all collection fields to an
-empty ``ArrayCollection`` in your documents constructor:
+empty ``ArrayCollection`` in your documents constructor::
 
-.. code-block:: php
-
-    <?php
     use Doctrine\Common\Collections\ArrayCollection;
     use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
@@ -547,11 +539,8 @@ empty ``ArrayCollection`` in your documents constructor:
     }
 
 Now the following code will be working even if the Document hasn't
-been associated with a DocumentManager yet:
+been associated with a DocumentManager yet::
 
-.. code-block:: php
-
-    <?php
     $group = $documentManager->find(null, $groupId);
     $user = new User();
     $user->getGroups()->add($group);

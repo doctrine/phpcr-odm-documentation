@@ -76,7 +76,6 @@ to be designated as an document. This can be done through the
 
     .. code-block:: php
 
-        <?php
         use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
         /** @PHPCR\Document */
@@ -184,7 +183,6 @@ Example:
 
     .. code-block:: php
 
-        <?php
         use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
         /**
@@ -239,7 +237,6 @@ follows:
 
     .. code-block:: php
 
-        <?php
         use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
         /**
@@ -376,7 +373,7 @@ Every document has an identifier. The id in PHPCR-ODM is the PHPCR path.
 .. note::
 
     The id being the path, it is not totally immutable. When the document is moved either explicitly
-    with DocumentManager::move() or by assignment of a different @Name or @ParentDocument, the
+    with DocumentManager::move() or by assignment of a different @Field(type="name") or @ParentDocument, the
     id will change. This was discussed thoroughly and is considered the best solution.
 
     If you need to reference a document reliably even when moving, look at the @ReferenceOne and the @Uuid
@@ -460,11 +457,8 @@ the assigned id if either is missing.
             nodename: nodename
 
 
-To create a new document, you do something like this:
+To create a new document, you do something like this::
 
-.. code-block:: php
-
-    <?php
     $doc = new Document();
     $doc->setParent($dm->find(null, '/test'));
     $doc->setNodename('mynode');
@@ -505,11 +499,8 @@ representing any PHPCR-ODM document, though.)
             id: ~
 
 
-To create a new document, you do something like this:
+To create a new document, you do something like this::
 
-.. code-block:: php
-
-    <?php
     $doc = new Document();
     $doc->setId('/test/mynode');
     // document is persisted with id /test/mynode
@@ -552,11 +543,8 @@ This gives you full control how you want to build the id path.
                 generator:
                     strategy: repository
 
-The corresponding code could look like this:
+The corresponding code could look like this::
 
-.. code-block:: php
-
-    <?php
     namespace Demo;
 
     use Doctrine\ODM\PHPCR\Id\RepositoryIdInterface;

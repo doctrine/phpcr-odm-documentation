@@ -83,8 +83,6 @@ This will download the dependencies into the vendor/ folder and generate ``vendo
 Now we bootstrap Doctrine PHPCR-ODM. Create a file called ``bootstrap.php`` in
 your project root directory::
 
-    <?php
-
     // bootstrap.php
 
     $vendorDir = __DIR__.'/vendor';
@@ -160,7 +158,6 @@ Building the model
 Models are plain PHP classes. Note that you have several ways to define the mapping.
 For easy readability, we use the annotation mapping with PHPCR namespace in this tutorial::
 
-    <?php
     // src/Demo/Document.php
     namespace Demo;
 
@@ -175,18 +172,22 @@ For easy readability, we use the annotation mapping with PHPCR namespace in this
          * @PHPCR\Id
          */
         private $id;
+
         /**
          * @PHPCR\ParentDocument
          */
         private $parent;
+
         /**
          * @PHPCR\Nodename
          */
         private $name;
+
         /**
          * @PHPCR\Children
          */
         private $children;
+
         /**
          * @PHPCR\Field(type="string")
          */
@@ -270,8 +271,8 @@ Storing documents
 
 We write a simple PHP script to generate some sample data::
 
-    <?php
     // src/generate.php
+
     require_once '../bootstrap.php';
 
     // get the root node to add our data to it
@@ -310,8 +311,8 @@ Reading documents
 
 This script will simply echo the data to the console::
 
-    <?php
     // src/read.php
+
     require_once '../bootstrap.php';
 
     $doc = $documentManager->find(null, "/doc");
@@ -334,12 +335,12 @@ to determine the position in the tree, together with ``@Nodename``.
 As the children of our sample document are mapped with ``@Children``,
 we can traverse them::
 
-    <?php
+    use Demo\MyDocument;
 
     $doc = $documentManager->find(null, "/doc");
 
     foreach($doc->getChildren() as $child) {
-        if ($child instanceof \Demo\Document) {
+        if ($child instanceof MyDocument) {
             echo 'Has child '.$child->getId() . "\n";
         } else {
             echo 'Unexpected child '.get_class($child)."\n";
@@ -353,8 +354,6 @@ we can traverse them::
 
 Even if children are not mapped, you can use the document manager to get all
 flushed children of a document::
-
-    <?php
 
     $children = $documentManager->getChildren($parent);
 
@@ -382,8 +381,8 @@ but is readonly.
 
 Lets look at an example of document ``A`` referencing ``B``::
 
-    <?php
     // src/Demo/A.php
+
     namespace Demo;
 
     use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
@@ -414,8 +413,6 @@ Lets look at an example of document ``A`` referencing ``B``::
 
 We can now create a reference with the following code::
 
-    <?php
-
     $parent = $dm->find(null, '/');
     $a = new A();
     $a->setParent($parent);
@@ -438,8 +435,6 @@ We can now create a reference with the following code::
 If referrers are not mapped on a document, you can use the document
 manager to get all flushed referrers of a document::
 
-    <?php
-
     $referrers = $documentManager->getReferrers($b);
 
 
@@ -448,8 +443,8 @@ Removing documents
 
 To delete a document, call the ``remove`` method on the ``DocumentManager``::
 
-    <?php
     // src/manipulate.php
+
     require_once '../bootstrap.php';
 
     // remove a document
@@ -467,8 +462,8 @@ You can move a document to a different path with the ``move`` method.
 Alternatively, you can assign a different Parent and/or Nodename to move
 by assignment. The latter is for example handy with Symfony2 forms::
 
-    <?php
     // src/manipulate.php
+
     require_once '../bootstrap.php';
 
     // we move a node

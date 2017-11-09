@@ -13,11 +13,8 @@ that needs to make sure the class of a newly stored document can be
 determined when loading it again.
 
 An example mapper from the `symfony cmf sandbox`_
-(``magnolia_integration`` branch):
+(``magnolia_integration`` branch)::
 
-.. code-block:: php
-
-    <?php
     namespace Sandbox\MagnoliaBundle\Document;
 
     use Doctrine\ODM\PHPCR\DocumentClassMapper;
@@ -68,11 +65,7 @@ An example mapper from the `symfony cmf sandbox`_
     }
 
 Then adjust your :ref:`bootstrap code <intro-bootstrap>` to use the
-custom mapper.
-
-.. code-block:: php
-
-    ...
+custom mapper::
 
     /* prepare the doctrine configuration */
     $config = new \Doctrine\ODM\PHPCR\Configuration();

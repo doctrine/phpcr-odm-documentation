@@ -74,7 +74,6 @@ Due to implementation limitations, the Locale field is `required` on all transla
 
     .. code-block:: php
 
-        <?php
         use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
         /**
@@ -170,7 +169,6 @@ Full Example
 
 .. code-block:: php
 
-    <?php
     $article = new Article();
     $article->id = '/test';
     $article->topic = 'Test';

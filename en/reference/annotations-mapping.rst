@@ -9,11 +9,8 @@ Note on usage
 
 Note that the code examples are given without their namespaces, however it is
 normally necessary to import the annotation namespace into your class, and to
-prefix each annotation with the namespace as demonstrated in the following example:
+prefix each annotation with the namespace as demonstrated in the following example::
 
-.. code-block:: php
-
-    <?php
     namespace MyProject\Bundle\BlogBundle\Document;
     use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
@@ -70,9 +67,7 @@ Optional attributes:
    from the anchestor documents so you have to repeat mixins you want to keep
    if you add a mixins field.
 
-Minimal example:
-
-.. code-block:: php
+Minimal example::
 
     use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
@@ -84,9 +79,7 @@ Minimal example:
         // ...
     }
 
-Full example:
-
-.. code-block:: php
+Full example::
 
     use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
@@ -205,9 +198,7 @@ Types:
 - **string**: Sets the type of the annotated instance variable to string.
 - **uri**: The annotated instance variable will be validated as an URI.
 
-Examples:
-
-.. code-block:: php
+Examples::
 
     use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
@@ -306,9 +297,7 @@ Optional attributes:
 ~~~~~~
 
 The annotated instance variable will be populated with an integer value
-representing the depth of the document within the document hierarchy.
-
-.. code-block:: php
+representing the depth of the document within the document hierarchy::
 
     use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
@@ -327,9 +316,7 @@ Optional attributes:
 - **cascade**: |cascade_definition| See :ref:`assocmap_cascading`
 
 The annotated instance variable will contain the nodes parent document. Assigning
-a different parent will result in a move operation.
-
-.. code-block:: php
+a different parent will result in a move operation::
 
    use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
@@ -373,9 +360,7 @@ Required attributes:
 
 Mark the annotated instance variable as representing the name of the node. The name
 of the node is the last part of the :ref:`ID <annref_id>`. Changing the marked variable will update
-the nodes ID.
-
-.. code-block:: php
+the nodes ID::
 
    use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
@@ -397,9 +382,7 @@ the nodes ID.
 The annotated instance variable will be populated with a UUID
 (Universally Unique Identifier). The UUID is immutable. For
 this field to be reliably populated the document should be
-*referenceable*.
-
-.. code-block:: php
+*referenceable*::
 
    use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
@@ -426,9 +409,7 @@ of the annotation.
 ~~~~~~~~~
 
 Life cycle callback. The marked method will be called automatically on the ``postLoad``
-event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>`
-
-.. code-block:: php
+event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>` for further explanations::
 
    use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
@@ -446,9 +427,7 @@ event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>`
 ~~~~~~~~~~~~
 
 Life cycle callback. The marked method will be called automatically on the ``postPersist``
-event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>`
-
-.. code-block:: php
+event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>` for further explanations::
 
    use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
@@ -466,9 +445,7 @@ event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>`
 ~~~~~~~~~~~
 
 Life cycle callback. The marked method will be called automatically on the ``postRemove``
-event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>`
-
-.. code-block:: php
+event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>` for further explanations::
 
    use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
@@ -486,9 +463,7 @@ event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>`
 ~~~~~~~~~~~
 
 Life cycle callback. The marked method will be called automatically on the ``postUpdate``
-event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>`
-
-.. code-block:: php
+event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>` for further explanations::
 
    use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
@@ -506,9 +481,7 @@ event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>`
 ~~~~~~~~~~~
 
 Life cycle callback. The marked method will be called automatically on the ``prePersist``
-event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>`
-
-.. code-block:: php
+event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>` for further explanations::
 
    use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
@@ -526,9 +499,7 @@ event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>`
 ~~~~~~~~~~
 
 Life cycle callback. The marked method will be called automatically on the ``preRemove``
-event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>`
-
-.. code-block:: php
+event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>` for further explanations::
 
    use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
@@ -546,10 +517,7 @@ event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>`
 ~~~~~~~~~~
 
 Life cycle callback. The marked method will be called automatically on the ``preUpdate``
-event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>`
-
-
-.. code-block:: php
+event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>` for further explanations::
 
    use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
@@ -670,9 +638,7 @@ Translation
 These annotations only apply to documents where the ``translator`` attribute is
 specified in :ref:`@Document<annref_document>`.
 
-Example:
-
-.. code-block:: php
+Example::
 
     use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
@@ -708,9 +674,7 @@ specified in :ref:`@Document<annref_document>`.
 
 See :ref:`versioning mappings <versioning_mappings>`.
 
-Example:
-
-.. code-block:: php
+Example::
 
     use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 

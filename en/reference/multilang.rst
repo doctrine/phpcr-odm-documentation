@@ -40,8 +40,6 @@ attribute on all fields that should be different depending on the locale.
 
     .. code-block:: php
 
-        <?php
-
         use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
         /**
@@ -177,12 +175,11 @@ For example if you want all the translations to be stored in a separate subtree 
 
 To do so you need to implement the ``Doctrine\ODM\PHPCR\Translation\TranslationStrategy\TranslationStrategyInterface``.
 
-Then you have to register your translation strategy with the document manager during the bootstrap.
+Then you have to register your translation strategy with the document manager during the bootstrap::
 
-.. code-block:: php
+    use Doctrine\ODM\PHPCR\Translation\TranslationStrategy\TranslationStrategyInterface;
 
-    <?php
-    class MyTranslationStrategy implements Doctrine\ODM\PHPCR\Translation\TranslationStrategy\TranslationStrategyInterface
+    class MyTranslationStrategy implements TranslationStrategyInterface
     {
         // ...
     }
@@ -191,7 +188,6 @@ Then you have to register your translation strategy with the document manager du
     $dm->setTranslationStrategy('my_strategy_name', new MyTranslationStrategy());
 
 ``my_strategy_name`` would be the value for the translator attribute to use your custom strategy.
-
 
 
 .. _multilang_chooser:
@@ -215,18 +211,17 @@ Based on your HTTP request or whatever criteria you have, you can use setLocale(
 your document in the right language.
 
 When you bootstrap the document manager, you need to set the language chooser strategy if you have
-any translatable documents:
+any translatable documents::
 
-.. code-block:: php
+    use Doctrine\ODM\PHPCR\DocumentManager;
 
-    <?php
     $localePrefs = array(
         'en' => array('de', 'fr'),
         'fr' => array('de', 'en'),
         'it' => array('de', 'en'),
     );
 
-    $dm = new \Doctrine\ODM\PHPCR\DocumentManager($session, $config);
+    $dm = new DocumentManager($session, $config);
     $dm->setLocaleChooserStrategy(new LocaleChooser($localePrefs, 'en'));
 
 The above says: When ``en`` is requested but you do not find it, then try ``de`` and finally ``fr``.
@@ -235,13 +230,12 @@ You can write your own strategy by implementing ``Doctrine\ODM\PHPCR\Translation
 This is useful to determine the default language based on some logic, or provide fallback orders based on user preferences.
 
 
-
 Full Example
 ------------
 
 .. code-block:: php
 
-    <?php
+    use Doctrine\ODM\PHPCR\DocumentManager;
 
     // bootstrap the DocumentManager as required (see above)
 
@@ -250,7 +244,7 @@ Full Example
         'fr' => array('en'),
     );
 
-    $dm = new \Doctrine\ODM\PHPCR\DocumentManager($session, $config);
+    $dm = new DocumentManager($session, $config);
     $dm->setLocaleChooserStrategy(new LocaleChooser($localePrefs, 'en'));
 
     // then to use translations:
