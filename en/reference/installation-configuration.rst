@@ -49,7 +49,6 @@ from the Jackalope wiki to have the storage backend.
 
 Bootstrap will roughly look like this::
 
-    <?php
     $workspace = 'default';
     $user = 'admin';
     $pass = 'admin';
@@ -72,7 +71,6 @@ Create the database as described in the documentation of
 
 Bootstrap will roughly look like this when using mysql as storage backend::
 
-    <?php
     $workspace = 'default';
     $user = 'admin';
     $pass = 'admin';
@@ -121,7 +119,6 @@ to run. On typical Linux setups getting the extension is as easy as:
 
 Bootstrap will roughly look like this when using mysql as storage backend::
 
-    <?php
     $workspace = 'default';
     $user = 'admin';
     $pass = 'password';
@@ -185,7 +182,6 @@ Class loading with composer
 Autoloading is taken care of by Composer. You just have to include the
 composer autoload file in your project::
 
-    <?php
     // Include Composer Autoload
     // if this file does not exist, you forgot to run php composer.phar install
     require_once __DIR__ . "/vendor/autoload.php";
@@ -213,7 +209,6 @@ Annotation Mapping Driver
 With the annotation driver, you can annotate the fields in your document
 classes with the mapping metadata::
 
-    <?php
     use Doctrine\Common\Annotations\AnnotationRegistry;
     use Doctrine\Common\Annotations\AnnotationReader;
     use Doctrine\ODM\PHPCR\Mapping\Driver\AnnotationDriver;
@@ -243,8 +238,8 @@ XML Mapping Driver
 With the XML driver, you create separate XML files that map between your
 documents and PHPCR::
 
-    <?php
     use Doctrine\ODM\PHPCR\Mapping\Driver\XmlDriver;
+
     $driver = new XmlDriver(array('/path/to/your/xml-mapping/files'));
 
 YML Mapping Driver
@@ -252,8 +247,8 @@ YML Mapping Driver
 
 Your project must require symfony/yaml in composer.json::
 
-    <?php
     use Doctrine\ODM\PHPCR\Mapping\Driver\YamlDriver;
+
     $driver = new YamlDriver(array('/path/to/your/yml-mapping/files'));
 
 
@@ -262,7 +257,6 @@ Quick Configuration Example
 
 A complete configuration could look like this::
 
-    <?php
     $workspace = 'default';
     $user = 'admin';
     $pass = 'admin';
@@ -323,7 +317,6 @@ Proxy Directory (***REQUIRED***)
 
 Configure the directory where proxy objects are cached::
 
-    <?php
     $config->setProxyDir($dir);
     $config->getProxyDir();
 
@@ -335,7 +328,6 @@ Proxy Namespace (***REQUIRED***)
 
 .. code-block:: php
 
-    <?php
     $config->setProxyNamespace($namespace);
     $config->getProxyNamespace();
 
@@ -348,7 +340,6 @@ Metadata Driver (***REQUIRED***)
 
 .. code-block:: php
 
-    <?php
     $config->setMetadataDriverImpl($driver);
     $config->getMetadataDriverImpl();
 
@@ -378,7 +369,6 @@ Metadata Cache (***RECOMMENDED***)
 
 .. code-block:: php
 
-    <?php
     $config->setMetadataCacheImpl($cache);
     $config->getMetadataCacheImpl();
 
@@ -408,7 +398,6 @@ Auto-generating Proxy Classes (***OPTIONAL***)
 
 .. code-block:: php
 
-    <?php
     $config->setAutoGenerateProxyClasses($bool);
     $config->getAutoGenerateProxyClasses();
 
@@ -479,7 +468,6 @@ useful, for example, as a performance enhancement, when you want to
 establish an association to an entity for which you have the
 identifier. You could simply do this::
 
-    <?php
     // $dm instanceof DocumentManager, $cart instanceof MyProject\Model\Cart
     // $itemId comes from somewhere, probably a request parameter
     $item = $dm->getReference('MyProject\Model\Item', $itemId);
@@ -505,7 +493,6 @@ Proxy classes can either be generated manually through the Doctrine
 Console or automatically by Doctrine. The configuration option that
 controls this behavior is::
 
-    <?php
     $config->setAutoGenerateProxyClasses($bool);
     $config->getAutoGenerateProxyClasses();
 
@@ -537,11 +524,10 @@ it is necessary to have an autoloading mechanism in place for these classes.
 For implementation reasons Proxy class names are not PSR-0 compliant. This
 means that you have to register a special autoloader for these classes::
 
-    <?php
     use Doctrine\ORM\Proxy\Autoloader;
 
-    $proxyDir = "/path/to/proxies";
-    $proxyNamespace = "MyProxies";
+    $proxyDir = '/path/to/proxies';
+    $proxyNamespace = 'MyProxies';
 
     Autoloader::register($proxyDir, $proxyNamespace);
 
@@ -559,7 +545,6 @@ with them using two different metadata drivers, for example XML and
 YAML. You can use the DriverChain Metadata implementations to
 aggregate these drivers based on namespaces::
 
-    <?php
     use Doctrine\ORM\Mapping\Driver\DriverChain;
 
     $chain = new DriverChain();
@@ -581,7 +566,6 @@ Specifies the FQCN of a subclass of the Doctrine\Common\Persistence\ObjectReposi
 This will be used for all documents that do not specify a custom repository
 class::
 
-    <?php
     $config->setDefaultRepositoryClassName($fqcn);
     $config->getDefaultRepositoryClassName();
 

@@ -98,26 +98,17 @@ different from nt:unstructured, like a file or folder.
 
     To convert some mapping information between the various supported
     formats you can use the ``ClassMetadataExporter`` to get exporter
-    instances for the different formats:
+    instances for the different formats::
 
-    .. code-block:: php
-
-        <?php
         $cme = new \Doctrine\ORM\Tools\Export\ClassMetadataExporter();
 
     Once you have a instance you can use it to get an exporter. For
-    example, the yml exporter:
+    example, the yml exporter::
 
-    .. code-block:: php
-
-        <?php
         $exporter = $cme->getExporter('yml', '/path/to/export/yml');
 
-    Now you can export some ``ClassMetadata`` instances:
+    Now you can export some ``ClassMetadata`` instances::
 
-    .. code-block:: php
-
-        <?php
         $classes = array(
           $em->getClassMetadata('Entities\User'),
           $em->getClassMetadata('Entities\Profile')
@@ -130,7 +121,7 @@ different from nt:unstructured, like a file or folder.
     ``orm:convert-mapping`` command accepts two arguments, the type to
     convert to and the path to generate it:
 
-    .. code-block:: php
+    .. code-block:: bash
 
         $ php doctrine orm:convert-mapping xml /path/to/mapping-path-converted-to-xml
 

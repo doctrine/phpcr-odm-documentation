@@ -15,24 +15,25 @@ you can get timestamps on your documents by simply adding the mixins:
 
     .. code-block:: php
 
-        <?php
+        use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
+
         /**
-         * @Document(
+         * @PHPCR\Document(
          *   mixins={"mix:created", "mix:lastModified"}
          * )
          */
         class SomeDocument
         {
-            /** @Field(type="date", property="jcr:created") */
+            /** @PHPCR\Field(type="date", property="jcr:created") */
             private $created;
 
-            /** @Field(type="string", property="jcr:createdBy") */
+            /** @PHPCR\Field(type="string", property="jcr:createdBy") */
             private $createdBy;
 
-            /** @Field(type="date", property="jcr:lastModified") */
+            /** @PHPCR\Field(type="date", property="jcr:lastModified") */
             private $lastModified;
 
-            /** @Field(type="string", property="jcr:lastModifiedBy") */
+            /** @PHPCR\Field(type="string", property="jcr:lastModifiedBy") */
             private $lastModifiedBy;
         }
 
@@ -91,9 +92,7 @@ in the parameters to ``RepositoryFactory::getRepository``. This will only
 affect mix:lastModified but not mix:created.
 
 The document looks exactly the same as above. To update the modification
-date, write an event listener as follows and register it with the EventManager:
-
-.. code-block:: php
+date, write an event listener as follows and register it with the EventManager::
 
     use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
     use Doctrine\ODM\PHPCR\DocumentManager;
@@ -133,7 +132,7 @@ date, write an event listener as follows and register it with the EventManager:
             $document = $e->getObject();
 
             /**
-             * @var \Doctrine\ODM\PHPCR\DocumentManager $dm
+             * @var DocumentManager $dm
              */
             $dm = $e->getObjectManager();
 

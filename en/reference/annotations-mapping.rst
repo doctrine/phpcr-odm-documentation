@@ -9,11 +9,8 @@ Note on usage
 
 Note that the code examples are given without their namespaces, however it is
 normally necessary to import the annotation namespace into your class, and to
-prefix each annotation with the namespace as demonstrated in the following example:
+prefix each annotation with the namespace as demonstrated in the following example::
 
-.. code-block:: php
-
-    <?php
     namespace MyProject\Bundle\BlogBundle\Document;
     use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
@@ -33,7 +30,7 @@ prefix each annotation with the namespace as demonstrated in the following examp
         protected $parent;
 
         /**
-         * @PHPCR\NodeName
+         * @PHPCR\Nodename
          */
         protected $title;
     }
@@ -70,37 +67,35 @@ Optional attributes:
    from the anchestor documents so you have to repeat mixins you want to keep
    if you add a mixins field.
 
-Minimal example:
+Minimal example::
 
-.. code-block:: php
+    use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
-   <?php
-   /**
-    * @Document()
-    */
-   class User
-   {
-     // ...
-   }
+    /**
+     * @PHPCR\Document()
+     */
+    class User
+    {
+        // ...
+    }
 
-Full example:
+Full example::
 
-.. code-block:: php
+    use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
-   <?php
-   /**
-    * @Document(
-    *   repositoryClass="MyProject\UserRepository",
-    *   versionable="full",
-    *   referenceable=true,
-    *   translator="child",
-    *   mixins={"mix:created", "mix:lastModified"}
-    * )
-    */
-   class SomeDocument
-   {
-     // ...
-   }
+    /**
+     * @PHPCR\Document(
+     *   repositoryClass="MyProject\UserRepository",
+     *   versionable="full",
+     *   referenceable=true,
+     *   translator="child",
+     *   mixins={"mix:created", "mix:lastModified"}
+     * )
+     */
+    class SomeDocument
+    {
+        // ...
+    }
 
 .. note::
 
@@ -132,9 +127,10 @@ Optional attributes:
 
 .. code-block:: php
 
-    <?php
+    use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
+
     /**
-     * @MappedSuperclass()
+     * @PHPCR\MappedSuperclass()
      */
     class MappedSuperclassBase
     {
@@ -142,7 +138,7 @@ Optional attributes:
     }
 
     /**
-     * @Document()
+     * @PHPCR\Document()
      */
     class DocumentSubClassFoo extends MappedSuperclassBase
     {
@@ -162,7 +158,7 @@ You can annotate an instance variable with the ``@Field`` anotation to make it
     annotations like ``@Binary``, ``@Boolean``, ``@Date``, ``@Decimal``, ``@Double``, ``@Float``,
     ``@Int``, ``@Long``, ``@Name``, ``@Path``, ``@String`` and ``@Uri``. These were deprecated in
     the 1.3 release in favor of the newly added ``@Field(type="...")`` annotation to fix
-    incompatibilities with PHP 7.
+    incompatibilities with PHP 7. In 2.0, the old annotations have been removed.
 
 .. _annref_field:
 
@@ -202,41 +198,39 @@ Types:
 - **string**: Sets the type of the annotated instance variable to string.
 - **uri**: The annotated instance variable will be validated as an URI.
 
-Examples:
+Examples::
 
-.. code-block:: php
+    use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
-   <?php
+    /**
+     * @PHPCR\Field(type="string")
+     */
+    protected $author;
 
-   /**
-    * @Field(type="string")
-    */
-   protected $author;
+    /**
+     * @PHPCR\Field(type="string", translated=true)
+     */
+    protected $title;
 
-   /**
-    * @Field(type="string", translated=true)
-    */
-   protected $title;
+    /**
+     * @PHPCR\Field(type="string", translated=true, nullable=true)
+     */
+    protected $subTitle;
 
-   /**
-    * @Field(type="string", translated=true, nullable=true)
-    */
-   protected $subTitle;
+    /**
+     * @PHPCR\Field(type="boolean")
+     */
+    protected $enabled;
 
-   /**
-    * @Field(type="boolean")
-    */
-   protected $enabled;
+    /**
+     * @PHPCR\Field(type="string", multivalue=true)
+     */
+    protected $keywords; // e.g. array('dog', 'cat', 'mouse')
 
-   /**
-    * @Field(type="string", multivalue=true)
-    */
-   protected $keywords; // e.g. array('dog', 'cat', 'mouse')
-
-   /**
-    * @Field(type="double", assoc="")
-    */
-   protected $exchangeRates; // e.g. array('GBP' => 0.810709, 'EUR' => 1, 'USD' => 1.307460)
+    /**
+     * @PHPCR\Field(type="double", assoc="")
+     */
+    protected $exchangeRates; // e.g. array('GBP' => 0.810709, 'EUR' => 1, 'USD' => 1.307460)
 
 Hierarchy
 ---------
@@ -264,9 +258,10 @@ Optional attributes:
 
 .. code-block:: php
 
-   <?php
+   use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
+
    /**
-    * @Child(name="Preferences")
+    * @PHPCR\Child(name="Preferences")
     */
    protected $preferences;
 
@@ -289,9 +284,10 @@ Optional attributes:
 
 .. code-block:: php
 
-   <?php
+   use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
+
     /**
-     * @Children(filter="a*", fetchDepth=3)
+     * @PHPCR\Children(filter="a*", fetchDepth=3)
      */
     private $children;
 
@@ -301,13 +297,12 @@ Optional attributes:
 ~~~~~~
 
 The annotated instance variable will be populated with an integer value
-representing the depth of the document within the document hierarchy.
+representing the depth of the document within the document hierarchy::
 
-.. code-block:: php
+    use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
-    <?php
     /**
-     * @Depth()
+     * @PHPCR\Depth()
      */
     private $depth;
 
@@ -321,14 +316,12 @@ Optional attributes:
 - **cascade**: |cascade_definition| See :ref:`assocmap_cascading`
 
 The annotated instance variable will contain the nodes parent document. Assigning
-a different parent will result in a move operation.
+a different parent will result in a move operation::
 
-.. code-block:: php
-
-   <?php
+   use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
    /**
-    * @ParentDocument
+    * @PHPCR\ParentDocument
     */
    private $parent;
 
@@ -353,9 +346,10 @@ Required attributes:
 
 .. code-block:: php
 
-   <?php
+   use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
+
    /**
-    * @Id()
+    * @PHPCR\Id()
     */
    protected $id; // e.g. /path/to/mydocument
 
@@ -366,18 +360,17 @@ Required attributes:
 
 Mark the annotated instance variable as representing the name of the node. The name
 of the node is the last part of the :ref:`ID <annref_id>`. Changing the marked variable will update
-the nodes ID.
+the nodes ID::
 
-.. code-block:: php
+   use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
-   <?php
    /**
-    * @Id()
+    * @PHPCR\Id()
     */
    protected $id; // e.g. /path/to/mydocument
 
    /**
-    * @NodeName()
+    * @PHPCR\Nodename()
     */
    protected $nodeName; // e.g. mydocument
 
@@ -389,13 +382,12 @@ the nodes ID.
 The annotated instance variable will be populated with a UUID
 (Universally Unique Identifier). The UUID is immutable. For
 this field to be reliably populated the document should be
-*referenceable*.
+*referenceable*::
 
-.. code-block:: php
+   use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
-   <?php
    /**
-    * @Uuid()
+    * @PHPCR\Uuid()
     */
    protected $uuid; // e.g. 508d6621-0c20-4972-bf0e-0278ccabe6e5
 
@@ -417,13 +409,12 @@ of the annotation.
 ~~~~~~~~~
 
 Life cycle callback. The marked method will be called automatically on the ``postLoad``
-event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>`
+event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>` for further explanations::
 
-.. code-block:: php
+   use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
-   <?php
     /**
-     * @PostLoad
+     * @PHPCR\PostLoad
      */
     public function doSomethingOnPostLoad()
     {
@@ -436,13 +427,12 @@ event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>`
 ~~~~~~~~~~~~
 
 Life cycle callback. The marked method will be called automatically on the ``postPersist``
-event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>`
+event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>` for further explanations::
 
-.. code-block:: php
+   use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
-   <?php
     /**
-     * @PostPersist
+     * @PHPCR\PostPersist
      */
     public function doSomethingOnPostPersist()
     {
@@ -455,13 +445,12 @@ event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>`
 ~~~~~~~~~~~
 
 Life cycle callback. The marked method will be called automatically on the ``postRemove``
-event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>`
+event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>` for further explanations::
 
-.. code-block:: php
+   use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
-   <?php
     /**
-     * @PostRemove
+     * @PHPCR\PostRemove
      */
     public function doSomethingOnPostRemove()
     {
@@ -474,13 +463,12 @@ event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>`
 ~~~~~~~~~~~
 
 Life cycle callback. The marked method will be called automatically on the ``postUpdate``
-event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>`
+event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>` for further explanations::
 
-.. code-block:: php
+   use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
-   <?php
     /**
-     * @PostUpdate
+     * @PHPCR\PostUpdate
      */
     public function doSomethingOnPostUpdate()
     {
@@ -493,13 +481,12 @@ event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>`
 ~~~~~~~~~~~
 
 Life cycle callback. The marked method will be called automatically on the ``prePersist``
-event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>`
+event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>` for further explanations::
 
-.. code-block:: php
+   use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
-   <?php
     /**
-     * @PrePersist
+     * @PHPCR\PrePersist
      */
     public function doSomethingOnPrePersist()
     {
@@ -512,13 +499,12 @@ event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>`
 ~~~~~~~~~~
 
 Life cycle callback. The marked method will be called automatically on the ``preRemove``
-event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>`
+event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>` for further explanations::
 
-.. code-block:: php
+   use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
-   <?php
     /**
-     * @PreRemove
+     * @PHPCR\PreRemove
      */
     public function doSomethingOnPreRemove()
     {
@@ -531,14 +517,12 @@ event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>`
 ~~~~~~~~~~
 
 Life cycle callback. The marked method will be called automatically on the ``preUpdate``
-event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>`
+event. See :ref:`lifecycle callbacks <events_lifecyclecallbacks>` for further explanations::
 
+   use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
-.. code-block:: php
-
-   <?php
     /**
-     * @PreUpdate
+     * @PHPCR\PreUpdate
      */
     public function doSomethingOnPreUpdate()
     {
@@ -572,9 +556,10 @@ Optional attributes:
 
 .. code-block:: php
 
-   <?php
+   use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
+
    /**
-    * @ReferenceMany(targetDocument="Phonenumber", strategy="hard")
+    * @PHPCR\ReferenceMany(targetDocument="Phonenumber", strategy="hard")
     */
     protected $phonenumbers;
 
@@ -593,9 +578,10 @@ Optional attributes:
 
 .. code-block:: php
 
-   <?php
+   use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
+
    /**
-    * @ReferenceOne(targetDocument="Contact", strategy="hard")
+    * @PHPCR\ReferenceOne(targetDocument="Contact", strategy="hard")
     */
     protected $contact;
 
@@ -620,9 +606,10 @@ Optional attributes:
 
 .. code-block:: php
 
-   <?php
+   use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
+
    /**
-    * @Referrers(referringDocument="Address", referencedBy="addressbook")
+    * @PHPCR\Referrers(referringDocument="Address", referencedBy="addressbook")
     */
    protected $addresses;
 
@@ -638,9 +625,10 @@ Optional attributes:
 
 .. code-block:: php
 
-   <?php
+   use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
+
    /**
-    * @MixedReferrers()
+    * @PHPCR\MixedReferrers()
     */
    protected $referrers;
 
@@ -650,23 +638,22 @@ Translation
 These annotations only apply to documents where the ``translator`` attribute is
 specified in :ref:`@Document<annref_document>`.
 
-Example:
+Example::
 
-.. code-block:: php
+    use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
-    <?php
     /**
-     * @Document(translator="attribute")
+     * @PHPCR\Document(translator="attribute")
      */
     class MyDocument
     {
        /**
-        * @Locale
+        * @PHPCR\Locale
         */
        protected $locale;
 
        /**
-        * @Field(type="string", translated=true)
+        * @PHPCR\Field(type="string", translated=true)
         */
        protected $title;
     }
@@ -687,23 +674,22 @@ specified in :ref:`@Document<annref_document>`.
 
 See :ref:`versioning mappings <versioning_mappings>`.
 
-Example:
+Example::
 
-.. code-block:: php
+    use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
 
-    <?php
     /**
-     * @Document(versionable="simple")
+     * @PHPCR\Document(versionable="simple")
      */
     class MyPersistentClass
     {
         /**
-         * @VersionName
+         * @PHPCR\VersionName
          */
         private $versionName;
 
         /**
-         * @VersionCreated
+         * @PHPCR\VersionCreated
          */
         private $versionCreated;
     }

@@ -9,10 +9,6 @@ a few of them, preloading them all might be more expensive then the repeated tri
 content repository to load the actually used children one by one.
 
 This feature can either be used when mapping a :ref:`Children collection <hierarchy-mappings>` or via
-an explicit call to ``UnitOfWork::setFetchDepth`` to set a global default fetch depth for this session.
-
-.. code-block: php
-
-    <?php
+an explicit call to ``UnitOfWork::setFetchDepth`` to set a global default fetch depth for this session::
 
     $dm->getUnitOfWork()->setFetchDepth(2);

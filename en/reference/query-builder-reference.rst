@@ -8,6 +8,7 @@ Query Builder Reference
 
     All the classes here documented can be found in the namespace: ``Doctrine\ODM\PHPCR\Query\Builder``
 
+.. Run bin/phpcr-odm doctrine:phpcr:qb:dump-reference to re-generate
 Reference
 ---------
 
@@ -16,7 +17,7 @@ Reference
 Node: ConstraintAndx
 ~~~~~~~~~~~~~~~~~~~~
 
-Contraint which evaluates to true when 
+Contraint which evaluates to true when
 all its child constraints evaluate to true.
 
 If only a single constraint is appended, the appended
@@ -48,7 +49,7 @@ for each of "eq", "gte", "gt", "lte", "lt", "like", etc.
 A dynamic operand is an operand whose value is derived from the
 persisted object set.
 
-A static operand is a non-changing value, either a literal or a bound 
+A static operand is a non-changing value, either a literal or a bound
 property.
 
 Comparisons can only be made one dynamic and one static operand. When
@@ -85,11 +86,8 @@ return nodes of type "constraint".
 ->andX
 ^^^^^^
 
-And composite constraint.
+And composite constraint::
 
-.. code-block:: php
-    
-    <?php
     $qb->where()
       ->andX()
         ->fieldIsset('f.foo')
@@ -100,17 +98,14 @@ And composite constraint.
 
 The andX node allows you to add 1, 2 or many operand nodes. When
 one operand is added the "and" is removed, when more than one
-is added the "and" operands are nested.
+is added the "and" operands are nested::
 
-.. code-block:: php
-    
-    <?php
     // when adding only a single operand,
     $qb->where()->andX()->eq()->field('f.foo')->literal('bar');
     // is equivilent to:
     $qb->where()->eq()->field('f.foo')->literal('bar');
-    
-    
+
+
     // when adding more than one,
     $qb->where()
       ->andX()
@@ -119,7 +114,7 @@ is added the "and" operands are nested.
         ->eq()->field('f.zar')->literal('bar')->end()
       ->end()
     ->end();
-    
+
     // is equivilent to:
     $qb->where()
       ->andX()
@@ -141,11 +136,8 @@ is added the "and" operands are nested.
 ->orX
 ^^^^^
 
-Or composite constraint.
+Or composite constraint::
 
-.. code-block:: php
-    
-    <?php
     $qb->where()
       ->orX()
         ->fieldIsset('sel_1.prop_1')
@@ -165,11 +157,8 @@ As with "andX", "orX" allows one to many operands.
 ->fieldIsset
 ^^^^^^^^^^^^
 
-Field existance constraint:
+Field existance constraint::
 
-.. code-block:: php
-    
-    <?php
     $qb->where()->fieldIsset('sel_1.prop_1')->end();
 
 
@@ -186,11 +175,8 @@ Field existance constraint:
 ->fullTextSearch
 ^^^^^^^^^^^^^^^^
 
-Full text search constraint.
+Full text search constraint::
 
-.. code-block:: php
-    
-    <?php
     $qb->where()->fullTextSearch('sel_1.prop_1', 'search_expression')->end();
 
 
@@ -208,11 +194,8 @@ Full text search constraint.
 ->same
 ^^^^^^
 
-Same document constraint.
+Same document constraint::
 
-.. code-block:: php
-    
-    <?php
     $qb->where()->same('/path/to/doc', 'sel_1')->end();
 
 
@@ -232,11 +215,8 @@ Relates to PHPCR QOM SameNodeInterface.
 ->descendant
 ^^^^^^^^^^^^
 
-Descendant document constraint.
+Descendant document constraint::
 
-.. code-block:: php
-    
-    <?php
       $qb->where()->descendant('/ancestor/path', 'sel_1')->end();
 
 
@@ -256,11 +236,8 @@ Relates to PHPCR QOM DescendantNodeInterface
 ->child
 ^^^^^^^
 
-Select children of the aliased document at the given path.
+Select children of the aliased document at the given path::
 
-.. code-block:: php
-    
-    <?php
     $qb->where()->child('/parent/path', 'sel_1')->end();
 
 
@@ -280,11 +257,8 @@ Relates to PHPCR QOM ChildNodeInterface.
 ->eq
 ^^^^
 
-Equality comparison constraint.
+Equality comparison constraint::
 
-.. code-block:: php
-    
-    <?php
     $qb->where()
       ->eq()
         ->field('sel_1.foobar')
@@ -301,11 +275,8 @@ Equality comparison constraint.
 ->neq
 ^^^^^
 
-Inequality comparison constraint
+Inequality comparison constraint::
 
-.. code-block:: php
-    
-    <?php
     $qb->where()
       ->neq()
         ->field('sel_1.foobar')
@@ -322,11 +293,8 @@ Inequality comparison constraint
 ->lt
 ^^^^
 
-Less than comparison constraint.
+Less than comparison constraint::
 
-.. code-block:: php
-    
-    <?php
     $qb->where()
       ->lt()
         ->field('sel_1.foobar')
@@ -343,11 +311,8 @@ Less than comparison constraint.
 ->lte
 ^^^^^
 
-Less than or equal to comparison constraint.
+Less than or equal to comparison constraint::
 
-.. code-block:: php
-    
-    <?php
     $qb->where()
       ->lte()
         ->field('sel_1.foobar')
@@ -364,11 +329,8 @@ Less than or equal to comparison constraint.
 ->gt
 ^^^^
 
-Greater than comparison constraint.
+Greater than comparison constraint::
 
-.. code-block:: php
-    
-    <?php
     $qb->where()
       ->gt()
         ->field('sel_1.foobar')
@@ -385,11 +347,8 @@ Greater than comparison constraint.
 ->gte
 ^^^^^
 
-Greater than or equal to comparison constraint.
+Greater than or equal to comparison constraint::
 
-.. code-block:: php
-    
-    <?php
     $qb->where()
       ->gte()
         ->field('sel_1.foobar')
@@ -408,11 +367,8 @@ Greater than or equal to comparison constraint.
 
 Like comparison constraint.
 
-Use "%" as wildcards.
+Use "%" as wildcards::
 
-.. code-block:: php
-    
-    <?php
     $qb->where()
       ->like()
         ->field('sel_1.foobar')
@@ -449,7 +405,7 @@ operand.
 Node: ConstraintOrx
 ~~~~~~~~~~~~~~~~~~~
 
-Constraint which evaluates to true if any one of ites children
+Constraint which evaluates to true if any one of its children
 evaluates to true.
 
 Like the ConstraintAndx constraint a single child will act as if
@@ -498,24 +454,21 @@ Factory node for dynamic operands.
 ^^^^^^^^^^^^^^^^^^^^^
 
 Represents the aliased documents rank by relevance to the full text
-search expression given by the "fullTextSearch" constraint.
+search expression given by the "fullTextSearch" constraint::
 
-See also: http://www.day.com/specs/jcr/2.0/6_Query.html#FullTextSearchScore
-
-.. code-block:: php
-    
-    <?php
     $qb->where()
       ->gt()
         ->fullTextSearchScore('sel_1')
         ->literal(50)
       ->end()
     ->end();
-    
+
     $qb->orderBy()
       ->asc()->fullTextSearchScore('sel_1')
     ->end();
 
+
+See also: http://www.day.com/specs/jcr/2.0/6_Query.html#FullTextSearchScore
 
 **Adds**: :ref:`operand_dynamic <qbref_node_operand_dynamic>` (OperandDynamicFullTextSearchScore)
 
@@ -530,18 +483,15 @@ See also: http://www.day.com/specs/jcr/2.0/6_Query.html#FullTextSearchScore
 ->length
 ^^^^^^^^
 
-Length operand resolves to length of aliased document.
+Length operand resolves to length of aliased document::
 
-.. code-block:: php
-    
-    <?php
     $qb->where()
       ->gt()
         ->length('alias_1.prop_1')
         ->literal(50)
       ->end()
     ->end();
-    
+
     $qb->orderBy()->asc()->fullTextSearchScore('sel_1')->end();
 
 
@@ -558,11 +508,8 @@ Length operand resolves to length of aliased document.
 ->lowerCase
 ^^^^^^^^^^^
 
-LowerCase operand evaluates to lower-cased string of child operand:
+LowerCase operand evaluates to lower-cased string of child operand::
 
-.. code-block:: php
-    
-    <?php
     $qb->where()
       ->eq()
         ->lowerCase()->field('sel_1.prop_1')->end()
@@ -580,11 +527,8 @@ LowerCase operand evaluates to lower-cased string of child operand:
 ->upperCase
 ^^^^^^^^^^^
 
-UpperCase operand evaluates to upper-cased string of child operand:
+UpperCase operand evaluates to upper-cased string of child operand::
 
-.. code-block:: php
-    
-    <?php
     $qb->where()
       ->eq()
           ->upperCase()->field('sel_1.prop_1')->end()
@@ -606,11 +550,8 @@ Document local name evaluates to the local (non namespaced)
 name of the node being compared.
 
 For example, if a node has the path "/path/to/foobar", then "foobar"
-is the local node name.
+is the local node name::
 
-.. code-block:: php
-    
-    <?php
     $qb->where()
       ->eq()
         ->localName('sel_1')
@@ -637,11 +578,8 @@ Relates to PHPCR NodeLocalNameInterface
 Evaluates to the namespaced name of the node being compared.
 
 For example, if a node has the path "/path/to/bar:foobar", then
-"bar:foobar" is the namespaced node name.
+"bar:foobar" is the namespaced node name::
 
-.. code-block:: php
-    
-    <?php
     $qb->where()
       ->eq()
         ->name('sel_1')
@@ -665,11 +603,8 @@ Relates to PHPCR NodeNameInterface.
 ->field
 ^^^^^^^
 
-Evaluates to the value of the specified field.
+Evaluates to the value of the specified field::
 
-.. code-block:: php
-    
-    <?php
     $qb->where()
       ->eq()
         ->field('sel_1.prop_name')
@@ -744,11 +679,8 @@ Factory node for all operands, both dynamic and static.
 
 Evaluates to the value of the parameter bound to the given $name.
 
-Relates to PHPCR BindVariableValueInterface
+Relates to PHPCR BindVariableValueInterface::
 
-.. code-block:: php
-    
-    <?php
     $qb->where()->eq()->field('f.foobar')->parameter('param_1')->end();
     $qb->setParameter('param_1', 'foo');
 
@@ -766,11 +698,8 @@ Relates to PHPCR BindVariableValueInterface
 ->literal
 ^^^^^^^^^
 
-Evaluates to the given literal value.
+Evaluates to the given literal value::
 
-.. code-block:: php
-    
-    <?php
     $qb->where()->eq()->field('f.foobar')->literal('Literal Value')->end();
 
 
@@ -823,11 +752,8 @@ in either ascending or descending order.
 ->asc
 ^^^^^
 
-Add ascending ordering:
+Add ascending ordering::
 
-.. code-block:: php
-    
-    <?php
     $qb->orderBy()->asc()->field('sel_1.prop_1')->end();
 
 
@@ -840,11 +766,8 @@ Add ascending ordering:
 ->desc
 ^^^^^^
 
-Add descending ordering:
+Add descending ordering::
 
-.. code-block:: php
-    
-    <?php
     $qb->orderBy()->desc()->field('sel_1.prop_1')->end();
 
 
@@ -891,11 +814,8 @@ Node: QueryBuilder
 
 The Query Builder root node.
 
-This is the node which is returned when a query builder is asked for.
+This is the node which is returned when a query builder is asked for::
 
-.. code-block:: php
-    
-    <?php
     $dm = // get document manager
     $qb = $dm->createQueryBuilder();
     $qb->fromDocument('Blog\Post', 'p');
@@ -921,11 +841,8 @@ hierarchy and converts the object graph the PHPCR QOM object graph.
 ->where
 ^^^^^^^
 
-Where factory node is used to specify selection criteria.
+Where factory node is used to specify selection criteria::
 
-.. code-block:: php
-    
-    <?php
     $qb->where()
       ->eq()
         ->field('a.foobar')->literal('bar')->end()
@@ -964,15 +881,12 @@ Add additional selection criteria using the OR operator.
 ->from
 ^^^^^^
 
-Set the from source for the query.
+Set the from source for the query::
 
-.. code-block:: php
-    
-    <?php
     $qb->from()->document('Foobar', 'a');
-    
+
     // or with a join ...
-    
+
     $qb->from('a')->joinInner()
       ->left()->document('Foobar', 'a')->end()
       ->right()->document('Barfoo', 'b')->end()
@@ -993,21 +907,15 @@ Set the from source for the query.
 ->fromDocument
 ^^^^^^^^^^^^^^
 
-Shortcut for:
+Shortcut for::
 
-.. code-block:: php
-    
-    <?php
     $qb->from()
       ->document('Foobar', 'a')->end()
     ->end();
 
 
-Which becomes:
+Which becomes::
 
-.. code-block:: php
-    
-    <?php
     $qb->fromDocument('Foobar', 'a')->end();
 
 
@@ -1028,11 +936,8 @@ Replaces any existing from source.
 ^^^^^^^^^^^^^^^^^^
 
 Replace the existing source with a left outer join source using the existing
-source as the left operand.
+source as the left operand::
 
-.. code-block:: php
-    
-    <?php
     $qb->fromDocument('Foobar', 'a')
       ->addJoinLeftOuter()
         ->right()->document('Barfoo', 'b')->end()
@@ -1056,11 +961,8 @@ will behave as an inner join.
 ^^^^^^^^^^^^^^^^^^^
 
 Replace the existing source with a right outer join source using the existing
-source as the left operand.
+source as the left operand::
 
-.. code-block:: php
-    
-    <?php
     $qb->fromDocument('Foobar', 'a')
       ->addJoinRightOuter()
         ->right()->document('Barfoo', 'b')->end()->end()
@@ -1084,11 +986,8 @@ will behave as an inner join.
 ^^^^^^^^^^^^^^
 
 Replace the existing source with an inner join source using the existing
-source as the left operand.
+source as the left operand::
 
-.. code-block:: php
-    
-    <?php
     $qb->fromDocument('Foobar', 'a')
       ->addJoinInner()
         ->right()->document('Barfoo', 'b')->end()
@@ -1097,8 +996,10 @@ source as the left operand.
     ->end();
 
 
-Note that this method is currently not implemented until we can decide
-on how it should work.
+Note that for outer joins to work correctly, documents being joined to must be mapped with
+a node type that is unique to the repository workspace, and the ``uniqueNodeType`` property
+must be set to ``true`` for the document (see :ref:`<_annref_document>`). Otherwise, the join
+will behave as an inner join.
 
 **Adds**: :ref:`select <qbref_node_select>` (Select)
 
@@ -1112,11 +1013,8 @@ on how it should work.
 Method to add properties for selection to builder tree, replaces any
 existing select.
 
-Number of property nodes is unbounded.
+Number of property nodes is unbounded::
 
-.. code-block:: php
-    
-    <?php
     $qb->select()
       ->field('a.prop_1')
       ->field('a.prop_2')
@@ -1133,11 +1031,8 @@ Number of property nodes is unbounded.
 ->addSelect
 ^^^^^^^^^^^
 
-Add additional properties to selection.
+Add additional properties to selection::
 
-.. code-block:: php
-    
-    <?php
     $qb->select()
         ->field('a.prop_1')
       ->end()
@@ -1159,11 +1054,8 @@ Add additional properties to selection.
 
 Add orderings to the builder tree.
 
-Number of orderings is unbounded.
+Number of orderings is unbounded::
 
-.. code-block:: php
-    
-    <?php
     $qb->orderBy()
       ->asc()->field('a.prop_1')->end()
       ->desc()->field('a.prop_2')->end()
@@ -1209,8 +1101,6 @@ Factory node for adding additional selection fields.
 
 **Extends**: :ref:`Select <qbref_node_select>`
 
-**Inherited methods**: 
-
 **Child Cardinality**:
     * **0..*** :ref:`property <qbref_type_property>`
 
@@ -1246,11 +1136,8 @@ Factory node for join conditions.
 ->descendant
 ^^^^^^^^^^^^
 
-Descendant join condition.
+Descendant join condition::
 
-.. code-block:: php
-    
-    <?php
       $qb->from('alias_1')
         ->joinInner()
           ->left()->document('Foo/Bar/One', 'alias_1')->end()
@@ -1275,11 +1162,8 @@ Descendant join condition.
 ->equi
 ^^^^^^
 
-Equi (equality) join condition.
+Equi (equality) join condition::
 
-.. code-block:: php
-    
-    <?php
       $qb->from('alias_1')
         ->joinInner()
           ->left()->document('Foo/Bar/One', 'alias_1')->end()
@@ -1305,11 +1189,8 @@ See: http://en.wikipedia.org/wiki/Join_%28SQL%29#Equi-join
 ->child
 ^^^^^^^
 
-Child document join condition.
+Child document join condition::
 
-.. code-block:: php
-    
-    <?php
       $qb->from('alias_1')
         ->joinInner()
           ->left()->document('Foo/Bar/One', 'alias_1')->end()
@@ -1333,11 +1214,8 @@ Child document join condition.
 ->same
 ^^^^^^
 
-Same document join condition:
+Same document join condition::
 
-.. code-block:: php
-    
-    <?php
       $qb->from('alias_1')
         ->joinInner()
           ->left()->document('Foo/Bar/One', 'alias_1')->end()

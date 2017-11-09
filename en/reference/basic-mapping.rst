@@ -76,8 +76,9 @@ to be designated as an document. This can be done through the
 
     .. code-block:: php
 
-        <?php
-        /** @Document */
+        use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
+
+        /** @PHPCR\Document */
         class MyPersistentClass
         {
             //...
@@ -182,13 +183,21 @@ Example:
 
     .. code-block:: php
 
-        <?php
-        /** @Document */
+        use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
+
+        /**
+         * @PHPCR\Document
+         */
         class MyPersistentClass
         {
-            /** @Field(type="long") */
+            /**
+             * @PHPCR\Field(type="long")
+             */
             private $count;
-            /** @Field(type="string") */
+
+            /**
+             * @PHPCR\Field(type="string")
+             */
             private $name; // type defaults to string
             //...
         }
@@ -228,8 +237,11 @@ follows:
 
     .. code-block:: php
 
-        <?php
-        /** @Field(property="db_name") */
+        use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
+
+        /**
+         * @PHPCR\Field(property="db_name")
+         */
         private $myField;
 
     .. code-block:: xml
@@ -262,8 +274,11 @@ Unless specified as true, properties are considered single value.
 
     .. code-block:: php
 
-        <?php
-        /** @Field(type="string", multivalue=true) */
+        use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
+
+        /**
+         * @PHPCR\Field(type="string", multivalue=true)
+         */
         private $names;
 
     .. code-block:: xml
@@ -294,11 +309,16 @@ the list keys.
 
     .. code-block:: php
 
-        <?php
-        /** @Field(type="string", assoc="") */
+        use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
+
+        /**
+         * @PHPCR\Field(type="string", assoc="")
+         */
         private $names;
 
-        /** @Field(type="string", assoc="listArraykeys") */
+        /**
+         * @PHPCR\Field(type="string", assoc="listArraykeys")
+         */
         private $list;
 
     .. code-block:: xml
@@ -353,7 +373,7 @@ Every document has an identifier. The id in PHPCR-ODM is the PHPCR path.
 .. note::
 
     The id being the path, it is not totally immutable. When the document is moved either explicitly
-    with DocumentManager::move() or by assignment of a different @Name or @ParentDocument, the
+    with DocumentManager::move() or by assignment of a different @Field(type="name") or @ParentDocument, the
     id will change. This was discussed thoroughly and is considered the best solution.
 
     If you need to reference a document reliably even when moving, look at the @ReferenceOne and the @Uuid
@@ -409,10 +429,16 @@ the assigned id if either is missing.
 
     .. code-block:: php
 
-        <?php
-        /** @Parentdocument */
+        use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
+
+        /**
+         * @PHPCR\Parentdocument
+         */
         private $parent;
-        /** @Nodename */
+
+        /**
+         * @PHPCR\Nodename
+         */
         private $nodename;
 
     .. code-block:: xml
@@ -431,11 +457,8 @@ the assigned id if either is missing.
             nodename: nodename
 
 
-To create a new document, you do something like this:
+To create a new document, you do something like this::
 
-.. code-block:: php
-
-    <?php
     $doc = new Document();
     $doc->setParent($dm->find(null, '/test'));
     $doc->setNodename('mynode');
@@ -455,8 +478,11 @@ representing any PHPCR-ODM document, though.)
 
     .. code-block:: php
 
-        <?php
-        /** @Id */
+        use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
+
+        /**
+         * @PHPCR\Id
+         */
         private $id;
 
     .. code-block:: xml
@@ -473,11 +499,8 @@ representing any PHPCR-ODM document, though.)
             id: ~
 
 
-To create a new document, you do something like this:
+To create a new document, you do something like this::
 
-.. code-block:: php
-
-    <?php
     $doc = new Document();
     $doc->setId('/test/mynode');
     // document is persisted with id /test/mynode
@@ -496,8 +519,11 @@ This gives you full control how you want to build the id path.
 
     .. code-block:: php
 
-        <?php
-        /** @Id(strategy="repository") */
+        use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
+
+        /**
+         * @PHPCR\Id(strategy="repository")
+         */
         private $id;
 
     .. code-block:: xml
@@ -517,11 +543,8 @@ This gives you full control how you want to build the id path.
                 generator:
                     strategy: repository
 
-The corresponding code could look like this:
+The corresponding code could look like this::
 
-.. code-block:: php
-
-    <?php
     namespace Demo;
 
     use Doctrine\ODM\PHPCR\Id\RepositoryIdInterface;
@@ -533,9 +556,14 @@ The corresponding code could look like this:
      */
     class Document
     {
-        /** @PHPCR\Id(strategy="repository") */
+        /**
+         * @PHPCR\Id(strategy="repository")
+         */
         private $id;
-        /** @PHPCR\String */
+
+        /**
+         * @PHPCR\Field(type="string")
+         */
         private $title;
         //...
     }
@@ -554,7 +582,7 @@ The corresponding code could look like this:
         }
     }
 
-Symfony2 bundle
+Symfony bundle
 ---------------
 
 If you are using the `Symfony DoctrinePHPCRBundle <https://github.com/doctrine/DoctrinePHPCRBundle>`_, you can use the ``ValidPhpcrOdm`` validator to validate your documents.

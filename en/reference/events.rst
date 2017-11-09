@@ -70,12 +70,10 @@ the life-time of their registered documents.
 
 
 You can access the Event constants from the ``Event`` class in the
-PHPCR-ODM package.
+PHPCR-ODM package::
 
-.. code-block:: php
-
-    <?php
     use Doctrine\ODM\PHPCR\Event;
+
     echo Event::preUpdate;
 
 Event order when moving
@@ -144,53 +142,81 @@ event occurs.
 
     .. code-block:: php
 
-        <?php
-        /** @PrePersist */
+        use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
+
+        /**
+         * @PHPCR\PrePersist
+         */
         public function doStuffOnPrePersist()
         {
             $this->createdAt = date('Y-m-d H:m:s');
         }
-        /** @PrePersist */
+
+        /**
+         * @PHPCR\PrePersist
+         */
         public function doOtherStuffOnPrePersist()
         {
             $this->value = 'changed from prePersist callback!';
         }
-        /** @PostPersist */
+
+        /**
+         * @PHPCR\PostPersist
+         */
         public function doStuffOnPostPersist()
         {
             $this->value = 'changed from postPersist callback!';
         }
-        /** @PostLoad */
+
+        /**
+         * @PHPCR\PostLoad
+         */
         public function doStuffOnPostLoad()
         {
             $this->value = 'changed from postLoad callback!';
         }
-        /** @PreUpdate */
+
+        /**
+         * @PHPCR\PreUpdate
+         */
         public function doStuffOnPreUpdate()
         {
             $this->value = 'changed from preUpdate callback!';
         }
-        /** @PreBindTranslation */
+
+        /**
+         * @PHPCR\PreBindTranslation
+         */
         public function doStuffOnPreBindTranslation()
         {
             $this->value = 'changed from preBindTranslation callback!';
         }
-        /** @PostBindTranslation */
+
+        /**
+         * @PHPCR\PostBindTranslation
+         */
         public function doStuffOnPostBindTranslation()
         {
             $this->value = 'changed from postBindTranslation callback!';
         }
-        /** @postLoadTranslation */
+
+        /**
+         * @PHPCR\postLoadTranslation
+         */
         public function doStuffOnPostLoadTranslation()
         {
             $this->value = 'changed from postLoadTranslation callback!';
         }
-        /** @PreRemoveTranslation */
+        /**
+         * @PHPCR\PreRemoveTranslation
+         */
         public function doStuffOnPreRemoveTranslation()
         {
             $this->value = 'changed from preRemoveTranslation callback!';
         }
-        /** @PostRemoveTranslation */
+        /**
+         * @PHPCR\PostRemoveTranslation
+         */
         public function doStuffOnPostRemoveTranslation()
         {
             $this->value = 'changed from postRemoveTranslation callback!';

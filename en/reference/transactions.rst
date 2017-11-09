@@ -13,11 +13,7 @@ The ``Doctrine\ODM\PHPCR\DocumentManager#transactional()`` method provides suppo
 functions in a transactional-safe manner if the underlying PHPCR transport supports it. Any PHP
 ``callable`` type is supported.
 
-Example:
-
-.. code-block:: php
-
-    <?php
+Example::
 
     use Doctrine\ODM\PHPCR\DocumentManager;
 

@@ -41,10 +41,10 @@ flush the document manager before calling checkin().
 .. warning::
 
     Versioning is not supported by Jackalope Doctrine DBAL PHPCR provider, while
-    with Jackalope Jackrabbit provider currently you can use only ``full`` mode, 
+    with Jackalope Jackrabbit provider currently you can use only ``full`` mode,
     because simple versioning is not yet implemented in Jackrabbit server
     (see `JCR-2112 issue <https://issues.apache.org/jira/browse/JCR-2112>`_).
-    
+
 
 For more background, read the `Versioning section in the PHPCR Tutorial <http://phpcr.readthedocs.org/en/latest/book/versioning.html>`_
 and refer to the `JCR 2.0 specification, Chapter 15 <http://www.day.com/specs/jcr/2.0/15_Versioning.html>`_.
@@ -74,16 +74,21 @@ Due to implementation limitations, the Locale field is `required` on all transla
 
     .. code-block:: php
 
-        <?php
+        use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
+
         /**
-         * @Document(versionable="full")
+         * @PHPCR\Document(versionable="full")
          */
         class MyPersistentClass
         {
-            /** @VersionName */
+            /**
+             * @PHPCR\VersionName
+             */
             private $versionName;
 
-            /** @VersionCreated */
+            /**
+             * @PHPCR\VersionCreated
+             */
             private $versionCreated;
         }
 
@@ -164,7 +169,6 @@ Full Example
 
 .. code-block:: php
 
-    <?php
     $article = new Article();
     $article->id = '/test';
     $article->topic = 'Test';

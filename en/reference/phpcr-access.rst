@@ -12,11 +12,7 @@ you can call ``SessionInterface::save()``
 Getting the PHPCR Session
 -------------------------
 
-The DocumentManager provides access to the PHPCR session.
-
-.. code-block:: php
-
-    <?php
+The DocumentManager provides access to the PHPCR session::
 
     $session = $documentManager->getPhpcrSession();
     // do stuff
@@ -35,13 +31,16 @@ This field is populated on find, and as soon as you register the document with t
 
     .. code-block:: php
 
-        <?php
+        use Doctrine\ODM\PHPCR\Mapping\Annotations as PHPCR;
+
         /**
-         * @Document
+         * @PHPCR\Document
          */
         class MyPersistentClass
         {
-            /** @Node */
+            /**
+             * @PHPCR\Node
+             */
             private $node;
         }
 
