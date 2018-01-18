@@ -391,8 +391,8 @@ this field to be reliably populated the document should be
     */
    protected $uuid; // e.g. 508d6621-0c20-4972-bf0e-0278ccabe6e5
 
-Lifcycle callbacks
-------------------
+Lifecycle callbacks
+-------------------
 
 These annotations, applied to a method, will cause the method to be called automatically
 by the ODM on the :ref:`lifecycle event <events_lifecyclecallbacks>` corresponding to the name
