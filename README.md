@@ -1,4 +1,6 @@
-# Doctrine PHPCR-ODM Documentation
+# MOVED
+
+**The documentation is now directly in the [phpcr-odm repository](https://github.com/doctrine/phpcr-odm)**
 
 ## Read compiled doc online
 
